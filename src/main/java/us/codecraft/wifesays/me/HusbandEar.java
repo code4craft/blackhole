@@ -13,8 +13,6 @@ public class HusbandEar {
 
 	private TCPSocketMonitor tcpSocketMonitor;
 
-	private int port = 40310;
-
 	private Logger logger = Logger.getLogger(getClass());
 
 	public void start() {
