@@ -1,6 +1,7 @@
 package us.codecraft.blackhole.monitor;
 
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,25 +10,27 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import us.codecraft.blackhole.connection.TCPConnection;
+import us.codecraft.blackhole.server.QueryProcesser;
 
 public class TCPSocketMonitor extends Thread {
 
 	private Logger log = Logger.getLogger(this.getClass());
 
-	private final InetAddress addr;
-	private final int port;
-	private final ServerSocket serverSocket;
+	private InetAddress addr;
+	private int port;
+	private ServerSocket serverSocket;
+	@Autowired
+	private QueryProcesser queryProcesser;
 
 	private ExecutorService executorService = Executors.newFixedThreadPool(100);
 
-	public TCPSocketMonitor(final InetAddress addr, final int port)
-			throws IOException {
+	public TCPSocketMonitor(String host, int port) throws IOException {
 		super();
-		this.addr = addr;
 		this.port = port;
-
+		this.addr = Inet4Address.getByName(host);
 		serverSocket = new ServerSocket(port, 128, addr);
 
 		this.setDaemon(true);
@@ -47,7 +50,8 @@ public class TCPSocketMonitor extends Thread {
 				log.debug("TCP connection from "
 						+ socket.getRemoteSocketAddress());
 
-				executorService.execute(new TCPConnection(socket));
+				executorService.execute(new TCPConnection(socket,
+						queryProcesser));
 
 			} catch (SocketException e) {
 

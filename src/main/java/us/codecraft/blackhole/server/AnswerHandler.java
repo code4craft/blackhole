@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.xbill.DNS.DClass;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Record;
@@ -21,22 +24,30 @@ import us.codecraft.blackhole.zones.PatternContainer;
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
-public class AnswerHandler implements Handler {
+@Component
+public class AnswerHandler implements Handler, InitializingBean {
 
 	private List<AnswerProvider> answerProviders;
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	AnswerHandler() {
-		init();
-	}
+	@Autowired
+	private AnswerCacheContainer answerCacheContainer;
 
-	public void init() {
+	@Autowired
+	private PatternContainer patternContainer;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		answerProviders = new LinkedList<AnswerProvider>();
-
-		answerProviders.add(AnswerCacheContainer.instance());
-		answerProviders.add(PatternContainer.instance());
-
+		answerProviders.add(answerCacheContainer);
+		answerProviders.add(patternContainer);
 	}
 
 	/*

@@ -10,6 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
 import org.xbill.DNS.Type;
 
@@ -17,24 +20,39 @@ import org.xbill.DNS.Type;
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
-public class PatternContainer implements AnswerProvider {
+@Component
+public class PatternContainer implements AnswerProvider, InitializingBean {
 
-	private Map<Pattern, String> patterns;
+	private Map<Pattern, String> patterns = new LinkedHashMap<Pattern, String>();;
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private PatternContainer() {
+	@Autowired
+	private AnswerCacheContainer answerCacheContainer;
 
-	}
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		String filename = null;
+		try {
+			filename = "config/zones";
+			try {
+				init(filename);
+			} catch (IOException e) {
+				logger.warn("fail to load config file " + filename);
+			}
+		} catch (Throwable e) {
+			logger.warn("fail to load config file " + filename, e);
+		}
 
-	private static PatternContainer INSTANCE = new PatternContainer();
-
-	public static PatternContainer instance() {
-		return INSTANCE;
 	}
 
 	public void init(String filename) throws IOException {
-		patterns = new LinkedHashMap<Pattern, String>();
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(
 				filename));
 		String line = null;
@@ -83,10 +101,10 @@ public class PatternContainer implements AnswerProvider {
 			Matcher matcher = entry.getKey().matcher(query);
 			if (matcher.matches()) {
 				String answer = entry.getValue();
-				AnswerCacheContainer.instance().addCache(query, type, answer);
+				answerCacheContainer.addCache(query, type, answer);
 				try {
-					AnswerCacheContainer.instance().addCache(reverseIp(answer),
-							Type.PTR, query);
+					answerCacheContainer.addCache(reverseIp(answer), Type.PTR,
+							query);
 				} catch (Throwable e) {
 					logger.info("not a ip, ignored");
 				}

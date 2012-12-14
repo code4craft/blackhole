@@ -3,29 +3,33 @@ package us.codecraft.blackhole.monitor;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import us.codecraft.blackhole.connection.UDPConnection;
+import us.codecraft.blackhole.server.QueryProcesser;
 
 public class UDPSocketMonitor extends Thread {
 
 	private Logger log = Logger.getLogger(this.getClass());
 
-	private final InetAddress addr;
-	private final int port;
+	private InetAddress addr;
+	private int port;
 	private static final short udpLength = 512;
-	private final DatagramSocket socket;
+	private DatagramSocket socket;
 	private ExecutorService executorService = Executors.newFixedThreadPool(100);
+	@Autowired
+	private QueryProcesser queryProcesser;
 
-	public UDPSocketMonitor(final InetAddress addr, final int port)
-			throws SocketException {
+	public UDPSocketMonitor(String host, int port) throws IOException {
 		super();
-		this.addr = addr;
+		this.addr = Inet4Address.getByName(host);
 		this.port = port;
 
 		socket = new DatagramSocket(port, addr);
@@ -47,7 +51,8 @@ public class UDPSocketMonitor extends Thread {
 
 				indp.setLength(in.length);
 				socket.receive(indp);
-				executorService.execute(new UDPConnection(socket, indp));
+				executorService.execute(new UDPConnection(socket, indp,
+						queryProcesser));
 
 				log.debug("UDP connection from " + indp.getSocketAddress());
 

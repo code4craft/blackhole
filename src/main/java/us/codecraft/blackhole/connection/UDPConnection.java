@@ -16,10 +16,14 @@ public class UDPConnection implements Runnable {
 	private final DatagramSocket socket;
 	private final DatagramPacket inDataPacket;
 
-	public UDPConnection(DatagramSocket socket, DatagramPacket inDataPacket) {
+	private QueryProcesser queryProcesser;
+
+	public UDPConnection(DatagramSocket socket, DatagramPacket inDataPacket,
+			QueryProcesser queryProcesser) {
 		super();
 		this.socket = socket;
 		this.inDataPacket = inDataPacket;
+		this.queryProcesser = queryProcesser;
 	}
 
 	public void run() {
@@ -30,8 +34,7 @@ public class UDPConnection implements Runnable {
 
 			try {
 				Message query = new Message(inDataPacket.getData());
-				Message responseMessage = QueryProcesser.instance().process(
-						query);
+				Message responseMessage = queryProcesser.process(query);
 				response = responseMessage.toWire();
 				if (response == null) {
 					return;

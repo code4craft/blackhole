@@ -2,25 +2,22 @@ package us.codecraft.blackhole.zones;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.stereotype.Component;
+
 import us.codecraft.blackhole.DoubleKeyMap;
 
 /**
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
+@Component
 public class AnswerCacheContainer implements AnswerProvider {
 
 	private DoubleKeyMap<String, Integer, String> cache;
 
-	private AnswerCacheContainer() {
+	public AnswerCacheContainer() {
 		cache = new DoubleKeyMap<String, Integer, String>(
 				ConcurrentHashMap.class);
-	}
-
-	private static final AnswerCacheContainer INSTANCE = new AnswerCacheContainer();
-
-	public static AnswerCacheContainer instance() {
-		return INSTANCE;
 	}
 
 	/*

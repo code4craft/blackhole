@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
+@Component
 public class HandlerManager {
 
 	private List<Handler> handlers;

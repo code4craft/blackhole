@@ -17,9 +17,12 @@ public class TCPConnection implements Runnable {
 
 	private Socket socket;
 
-	public TCPConnection(Socket socket) {
+	private QueryProcesser queryProcesser;
+
+	public TCPConnection(Socket socket, QueryProcesser queryProcesser) {
 		super();
 		this.socket = socket;
+		this.queryProcesser = queryProcesser;
 	}
 
 	public void run() {
@@ -42,9 +45,7 @@ public class TCPConnection implements Runnable {
 				byte[] response = null;
 				try {
 					request = new Message(in);
-					log.info("query");
-					Message process = QueryProcesser.instance()
-							.process(request);
+					Message process = queryProcesser.process(request);
 					response = process.toWire();
 					if (response == null) {
 						return;
