@@ -5,4 +5,26 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>blackhole</name>
   <description>A simple DNS authoritative server.It can easily be configured to intercept some kind of request to one address.</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>dnsjava</groupId>
+  		<artifactId>dnsjava</artifactId>
+  		<version>2.1.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.7</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-log4j12</artifactId>
+  		<version>1.7.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>log4j</groupId>
+  		<artifactId>log4j</artifactId>
+  		<version>1.2.17</version>
+  	</dependency>
+  </dependencies>
 </project>

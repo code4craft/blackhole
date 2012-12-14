@@ -1,0 +1,3 @@
+12-12-14 12:05:47,899 INFO  Log4jTest(Log4jTest.java:12) ## a
+12-12-14 12:06:15,853 INFO  Log4jTest(Log4jTest.java:12) ## a
+12-12-14 12:06:15,859 WARN  Log4jTest(Log4jTest.java:14) ## a
