@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,25 +13,27 @@ import org.springframework.stereotype.Component;
  * @date Dec 14, 2012
  */
 @Component
-public class HandlerManager {
+public class HandlerManager implements InitializingBean {
 
 	private List<Handler> handlers;
 
-	private HandlerManager() {
+	@Autowired
+	private AnswerHandler answerHandler;
+
+	@Autowired
+	private HeaderHandler headerHandler;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+	 */
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		handlers = new LinkedList<Handler>();
-		handlers.add(new HeaderHandler());
-		handlers.add(new AnswerHandler());
-	}
-
-	private static volatile HandlerManager INSTANCE;
-
-	public static HandlerManager instance() {
-		if (INSTANCE == null) {
-			synchronized (HandlerManager.class) {
-				INSTANCE = new HandlerManager();
-			}
-		}
-		return INSTANCE;
+		handlers.add(headerHandler);
+		handlers.add(answerHandler);
 	}
 
 	/**

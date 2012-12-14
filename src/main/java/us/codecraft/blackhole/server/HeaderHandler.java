@@ -1,5 +1,6 @@
 package us.codecraft.blackhole.server;
 
+import org.springframework.stereotype.Component;
 import org.xbill.DNS.Flags;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Record;
@@ -9,6 +10,7 @@ import org.xbill.DNS.Section;
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
+@Component
 public class HeaderHandler implements Handler {
 
 	/*
