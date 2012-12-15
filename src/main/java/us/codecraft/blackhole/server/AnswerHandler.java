@@ -1,6 +1,5 @@
 package us.codecraft.blackhole.server;
 
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import org.xbill.DNS.DClass;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
-import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.RecordBuilder;
@@ -78,9 +76,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 							+ answer);
 					ServerContext.setHasRecord(true);
 					return true;
-				} catch (UnknownHostException e) {
-					logger.warn("handling exception ", e);
-				} catch (TextParseException e) {
+				} catch (Throwable e) {
 					logger.warn("handling exception ", e);
 				}
 			}
