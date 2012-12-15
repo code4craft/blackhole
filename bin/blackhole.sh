@@ -6,7 +6,7 @@ export PATH
 case "$1" in
   start)
     echo "Starting blackhole"
-    nohup java -jar $HOME_DIR/blackhole.jar >> $HOME_DIR/log 2>&1 &
+    java -jar $HOME_DIR/blackhole.jar >> $HOME_DIR/log &
     ;;
   stop)
     echo "Stopping blackhole"
