@@ -1,0 +1,22 @@
+######################	Black Hole Zones config file ############################
+#
+# Syntax:
+#		address		domain	[type]
+# like: 127.0.0.1	codecraft.us
+#	Char "*" matches all chars with any length.
+#	Lines starting with "#" will be considered as comments.
+#	Type field is optional.Line without type will be considered supporting all types. 
+#	If more than one line works for a query, the first line will have effect. 	    
+#
+# Samples:
+# 
+#	127.0.0.1	codecraft.us
+#		response all domain query end with "codecraft.us" to 127.0.0.1
+#
+#	127.0.0.1	*
+#		response all query with all domain to 127.0.0.1
+#
+#	127.0.0.1	flashsword20.*.*
+#		response all query like "flashsword20.diandian.com" "flashsword20.github.com"
+#
+192.168.9.106	*
