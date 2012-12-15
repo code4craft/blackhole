@@ -42,7 +42,7 @@ BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/z
 	(time to live，DNS过期时间，单位是秒)。
 * **DNS**
 	
-	BlackHole并没有查找DNS的功能，如果遇到未在本地配置的域名请求，它会做一个代理的工作，将请求发向一个已有的DNS服务器，并返回这个DNS服务器的结果。**如果你只希望用BlackHole做某些域名的拦截，需要对这个DNS服务器的地址进行配置。**
+	BlackHole并没有递归查找DNS的功能，如果遇到未在本地配置的域名请求，它会做一个UDP代理的工作，将请求发向一个已有的DNS服务器，并返回这个DNS服务器的结果。**如果你只希望用BlackHole做某些域名的拦截，需要对这个DNS服务器的地址进行配置。**
 
 #####zones
 
