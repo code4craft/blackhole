@@ -2,7 +2,6 @@ package us.codecraft.blackhole.zones;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,16 +15,21 @@ import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
 import org.xbill.DNS.Type;
 
+import us.codecraft.wifesays.me.ReloadAble;
+
 /**
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
 @Component
-public class PatternContainer implements AnswerProvider, InitializingBean {
+public class PatternContainer implements AnswerProvider, InitializingBean,
+		ReloadAble {
 
-	private Map<Pattern, String> patterns = new LinkedHashMap<Pattern, String>();;
+	private volatile Map<Pattern, String> patterns;
 
 	private Logger logger = Logger.getLogger(getClass());
+
+	private String filename = "config/zones";
 
 	@Autowired
 	private AnswerCacheContainer answerCacheContainer;
@@ -38,43 +42,39 @@ public class PatternContainer implements AnswerProvider, InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String filename = null;
-		try {
-			filename = "config/zones";
-			try {
-				init(filename);
-			} catch (IOException e) {
-				logger.warn("fail to load config file " + filename);
-			}
-		} catch (Throwable e) {
-			logger.warn("fail to load config file " + filename, e);
-		}
+
+		readConfig(filename);
 
 	}
 
-	public void init(String filename) throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(
-				filename));
-		String line = null;
-		while ((line = bufferedReader.readLine()) != null) {
-			line = line.trim();
-			if (line.startsWith("#")) {
-				continue;
-			}
-			try {
-				String[] items = line.split("\\s+");
-				if (items.length < 2) {
+	public void readConfig(String filename) {
+		try {
+			Map<Pattern, String> patternsTemp = new LinkedHashMap<Pattern, String>();
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(
+					filename));
+			String line = null;
+			while ((line = bufferedReader.readLine()) != null) {
+				line = line.trim();
+				if (line.startsWith("#")) {
 					continue;
 				}
-				String ip = items[0];
-				String pattern = items[1];
-				patterns.put(compileStringToPattern(pattern), ip);
-				logger.info("load config success:\t" + line);
-			} catch (Exception e) {
-				logger.warn("parse config line error:\t" + line, e);
+				try {
+					String[] items = line.split("\\s+");
+					if (items.length < 2) {
+						continue;
+					}
+					String ip = items[0];
+					String pattern = items[1];
+					patternsTemp.put(compileStringToPattern(pattern), ip);
+					logger.info("read config success:\t" + line);
+				} catch (Exception e) {
+					logger.warn("parse config line error:\t" + line, e);
+				}
 			}
+			bufferedReader.close();
+		} catch (Throwable e) {
+			logger.warn("read config file failed:" + filename, e);
 		}
-		bufferedReader.close();
 	}
 
 	private Pattern compileStringToPattern(String patternStr) {
@@ -122,5 +122,15 @@ public class PatternContainer implements AnswerProvider, InitializingBean {
 		}
 		stringBuilder.append("in-addr.arpa.");
 		return stringBuilder.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see us.codecraft.wifesays.me.ReloadAble#reload()
+	 */
+	@Override
+	public void reload() {
+		readConfig(filename);
 	}
 }
