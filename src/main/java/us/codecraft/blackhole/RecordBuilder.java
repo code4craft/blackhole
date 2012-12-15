@@ -17,7 +17,7 @@ import org.xbill.DNS.Type;
  */
 public class RecordBuilder {
 
-	private Configure configure = Configure.instance();
+	private Configure configure = SpringLocator.getBean(Configure.class);
 
 	private int type;
 

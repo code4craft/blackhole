@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import us.codecraft.blackhole.connection.UDPConnection;
-import us.codecraft.blackhole.server.QueryProcesser;
+import us.codecraft.blackhole.server.MessageProcesser;
 
 public class UDPSocketMonitor extends Thread {
 
@@ -25,7 +25,7 @@ public class UDPSocketMonitor extends Thread {
 	private DatagramSocket socket;
 	private ExecutorService executorService = Executors.newFixedThreadPool(100);
 	@Autowired
-	private QueryProcesser queryProcesser;
+	private MessageProcesser queryProcesser;
 
 	public UDPSocketMonitor(String host, int port) throws IOException {
 		super();
