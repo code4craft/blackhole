@@ -16,6 +16,7 @@ import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.RecordBuilder;
+import us.codecraft.blackhole.ServerContext;
 import us.codecraft.blackhole.zones.AnswerCacheContainer;
 import us.codecraft.blackhole.zones.AnswerProvider;
 import us.codecraft.blackhole.zones.PatternContainer;
@@ -75,6 +76,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 					logger.info("answer\t" + Type.string(question.getType())
 							+ "\t" + DClass.string(question.getDClass()) + "\t"
 							+ answer);
+					ServerContext.setHasRecord(true);
 					return true;
 				} catch (UnknownHostException e) {
 					logger.warn("handling exception ", e);
@@ -83,7 +85,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 }

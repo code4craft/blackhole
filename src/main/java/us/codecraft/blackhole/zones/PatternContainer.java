@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
 import org.xbill.DNS.Type;
 
+import us.codecraft.blackhole.Configure;
 import us.codecraft.wifesays.me.ReloadAble;
 
 /**
@@ -29,7 +30,7 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private String filename = "config/zones";
+	private String filename = Configure.FILE_PATH + "config/zones";
 
 	@Autowired
 	private AnswerCacheContainer answerCacheContainer;
@@ -71,6 +72,7 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 					logger.warn("parse config line error:\t" + line, e);
 				}
 			}
+			patterns = patternsTemp;
 			bufferedReader.close();
 		} catch (Throwable e) {
 			logger.warn("read config file failed:" + filename, e);

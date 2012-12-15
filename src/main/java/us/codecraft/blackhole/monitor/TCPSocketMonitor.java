@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import us.codecraft.blackhole.connection.TCPConnection;
-import us.codecraft.blackhole.server.QueryProcesser;
+import us.codecraft.blackhole.server.MessageProcesser;
 
 public class TCPSocketMonitor extends Thread {
 
@@ -23,7 +23,7 @@ public class TCPSocketMonitor extends Thread {
 	private int port;
 	private ServerSocket serverSocket;
 	@Autowired
-	private QueryProcesser queryProcesser;
+	private MessageProcesser queryProcesser;
 
 	private ExecutorService executorService = Executors.newFixedThreadPool(100);
 

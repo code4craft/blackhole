@@ -9,7 +9,7 @@ import java.net.Socket;
 import org.apache.log4j.Logger;
 import org.xbill.DNS.Message;
 
-import us.codecraft.blackhole.server.QueryProcesser;
+import us.codecraft.blackhole.server.MessageProcesser;
 
 public class TCPConnection implements Runnable {
 
@@ -17,9 +17,9 @@ public class TCPConnection implements Runnable {
 
 	private Socket socket;
 
-	private QueryProcesser queryProcesser;
+	private MessageProcesser queryProcesser;
 
-	public TCPConnection(Socket socket, QueryProcesser queryProcesser) {
+	public TCPConnection(Socket socket, MessageProcesser queryProcesser) {
 		super();
 		this.socket = socket;
 		this.queryProcesser = queryProcesser;

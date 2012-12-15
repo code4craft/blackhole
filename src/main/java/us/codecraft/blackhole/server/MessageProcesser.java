@@ -9,7 +9,7 @@ import org.xbill.DNS.Message;
  * @date Dec 14, 2012
  */
 @Component
-public class QueryProcesser {
+public class MessageProcesser {
 
 	@Autowired
 	private HandlerManager handlerManager;
