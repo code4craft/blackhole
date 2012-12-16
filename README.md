@@ -1,9 +1,11 @@
 BlackHole
 =========
 
-####简介
+####1. 简介
 
-BlackHole是一个迷你型的DNS服务器。它的主要特色是可通过简单配置，将DNS请求导向某些特定IP。
+BlackHole是一个迷你型的DNS服务器。它的主要特色是可以通过简单配置，将DNS请求导向某些特定IP。
+
+####2. 用途
 
 BlackHole最简单直接的用途是在开发和测试环境中将域名指向某个IP。与修改hosts文件相比，BlackHole配置更方便，并且支持通配符。
 
@@ -13,11 +15,14 @@ BlackHole最简单直接的用途是在开发和测试环境中将域名指向�
 	
 表示将所有以.codecraft.us形式结尾的域名全部指向127.0.0.1。
 
-####安装BlackHole:
+BlackHole的另一个愿景是：用于机构的内部DNS拦截。如果内部DNS希望将某些域名导向特定IP，从而达到封禁的目的，则可以通过简单配置BlackHole完成。
+
+
+####3. 安装BlackHole:
 
 将[https://github.com/flashsword20/blackhole/tree/master/bin](https://github.com/flashsword20/blackhole/tree/master/bin)下的文件全部拷贝到/usr/local/blackhole目录下即可。
 
-####配置BlackHole:
+####4. 配置BlackHole:
 
 如果你没有将BlackHole安装到/usr/local/blackhole，则需要修改blackhole.sh，将HOME_DIR更改为你的安装目录。
 
@@ -64,7 +69,7 @@ BlackHole的配置跟Hosts文件是一样的，但是支持通配符"*"。
 
 支持SHELL的系统可以使用blackhole.sh zones来快速配置zones文件。
 
-####运行BlackHole:
+####5. 运行BlackHole:
 
 blackhole使用Java编写，可以使用于任何平台。支持shell的平台使用"blackhole.sh start"即可启动BlackHole。因为使用了53端口，所以需要具有root权限。
 
@@ -74,7 +79,7 @@ Windows下可以使用Java命令来启动。
 
 FOLDER为blackhole所在文件夹。
 
-####管理BlackHole：
+####6. 管理BlackHole：
 
 blackhole的监控模块使用了作者的另一个开源项目[wifesays](https://github.com/flashsword20/wifesays)。wifesays是一个简单的Java进程内TCP服务器，使用40310端口作为监控端口，基于TCP协议上封装了一些简单的文本命令。
 
@@ -104,6 +109,33 @@ COMMAND为命令。目前支持的命令为：
 	
 	blackhole.sh {start|reload|stop}
 
-####配置DNS服务器：
+####7. 配置DNS服务器：
 
-在blackhole生效前，需要将blackhole所在地址配置为第一位的DNS服务器，并将系统默认的DNS服务器地址配置到blackhole/config/blackhole.conf中。
+若某个系统希望使用blackhole作为DNS服务器，则在blackhole生效前，需要将blackhole所在地址配置为第一位的DNS服务器，并将系统默认的DNS服务器地址配置到blackhole/config/blackhole.conf中。
+
+####8. 性能：
+
+BlackHole存在两种工作模式："拦截"和"转发"。
+
+* #####拦截
+
+
+	当DNS客户端的请求在BlackHole中有对应zones配置时，则进入拦截模式。拦截模式下，BlackHole略低于BIND。
+
+* #####转发
+
+	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另一台DNS服务器，并将该DNS服务器的响应转发回客户端。此时性能降低为拦截模式的1/2。
+	
+#####基准测试
+
+在基准测试中，拦截模式下qps为BIND的40%，为15000，但仍然可以满足本地需要，以及大部分企业内网DNS服务器需要。
+
+基准测试结果见：
+[BlackHole vs BIND benchmark](https://github.com/flashsword20/blackhole/blob/master/benchmark)
+
+####稳定性
+
+目前BlackHole的稳定性未得到广泛证明，但是作者在不断更新中，欢迎使用并及时反馈。
+
+作者邮箱：
+yihua.huang#dianping.com
