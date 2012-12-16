@@ -7,7 +7,7 @@ Using queryperf in bind 9.8.2rc1
 
 -----------------------------------------------------
 
-blackhole only intercpet
+blackhole only intercpet(log off)
 
 Statistics:
 
@@ -19,24 +19,24 @@ Statistics:
   Queries lost:         0 queries
   Queries delayed(?):   0 queries
 
-  RTT max:         	0.037512 sec
-  RTT min:              0.000203 sec
-  RTT average:          0.005301 sec
-  RTT std deviation:    0.004635 sec
+  RTT max:          0.006314 sec
+  RTT min:              0.000041 sec
+  RTT average:          0.000488 sec
+  RTT std deviation:    0.000269 sec
   RTT out of range:     0 queries
 
   Percentage completed: 100.00%
   Percentage lost:        0.00%
 
-  Started at:           Sun Dec 16 08:45:15 2012
-  Finished at:          Sun Dec 16 08:45:18 2012
-  Ran for:              2.662502 seconds
+  Started at:           Sun Dec 16 09:20:54 2012
+  Finished at:          Sun Dec 16 09:20:54 2012
+  Ran for:              0.326342 seconds
 
-  Queries per second:   3755.865723 qps
-  
+  Queries per second:   30642.699990 qps
+
 -----------------------------------------------------
-
-blackhole + forward
+  
+blackhole + forward (log off)
 
 Statistics:
 
@@ -48,23 +48,23 @@ Statistics:
   Queries lost:         0 queries
   Queries delayed(?):   0 queries
 
-  RTT max:         	0.084637 sec
-  RTT min:              0.000691 sec
-  RTT average:          0.006217 sec
-  RTT std deviation:    0.005024 sec
+  RTT max:          0.022231 sec
+  RTT min:              0.000235 sec
+  RTT average:          0.001030 sec
+  RTT std deviation:    0.001212 sec
   RTT out of range:     0 queries
 
   Percentage completed: 100.00%
   Percentage lost:        0.00%
 
-  Started at:           Sun Dec 16 08:51:35 2012
-  Finished at:          Sun Dec 16 08:51:39 2012
-  Ran for:              3.126504 seconds
+  Started at:           Sun Dec 16 09:20:07 2012
+  Finished at:          Sun Dec 16 09:20:07 2012
+  Ran for:              0.639778 seconds
 
-  Queries per second:   3198.460645 qps
+  Queries per second:   15630.421803 qps
 
 -----------------------------------------------------  
-  
+
 BIND  
 
 Statistics:

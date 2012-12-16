@@ -53,9 +53,9 @@ public class UDPSocketMonitor extends Thread {
 				socket.receive(indp);
 				executorService.execute(new UDPConnection(socket, indp,
 						queryProcesser));
-
-				log.debug("UDP connection from " + indp.getSocketAddress());
-
+				if (log.isDebugEnabled()) {
+					log.debug("UDP connection from " + indp.getSocketAddress());
+				}
 			} catch (SocketException e) {
 
 				// This is usally thrown on shutdown

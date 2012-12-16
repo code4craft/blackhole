@@ -59,8 +59,10 @@ public class AnswerHandler implements Handler, InitializingBean {
 	public boolean handle(Message request, Message response) {
 		Record question = request.getQuestion();
 		String string = question.getName().toString();
-		logger.info("query \t" + Type.string(question.getType()) + "\t"
-				+ DClass.string(question.getDClass()) + "\t" + string);
+		if (logger.isInfoEnabled()) {
+			logger.info("query \t" + Type.string(question.getType()) + "\t"
+					+ DClass.string(question.getDClass()) + "\t" + string);
+		}
 		for (AnswerProvider answerProvider : answerProviders) {
 			String answer = answerProvider
 					.getAnswer(string, question.getType());
@@ -71,9 +73,12 @@ public class AnswerHandler implements Handler, InitializingBean {
 							.name(question.getName()).answer(answer)
 							.type(question.getType()).toRecord();
 					response.addRecord(record, Section.ANSWER);
-					logger.info("answer\t" + Type.string(question.getType())
-							+ "\t" + DClass.string(question.getDClass()) + "\t"
-							+ answer);
+					if (logger.isInfoEnabled()) {
+						logger.info("answer\t"
+								+ Type.string(question.getType()) + "\t"
+								+ DClass.string(question.getDClass()) + "\t"
+								+ answer);
+					}
 					ServerContext.setHasRecord(true);
 					return true;
 				} catch (Throwable e) {
