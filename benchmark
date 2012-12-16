@@ -1,0 +1,93 @@
+Benchmark
+
+-----------------------------------------------------
+-----------------------------------------------------
+
+Using queryperf in bind 9.8.2rc1
+
+-----------------------------------------------------
+
+blackhole only intercpet
+
+Statistics:
+
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         10000 queries
+  Queries completed:    10000 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:         	0.037512 sec
+  RTT min:              0.000203 sec
+  RTT average:          0.005301 sec
+  RTT std deviation:    0.004635 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Sun Dec 16 08:45:15 2012
+  Finished at:          Sun Dec 16 08:45:18 2012
+  Ran for:              2.662502 seconds
+
+  Queries per second:   3755.865723 qps
+  
+-----------------------------------------------------
+
+blackhole + forward
+
+Statistics:
+
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         10000 queries
+  Queries completed:    10000 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:         	0.084637 sec
+  RTT min:              0.000691 sec
+  RTT average:          0.006217 sec
+  RTT std deviation:    0.005024 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Sun Dec 16 08:51:35 2012
+  Finished at:          Sun Dec 16 08:51:39 2012
+  Ran for:              3.126504 seconds
+
+  Queries per second:   3198.460645 qps
+
+-----------------------------------------------------  
+  
+BIND  
+
+Statistics:
+
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         10000 queries
+  Queries completed:    10000 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:         	0.002164 sec
+  RTT min:              0.000050 sec
+  RTT average:          0.000511 sec
+  RTT std deviation:    0.000146 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Sun Dec 16 08:55:14 2012
+  Finished at:          Sun Dec 16 08:55:14 2012
+  Ran for:              0.271354 seconds
+
+  Queries per second:   36852.229928 qps

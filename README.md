@@ -3,7 +3,7 @@ BlackHole
 
 ####简介
 
-BlackHole是一个迷你型的DNS服务器。它的主要特色是可简单配置，将DNS请求导向某些特定IP。
+BlackHole是一个迷你型的DNS服务器。它的主要特色是可通过简单配置，将DNS请求导向某些特定IP。
 
 BlackHole最简单直接的用途是在开发和测试环境中将域名指向某个IP。与修改hosts文件相比，BlackHole配置更方便，并且支持通配符。
 
