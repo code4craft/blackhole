@@ -30,7 +30,7 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private String filename = Configure.FILE_PATH + "config/zones";
+	private String filename = Configure.FILE_PATH + "/config/zones";
 
 	@Autowired
 	private AnswerCacheContainer answerCacheContainer;
