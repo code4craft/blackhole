@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.monitor;
+package us.codecraft.blackhole.connector;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -12,7 +12,6 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import us.codecraft.blackhole.connection.UDPConnection;
 import us.codecraft.blackhole.server.MessageProcesser;
 
 /**

@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.server;
+package us.codecraft.blackhole.handler;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 /**
  * @author yihua.huang@dianping.com

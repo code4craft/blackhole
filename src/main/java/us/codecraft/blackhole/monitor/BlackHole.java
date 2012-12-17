@@ -14,6 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import us.codecraft.blackhole.config.Configure;
+import us.codecraft.blackhole.connector.UDPSocketMonitor;
 import us.codecraft.blackhole.utils.SpringLocator;
 
 /**
