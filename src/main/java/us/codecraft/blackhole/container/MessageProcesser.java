@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.server;
+package us.codecraft.blackhole.container;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

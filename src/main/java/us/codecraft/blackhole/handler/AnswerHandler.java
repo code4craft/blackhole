@@ -13,8 +13,8 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.server.RecordBuilder;
-import us.codecraft.blackhole.server.ServerContext;
+import us.codecraft.blackhole.container.RecordBuilder;
+import us.codecraft.blackhole.container.ServerContext;
 import us.codecraft.blackhole.zones.AnswerCacheContainer;
 import us.codecraft.blackhole.zones.AnswerProvider;
 import us.codecraft.blackhole.zones.PatternContainer;
@@ -59,8 +59,8 @@ public class AnswerHandler implements Handler, InitializingBean {
 	public boolean handle(Message request, Message response) {
 		Record question = request.getQuestion();
 		String string = question.getName().toString();
-		if (logger.isInfoEnabled()) {
-			logger.info("query \t" + Type.string(question.getType()) + "\t"
+		if (logger.isDebugEnabled()) {
+			logger.debug("query \t" + Type.string(question.getType()) + "\t"
 					+ DClass.string(question.getDClass()) + "\t" + string);
 		}
 		for (AnswerProvider answerProvider : answerProviders) {
@@ -73,8 +73,8 @@ public class AnswerHandler implements Handler, InitializingBean {
 							.name(question.getName()).answer(answer)
 							.type(question.getType()).toRecord();
 					response.addRecord(record, Section.ANSWER);
-					if (logger.isInfoEnabled()) {
-						logger.info("answer\t"
+					if (logger.isDebugEnabled()) {
+						logger.debug("answer\t"
 								+ Type.string(question.getType()) + "\t"
 								+ DClass.string(question.getDClass()) + "\t"
 								+ answer);

@@ -32,8 +32,10 @@ public class UDPForwardConnection {
 			logger.warn("The forward DNS server is not configured!");
 			return null;
 		}
-		logger.info("no record, forwarding to " + configure.getDnsHost() + ":"
-				+ Configure.DNS_PORT);
+		if (logger.isDebugEnabled()) {
+			logger.debug("no record, forwarding to " + configure.getDnsHost()
+					+ ":" + Configure.DNS_PORT);
+		}
 		DatagramChannel dc = null;
 		dc = DatagramChannel.open();
 		SocketAddress address = new InetSocketAddress(configure.getDnsHost(),

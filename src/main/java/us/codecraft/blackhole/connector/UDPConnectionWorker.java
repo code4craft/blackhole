@@ -7,21 +7,22 @@ import java.net.DatagramSocket;
 import org.apache.log4j.Logger;
 import org.xbill.DNS.Message;
 
-import us.codecraft.blackhole.server.MessageProcesser;
-import us.codecraft.blackhole.server.ServerContext;
+import us.codecraft.blackhole.container.MessageProcesser;
+import us.codecraft.blackhole.container.ServerContext;
 import us.codecraft.blackhole.utils.SpringLocator;
 
-public class UDPConnection implements Runnable {
+public class UDPConnectionWorker implements Runnable {
 
-	private static final Logger log = Logger.getLogger(UDPConnection.class);
+	private static final Logger logger = Logger
+			.getLogger(UDPConnectionWorker.class);
 
 	private final DatagramSocket socket;
 	private final DatagramPacket inDataPacket;
 
 	private MessageProcesser messageProcesser;
 
-	public UDPConnection(DatagramSocket socket, DatagramPacket inDataPacket,
-			MessageProcesser queryProcesser) {
+	public UDPConnectionWorker(DatagramSocket socket,
+			DatagramPacket inDataPacket, MessageProcesser queryProcesser) {
 		super();
 		this.socket = socket;
 		this.inDataPacket = inDataPacket;
@@ -36,17 +37,18 @@ public class UDPConnection implements Runnable {
 
 			try {
 				Message query = new Message(inDataPacket.getData());
+
 				Message responseMessage = messageProcesser.process(query);
 				ServerContext.setUdpSocket(socket);
-				if (!ServerContext.hasRecord()) {
+				if (ServerContext.hasRecord()) {
+					response = responseMessage.toWire();
+				} else {
 					UDPForwardConnection connection = SpringLocator
 							.getBean(UDPForwardConnection.class);
 					response = connection.forward(inDataPacket.getData());
 					if (response == null) {
 						return;
 					}
-				} else {
-					response = responseMessage.toWire();
 				}
 			} catch (IOException e) {
 			}
@@ -65,13 +67,13 @@ public class UDPConnection implements Runnable {
 
 			} catch (IOException e) {
 
-				log.debug("Error sending UDP response to "
+				logger.debug("Error sending UDP response to "
 						+ inDataPacket.getAddress() + ", " + e);
 			}
 
 		} catch (Throwable e) {
 
-			log.warn(
+			logger.warn(
 					"Error processing UDP connection from "
 							+ inDataPacket.getSocketAddress() + ", ", e);
 		}

@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import us.codecraft.blackhole.server.MessageProcesser;
+import us.codecraft.blackhole.container.MessageProcesser;
 
 /**
  * Authored by EagleDNS<a href="http://www.unlogic.se/projects/eagledns">
@@ -57,11 +57,8 @@ public class UDPSocketMonitor extends Thread {
 
 				indp.setLength(in.length);
 				socket.receive(indp);
-				executorService.execute(new UDPConnection(socket, indp,
+				executorService.execute(new UDPConnectionWorker(socket, indp,
 						queryProcesser));
-				if (log.isDebugEnabled()) {
-					log.debug("UDP connection from " + indp.getSocketAddress());
-				}
 			} catch (SocketException e) {
 
 				// This is usally thrown on shutdown
