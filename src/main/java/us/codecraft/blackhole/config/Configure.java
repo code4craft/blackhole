@@ -26,7 +26,7 @@ public class Configure implements ReloadAble, InitializingBean {
 
 	public static String FILE_PATH = "/usr/local/blackhole/";
 
-	private String filename = FILE_PATH + "config/blackhole.conf";
+	private String filename = FILE_PATH + "/config/blackhole.conf";
 
 	public final static int DNS_PORT = 53;
 
