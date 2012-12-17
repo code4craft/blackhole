@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.connection;
+package us.codecraft.blackhole.connector;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

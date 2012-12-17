@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
+import us.codecraft.blackhole.handler.Handler;
+import us.codecraft.blackhole.handler.HandlerManager;
+
 /**
  * Main logic of blackhole.<br/>
  * Process the DNS query and return the answer.

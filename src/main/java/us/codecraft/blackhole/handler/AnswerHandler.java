@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.server;
+package us.codecraft.blackhole.handler;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +13,8 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
+import us.codecraft.blackhole.server.RecordBuilder;
+import us.codecraft.blackhole.server.ServerContext;
 import us.codecraft.blackhole.zones.AnswerCacheContainer;
 import us.codecraft.blackhole.zones.AnswerProvider;
 import us.codecraft.blackhole.zones.PatternContainer;

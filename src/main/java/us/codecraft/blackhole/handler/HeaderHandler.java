@@ -1,10 +1,11 @@
-package us.codecraft.blackhole.server;
+package us.codecraft.blackhole.handler;
 
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Flags;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
+
 
 /**
  * @author yihua.huang@dianping.com
