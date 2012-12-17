@@ -13,8 +13,6 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.RecordBuilder;
-import us.codecraft.blackhole.ServerContext;
 import us.codecraft.blackhole.zones.AnswerCacheContainer;
 import us.codecraft.blackhole.zones.AnswerProvider;
 import us.codecraft.blackhole.zones.PatternContainer;

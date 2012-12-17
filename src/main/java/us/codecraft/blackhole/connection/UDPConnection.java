@@ -7,9 +7,9 @@ import java.net.DatagramSocket;
 import org.apache.log4j.Logger;
 import org.xbill.DNS.Message;
 
-import us.codecraft.blackhole.ServerContext;
-import us.codecraft.blackhole.SpringLocator;
 import us.codecraft.blackhole.server.MessageProcesser;
+import us.codecraft.blackhole.server.ServerContext;
+import us.codecraft.blackhole.utils.SpringLocator;
 
 public class UDPConnection implements Runnable {
 
@@ -18,14 +18,14 @@ public class UDPConnection implements Runnable {
 	private final DatagramSocket socket;
 	private final DatagramPacket inDataPacket;
 
-	private MessageProcesser queryProcesser;
+	private MessageProcesser messageProcesser;
 
 	public UDPConnection(DatagramSocket socket, DatagramPacket inDataPacket,
 			MessageProcesser queryProcesser) {
 		super();
 		this.socket = socket;
 		this.inDataPacket = inDataPacket;
-		this.queryProcesser = queryProcesser;
+		this.messageProcesser = queryProcesser;
 	}
 
 	public void run() {
@@ -36,7 +36,7 @@ public class UDPConnection implements Runnable {
 
 			try {
 				Message query = new Message(inDataPacket.getData());
-				Message responseMessage = queryProcesser.process(query);
+				Message responseMessage = messageProcesser.process(query);
 				ServerContext.setUdpSocket(socket);
 				if (!ServerContext.hasRecord()) {
 					UDPForwardConnection connection = SpringLocator

@@ -1,4 +1,4 @@
-package us.codecraft.blackhole;
+package us.codecraft.blackhole.config;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -1,4 +1,4 @@
-package us.codecraft.blackhole;
+package us.codecraft.blackhole.utils;
 
 /**
  * @author yihua.huang@dianping.com

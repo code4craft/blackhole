@@ -15,6 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import us.codecraft.blackhole.connection.UDPConnection;
 import us.codecraft.blackhole.server.MessageProcesser;
 
+/**
+ * Authored by EagleDNS<a href="http://www.unlogic.se/projects/eagledns">
+ * http://www.unlogic.se/projects/eagledns</a>
+ * 
+ * @author yihua.huang@dianping.com
+ * @date 2012-12-17
+ */
 public class UDPSocketMonitor extends Thread {
 
 	private Logger log = Logger.getLogger(this.getClass());

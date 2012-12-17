@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.Configure;
+import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ReloadAble;
 
 /**
