@@ -11,13 +11,9 @@
         <context:component-scan base-package="us.codecraft" />
         
         <beans>
-        	<bean name="tcpSocketMonitor" class="us.codecraft.blackhole.monitor.TCPSocketMonitor">
-        		<constructor-arg name="host" type="java.lang.String" value="0.0.0.0"></constructor-arg>
-        		<constructor-arg name="port" type="int" value="53"></constructor-arg>
-        	</bean>
         	<bean name="udpSocketMonitor" class="us.codecraft.blackhole.monitor.UDPSocketMonitor">
         		<constructor-arg name="host" type="java.lang.String" value="0.0.0.0"></constructor-arg>
-        		<constructor-arg name="port" type="int" value="53"></constructor-arg>
+        		<constructor-arg name="port" type="int" value="11153"></constructor-arg>
         	</bean>
         	<bean name="wifesaysTcpSocketMonitor" class="us.codecraft.wifesays.me.TCPSocketMonitor">
         		<constructor-arg name="host" type="java.lang.String" value="0.0.0.0"></constructor-arg>

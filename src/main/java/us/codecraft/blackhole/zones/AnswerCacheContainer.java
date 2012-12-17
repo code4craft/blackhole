@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Component;
 
-import us.codecraft.blackhole.DoubleKeyMap;
+import us.codecraft.blackhole.utils.DoubleKeyMap;
 
 /**
  * @author yihua.huang@dianping.com

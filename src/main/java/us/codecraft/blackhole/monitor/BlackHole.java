@@ -13,8 +13,8 @@ import org.apache.log4j.Logger;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
-import us.codecraft.blackhole.Configure;
-import us.codecraft.blackhole.SpringLocator;
+import us.codecraft.blackhole.config.Configure;
+import us.codecraft.blackhole.utils.SpringLocator;
 
 /**
  * 
@@ -28,13 +28,9 @@ public class BlackHole {
 
 	private static Logger logger = Logger.getLogger(BlackHole.class);
 
-	private TCPSocketMonitor tcpSocketMonitor;
-
 	private UDPSocketMonitor udpSocketMonitor;
 
 	public void start() throws UnknownHostException, IOException {
-		tcpSocketMonitor = SpringLocator.getBean(TCPSocketMonitor.class);
-		tcpSocketMonitor.start();
 		udpSocketMonitor = SpringLocator.getBean(UDPSocketMonitor.class);
 		udpSocketMonitor.start();
 	}

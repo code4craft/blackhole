@@ -1,8 +1,11 @@
-package us.codecraft.blackhole;
+package us.codecraft.blackhole.server;
 
 import java.net.DatagramSocket;
 
 /**
+ * Defines a set of methods that a handler uses to communicate with the main
+ * MessageProcessor.
+ * 
  * @author yihua.huang@dianping.com
  * @date Dec 15, 2012
  */
