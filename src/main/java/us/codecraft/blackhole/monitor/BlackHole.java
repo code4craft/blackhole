@@ -38,8 +38,7 @@ public class BlackHole {
 
 	private static void parseArgs(String[] args) throws ParseException {
 		Options options = new Options();
-		options.addOption(new Option("f", true, "input file"));
-		options.addOption(new Option("c", true, "simple command"));
+		options.addOption(new Option("d", true, "home path"));
 		CommandLineParser commandLineParser = new PosixParser();
 		CommandLine commandLine = commandLineParser.parse(options, args);
 		readOptions(commandLine);
@@ -47,7 +46,7 @@ public class BlackHole {
 
 	private static void readOptions(CommandLine commandLine) {
 		if (commandLine.hasOption("d")) {
-			String filename = commandLine.getOptionValue("f");
+			String filename = commandLine.getOptionValue("d");
 			Configure.FILE_PATH = filename;
 		}
 	}
