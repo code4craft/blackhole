@@ -18,6 +18,7 @@ import us.codecraft.blackhole.connector.UDPSocketMonitor;
 import us.codecraft.blackhole.utils.SpringLocator;
 
 /**
+ * Entry of application.
  * 
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012

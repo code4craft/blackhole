@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.server;
+package us.codecraft.blackhole.container;
 
 import java.net.UnknownHostException;
 
