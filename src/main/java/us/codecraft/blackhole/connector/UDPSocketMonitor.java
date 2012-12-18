@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import us.codecraft.blackhole.container.MessageProcesser;
+import us.codecraft.blackhole.container.QueryProcesser;
 
 /**
  * Authored by EagleDNS<a href="http://www.unlogic.se/projects/eagledns">
@@ -31,7 +31,7 @@ public class UDPSocketMonitor extends Thread {
 	private DatagramSocket socket;
 	private ExecutorService executorService = Executors.newFixedThreadPool(100);
 	@Autowired
-	private MessageProcesser queryProcesser;
+	private QueryProcesser queryProcesser;
 
 	public UDPSocketMonitor(String host, int port) throws IOException {
 		super();
