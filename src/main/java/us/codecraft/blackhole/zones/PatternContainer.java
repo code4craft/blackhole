@@ -19,6 +19,8 @@ import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ReloadAble;
 
 /**
+ * Read the config to patterns and process the request record.
+ * 
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
@@ -31,6 +33,8 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 	private Logger logger = Logger.getLogger(getClass());
 
 	private String filename = Configure.FILE_PATH + "/config/zones";
+
+	private static final String FAKE_MX_PREFIX = "mail.";
 
 	@Autowired
 	private AnswerCacheContainer answerCacheContainer;
@@ -66,10 +70,12 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 					}
 					String ip = items[0];
 					String pattern = items[1];
+					// ip format check
+					Address.getByAddress(ip);
 					patternsTemp.put(compileStringToPattern(pattern), ip);
 					logger.info("read config success:\t" + line);
 				} catch (Exception e) {
-					logger.warn("parse config line error:\t" + line, e);
+					logger.warn("parse config line error:\t" + line + "\t" + e);
 				}
 			}
 			patterns = patternsTemp;
@@ -103,6 +109,11 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 			Matcher matcher = entry.getKey().matcher(query);
 			if (matcher.matches()) {
 				String answer = entry.getValue();
+				if (type == Type.MX) {
+					String fakeMXHost = fakeMXHost(query);
+					answerCacheContainer.addCache(fakeMXHost, Type.A, answer);
+					return fakeMXHost;
+				}
 				answerCacheContainer.addCache(query, type, answer);
 				try {
 					answerCacheContainer.addCache(reverseIp(answer), Type.PTR,
@@ -114,6 +125,16 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * generate a fake MX host
+	 * 
+	 * @param domain
+	 * @return
+	 */
+	private String fakeMXHost(String domain) {
+		return FAKE_MX_PREFIX + domain;
 	}
 
 	private String reverseIp(String ip) {
