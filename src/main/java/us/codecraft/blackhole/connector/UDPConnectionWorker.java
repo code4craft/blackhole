@@ -5,11 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import org.apache.log4j.Logger;
-import org.xbill.DNS.Message;
 
-import us.codecraft.blackhole.container.MessageProcesser;
+import us.codecraft.blackhole.container.QueryProcesser;
 import us.codecraft.blackhole.container.ServerContext;
-import us.codecraft.blackhole.utils.SpringLocator;
 
 public class UDPConnectionWorker implements Runnable {
 
@@ -19,14 +17,14 @@ public class UDPConnectionWorker implements Runnable {
 	private final DatagramSocket socket;
 	private final DatagramPacket inDataPacket;
 
-	private MessageProcesser messageProcesser;
+	private QueryProcesser queryProcesser;
 
 	public UDPConnectionWorker(DatagramSocket socket,
-			DatagramPacket inDataPacket, MessageProcesser queryProcesser) {
+			DatagramPacket inDataPacket, QueryProcesser queryProcesser) {
 		super();
 		this.socket = socket;
 		this.inDataPacket = inDataPacket;
-		this.messageProcesser = queryProcesser;
+		this.queryProcesser = queryProcesser;
 	}
 
 	public void run() {
@@ -34,25 +32,11 @@ public class UDPConnectionWorker implements Runnable {
 		try {
 
 			byte[] response = null;
-
-			try {
-				Message query = new Message(inDataPacket.getData());
-
-				Message responseMessage = messageProcesser.process(query);
-				ServerContext.setUdpSocket(socket);
-				if (ServerContext.hasRecord()) {
-					response = responseMessage.toWire();
-				} else {
-					UDPForwardConnection connection = SpringLocator
-							.getBean(UDPForwardConnection.class);
-					response = connection.forward(inDataPacket.getData());
-					if (response == null) {
-						return;
-					}
-				}
-			} catch (IOException e) {
+			ServerContext.setUdpSocket(socket);
+			response = queryProcesser.process(inDataPacket.getData());
+			if (response == null) {
+				return;
 			}
-
 			DatagramPacket outdp = new DatagramPacket(response,
 					response.length, inDataPacket.getAddress(),
 					inDataPacket.getPort());
