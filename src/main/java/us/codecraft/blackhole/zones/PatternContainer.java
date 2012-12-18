@@ -107,7 +107,7 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 		}
 		for (Entry<Pattern, String> entry : patterns.entrySet()) {
 			Matcher matcher = entry.getKey().matcher(query);
-			if (matcher.matches()) {
+			if (matcher.find()) {
 				String answer = entry.getValue();
 				if (type == Type.MX) {
 					String fakeMXHost = fakeMXHost(query);

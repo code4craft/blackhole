@@ -16,7 +16,7 @@ import us.codecraft.wifesays.me.ReloadAble;
 @Component
 public class Configure implements ReloadAble, InitializingBean {
 
-	public final static long DEFAULT_TTL = 1000;
+	public final static long DEFAULT_TTL = 2000;
 
 	private long ttl = DEFAULT_TTL;
 
