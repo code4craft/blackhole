@@ -1,11 +1,17 @@
 package us.codecraft.blackhole.connector;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -23,12 +29,10 @@ import us.codecraft.blackhole.container.QueryProcesser;
  */
 public class UDPSocketMonitor extends Thread {
 
-	private Logger log = Logger.getLogger(this.getClass());
+	private Logger logger = Logger.getLogger(this.getClass());
 
 	private InetAddress addr;
 	private int port;
-	private static final short udpLength = 512;
-	private DatagramSocket socket;
 	private ExecutorService executorService = Executors.newFixedThreadPool(100);
 	@Autowired
 	private QueryProcesser queryProcesser;
@@ -38,49 +42,79 @@ public class UDPSocketMonitor extends Thread {
 		this.addr = Inet4Address.getByName(host);
 		this.port = port;
 
-		socket = new DatagramSocket(port, addr);
-
 		this.setDaemon(true);
 	}
 
 	@Override
 	public void run() {
 
-		log.info("Starting UDP socket monitor on address "
+		logger.info("Starting UDP socket monitor on address "
 				+ this.getAddressAndPort());
 
 		while (true) {
 			try {
 
-				byte[] in = new byte[udpLength];
-				DatagramPacket indp = new DatagramPacket(in, in.length);
+				Selector selector = Selector.open();
+				ByteBuffer byteBuffer = ByteBuffer.allocate(512);
+				DatagramChannel datagramChannel = DatagramChannel.open();
+				InetSocketAddress address = new InetSocketAddress(addr, port);
+				datagramChannel.socket().bind(address);
+				datagramChannel.configureBlocking(false);
+				SelectionKey selectionKey = datagramChannel.register(selector,
+						SelectionKey.OP_READ);
 
-				indp.setLength(in.length);
-				socket.receive(indp);
-				executorService.execute(new UDPConnectionWorker(socket, indp,
-						queryProcesser));
+				while (true) // 不断的轮询
+				{
+					selector.select();
+					Iterator<SelectionKey> selectionKeyIterator = selector
+							.selectedKeys().iterator();
+					while (selectionKeyIterator.hasNext()) {
+						selectionKey = (SelectionKey) selectionKeyIterator
+								.next();
+						selectionKeyIterator.remove();
+						processSelectionKey(selector, selectionKey, byteBuffer);
+					}
+				}
+
 			} catch (SocketException e) {
 
 				// This is usally thrown on shutdown
-				log.debug("SocketException thrown from UDP socket on address "
-						+ this.getAddressAndPort() + ", " + e);
+				logger.debug(
+						"SocketException thrown from UDP socket on address "
+								+ this.getAddressAndPort() + ", ", e);
 				break;
 			} catch (IOException e) {
 
-				log.info("IOException thrown by UDP socket on address "
+				logger.info("IOException thrown by UDP socket on address "
 						+ this.getAddressAndPort() + ", " + e);
 			}
 		}
-		log.info("UDP socket monitor on address " + getAddressAndPort()
+		logger.info("UDP socket monitor on address " + getAddressAndPort()
 				+ " shutdown");
 	}
 
-	public void closeSocket() throws IOException {
-
-		log.info("Closing TCP socket monitor on address " + getAddressAndPort()
-				+ "...");
-
-		this.socket.close();
+	private void processSelectionKey(Selector selector,
+			SelectionKey selectionKey, ByteBuffer byteBuffer)
+			throws IOException {
+		if (selectionKey.isReadable()) {
+			DatagramChannel datagramChannel = (DatagramChannel) selectionKey
+					.channel();
+			byteBuffer.clear();
+			SocketAddress clientAddress = datagramChannel.receive(byteBuffer);
+			byte[] copyOfRange = Arrays.copyOfRange(byteBuffer.array(), 0,
+					byteBuffer.remaining());
+			executorService.execute(new UDPConnectionWorker(copyOfRange,
+					clientAddress, selector, queryProcesser));
+		} else if (selectionKey.isWritable()) {
+			DatagramChannel datagramChannel = (DatagramChannel) selectionKey
+					.channel();
+			byte[] response = (byte[]) selectionKey.attachment();
+			byteBuffer.clear();
+			logger.debug("output " + response.length);
+			byteBuffer.put(response);
+			byteBuffer.flip();
+			datagramChannel.write(byteBuffer);
+		}
 	}
 
 	public String getAddressAndPort() {

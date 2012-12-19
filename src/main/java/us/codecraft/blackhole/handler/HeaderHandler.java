@@ -6,7 +6,6 @@ import org.xbill.DNS.Message;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 
-
 /**
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
@@ -22,7 +21,9 @@ public class HeaderHandler implements Handler {
 	 */
 	@Override
 	public boolean handle(Message request, Message response) {
-		response.getHeader().setFlag(Flags.QR);
+		if (request.getHeader().getFlag(Flags.QR)) {
+			response.getHeader().setFlag(Flags.QR);
+		}
 		if (request.getHeader().getFlag(Flags.RD)) {
 			response.getHeader().setFlag(Flags.RD);
 		}

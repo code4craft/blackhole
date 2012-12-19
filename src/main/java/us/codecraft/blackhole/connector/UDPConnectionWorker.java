@@ -1,65 +1,68 @@
 package us.codecraft.blackhole.connector;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.net.SocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.Selector;
 
 import org.apache.log4j.Logger;
 
 import us.codecraft.blackhole.container.QueryProcesser;
-import us.codecraft.blackhole.container.ServerContext;
 
 public class UDPConnectionWorker implements Runnable {
 
 	private static final Logger logger = Logger
 			.getLogger(UDPConnectionWorker.class);
 
-	private final DatagramSocket socket;
-	private final DatagramPacket inDataPacket;
+	private final byte[] query;
+	private final SocketAddress clientAddress;
+	private final Selector selector;
+	public static final short DEFAULT_UDP_LENGTH = 60;
 
 	private QueryProcesser queryProcesser;
 
-	public UDPConnectionWorker(DatagramSocket socket,
-			DatagramPacket inDataPacket, QueryProcesser queryProcesser) {
+	/**
+	 * @param query
+	 * @param clientAddress
+	 * @param selector
+	 * @param queryProcesser
+	 */
+	public UDPConnectionWorker(byte[] query, SocketAddress clientAddress,
+			Selector selector, QueryProcesser queryProcesser) {
 		super();
-		this.socket = socket;
-		this.inDataPacket = inDataPacket;
+		this.query = query;
+		this.clientAddress = clientAddress;
+		this.selector = selector;
 		this.queryProcesser = queryProcesser;
+	}
+
+	@SuppressWarnings("unused")
+	private <T> String printArray(byte[] copyOfRange) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		for (byte t : copyOfRange) {
+			builder.append(String.valueOf(t));
+			builder.append(",");
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	public void run() {
 
+		byte[] response = null;
 		try {
-
-			byte[] response = null;
-			ServerContext.setUdpSocket(socket);
-			response = queryProcesser.process(inDataPacket.getData());
-			if (response == null) {
-				return;
-			}
-			DatagramPacket outdp = new DatagramPacket(response,
-					response.length, inDataPacket.getAddress(),
-					inDataPacket.getPort());
-
-			outdp.setData(response);
-			outdp.setLength(response.length);
-			outdp.setAddress(inDataPacket.getAddress());
-			outdp.setPort(inDataPacket.getPort());
-
-			try {
-				socket.send(outdp);
-
-			} catch (IOException e) {
-
-				logger.debug("Error sending UDP response to "
-						+ inDataPacket.getAddress() + ", " + e);
-			}
-
+			ByteBuffer byteBuffer = ByteBuffer.allocate(DEFAULT_UDP_LENGTH);
+			response = queryProcesser.process(query);
+			DatagramChannel datagramChannel1 = DatagramChannel.open();
+			byteBuffer.clear();
+			logger.debug("output " + response.length);
+			byteBuffer.put(response);
+			byteBuffer.flip();
+			datagramChannel1.configureBlocking(false);
+			datagramChannel1.send(byteBuffer, clientAddress);
 		} catch (Throwable e) {
-
-			logger.warn(
-					"Error processing UDP connection from "
-							+ inDataPacket.getSocketAddress() + ", ", e);
+			logger.warn("worker exception", e);
 		}
 	}
 }
