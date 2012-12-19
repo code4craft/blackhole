@@ -33,7 +33,7 @@ public class UDPSocketMonitor extends Thread {
 
 	private InetAddress addr;
 	private int port;
-	private ExecutorService executorService = Executors.newFixedThreadPool(100);
+	private ExecutorService executorService = Executors.newFixedThreadPool(50);
 	@Autowired
 	private QueryProcesser queryProcesser;
 
@@ -110,7 +110,6 @@ public class UDPSocketMonitor extends Thread {
 					.channel();
 			byte[] response = (byte[]) selectionKey.attachment();
 			byteBuffer.clear();
-			logger.debug("output " + response.length);
 			byteBuffer.put(response);
 			byteBuffer.flip();
 			datagramChannel.write(byteBuffer);

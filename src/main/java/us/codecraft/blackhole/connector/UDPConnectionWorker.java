@@ -17,7 +17,7 @@ public class UDPConnectionWorker implements Runnable {
 	private final byte[] query;
 	private final SocketAddress clientAddress;
 	private final Selector selector;
-	public static final short DEFAULT_UDP_LENGTH = 60;
+	public static final short DEFAULT_UDP_LENGTH = 512;
 
 	private QueryProcesser queryProcesser;
 
@@ -56,7 +56,6 @@ public class UDPConnectionWorker implements Runnable {
 			response = queryProcesser.process(query);
 			DatagramChannel datagramChannel1 = DatagramChannel.open();
 			byteBuffer.clear();
-			logger.debug("output " + response.length);
 			byteBuffer.put(response);
 			byteBuffer.flip();
 			datagramChannel1.configureBlocking(false);
