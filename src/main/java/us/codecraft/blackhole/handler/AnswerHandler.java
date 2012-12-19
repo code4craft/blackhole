@@ -17,7 +17,7 @@ import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.container.RecordBuilder;
 import us.codecraft.blackhole.container.ServerContext;
-import us.codecraft.blackhole.zones.AnswerCacheContainer;
+import us.codecraft.blackhole.zones.AnswerContainer;
 import us.codecraft.blackhole.zones.AnswerProvider;
 import us.codecraft.blackhole.zones.PatternContainer;
 
@@ -33,7 +33,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 	private Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
-	private AnswerCacheContainer answerCacheContainer;
+	private AnswerContainer answerCacheContainer;
 
 	@Autowired
 	private PatternContainer patternContainer;
