@@ -6,7 +6,7 @@ export PATH
 case "$1" in
   start)
     echo "Starting blackhole"
-    java -jar $HOME_DIR/blackhole.jar -d$HOME_DIR >> $HOME_DIR/log &
+    java -jar $HOME_DIR/blackhole.jar -d"$HOME_DIR">> $HOME_DIR/log &
     ;;
   stop)
     echo "Stopping blackhole"
@@ -20,9 +20,11 @@ case "$1" in
     vi $HOME_DIR/config/zones
     java -jar $HOME_DIR/wifesays.jar -creload > /dev/null
     ;;
+  config)
+    vi $HOME_DIR/config/blackhole.conf
+    java -jar $HOME_DIR/wifesays.jar -creload > /dev/null
+    ;;
   *)
-    echo "Usage: $0 {start|stop|reload|zones}"
+    echo "Usage: $0 {start|stop|reload|zones|config}"
     ;;
 esac
-
-exit 0

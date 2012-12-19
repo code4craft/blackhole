@@ -3,6 +3,7 @@ package us.codecraft.blackhole.config;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -33,6 +34,15 @@ public class Configure implements ReloadAble, InitializingBean {
 	private Logger logger = Logger.getLogger(getClass());
 
 	private String dnsHost;
+
+	private boolean useCache;
+
+	/**
+	 * @return the useCache
+	 */
+	public boolean isUseCache() {
+		return useCache;
+	}
 
 	/**
 	 * 
@@ -142,7 +152,8 @@ public class Configure implements ReloadAble, InitializingBean {
 			ttl = Integer.parseInt(value);
 		} else if (key.equalsIgnoreCase("dns")) {
 			dnsHost = value;
+		} else if (key.equalsIgnoreCase("cache")) {
+			useCache = BooleanUtils.toBooleanObject(value);
 		}
 	}
-
 }

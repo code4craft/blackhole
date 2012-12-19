@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
+import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.connector.UDPForwardConnection;
 import us.codecraft.blackhole.handler.Handler;
 import us.codecraft.blackhole.handler.HandlerManager;
@@ -30,10 +31,16 @@ public class QueryProcesser {
 	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
 
+	@Autowired
+	private CacheManager cacheManager;
+
 	public byte[] process(byte[] queryData) throws IOException {
 
-		byte[] response = null;
 		Message query = new Message(queryData);
+		byte[] cache = cacheManager.getFromCache(query);
+		if (cache != null) {
+			return cache;
+		}
 		Message responseMessage = new Message(query.getHeader().getID());
 		for (Handler handler : handlerManager.getHandlers()) {
 			boolean handle = handler.handle(query, responseMessage);
@@ -41,6 +48,7 @@ public class QueryProcesser {
 				break;
 			}
 		}
+		byte[] response = null;
 		if (ServerContext.hasRecord()) {
 			response = responseMessage.toWire();
 		} else {
@@ -48,6 +56,7 @@ public class QueryProcesser {
 			if (response == null) {
 				return null;
 			}
+			cacheManager.setToCache(query, response);
 		}
 
 		return response;

@@ -48,7 +48,6 @@ public class UDPConnectionWorker implements Runnable {
 
 			try {
 				socket.send(outdp);
-
 			} catch (IOException e) {
 
 				logger.debug("Error sending UDP response to "
