@@ -37,7 +37,7 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 	private static final String FAKE_MX_PREFIX = "mail.";
 
 	@Autowired
-	private AnswerCacheContainer answerCacheContainer;
+	private AnswerContainer answerContainer;
 
 	/*
 	 * (non-Javadoc)
@@ -111,12 +111,12 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 				String answer = entry.getValue();
 				if (type == Type.MX) {
 					String fakeMXHost = fakeMXHost(query);
-					answerCacheContainer.addCache(fakeMXHost, Type.A, answer);
+					answerContainer.addCache(fakeMXHost, Type.A, answer);
 					return fakeMXHost;
 				}
-				answerCacheContainer.addCache(query, type, answer);
+				answerContainer.addCache(query, type, answer);
 				try {
-					answerCacheContainer.addCache(reverseIp(answer), Type.PTR,
+					answerContainer.addCache(reverseIp(answer), Type.PTR,
 							query);
 				} catch (Throwable e) {
 					logger.info("not a ip, ignored");

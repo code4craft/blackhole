@@ -11,11 +11,11 @@ import us.codecraft.blackhole.utils.DoubleKeyMap;
  * @date Dec 14, 2012
  */
 @Component
-public class AnswerCacheContainer implements AnswerProvider {
+public class AnswerContainer implements AnswerProvider {
 
 	private DoubleKeyMap<String, Integer, String> cache;
 
-	public AnswerCacheContainer() {
+	public AnswerContainer() {
 		cache = new DoubleKeyMap<String, Integer, String>(
 				ConcurrentHashMap.class);
 	}
