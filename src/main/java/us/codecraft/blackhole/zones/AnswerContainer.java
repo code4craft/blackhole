@@ -32,7 +32,7 @@ public class AnswerContainer implements AnswerProvider {
 		return cache.get(query, type);
 	}
 
-	public void addCache(String query, int type, String answer) {
+	public void add(String query, int type, String answer) {
 		cache.put(query, type, answer);
 	}
 

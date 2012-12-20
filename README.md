@@ -146,12 +146,12 @@ BlackHole存在两种工作模式："拦截"和"转发"。
 	
 #####基准测试
 
-在基准测试中，拦截模式下qps为BIND的40%，为15000，但仍然可以满足本地需要，以及大部分企业内网DNS服务器需要。
+在基准测试中，拦截模式下不开启cache，qps为BIND的50%，为17000，如果开启cache，对于有缓存的数据达到40000qps，优于BIND，已经能满足企业内网需要。
 
 基准测试结果见：
 [BlackHole vs BIND benchmark](https://github.com/flashsword20/blackhole/blob/master/benchmark)
 
-####稳定性
+####9. 稳定性
 
 目前BlackHole的稳定性未得到广泛证明，但是作者在不断更新中，欢迎使用并及时反馈。
 

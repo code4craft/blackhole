@@ -56,8 +56,8 @@ public class QueryProcesser {
 			if (response == null) {
 				return null;
 			}
-			cacheManager.setToCache(query, response);
 		}
+		cacheManager.setToCache(query, response);
 
 		return response;
 	}
