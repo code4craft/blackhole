@@ -6,7 +6,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
-import org.xbill.DNS.Record;
 
 import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.connector.UDPForwardConnection;
@@ -53,8 +52,7 @@ public class QueryProcesser {
 		if (ServerContext.hasRecord()) {
 			response = responseMessage.toWire();
 		} else {
-			Record question = query.getQuestion();
-			response = forwardConnection.forward(question, queryData);
+			response = forwardConnection.forward(queryData);
 			if (response == null) {
 				return null;
 			}

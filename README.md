@@ -41,13 +41,26 @@ BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/z
 	DNS=192.168.0.1
 	
 目前可配置项如下：
-
-* **TTL**
-
-	(time to live，DNS过期时间，单位是秒)。
+
 * **DNS**
 	
-	BlackHole并没有递归查找DNS的功能，如果遇到未在本地配置的域名请求，它会做一个UDP代理的工作，将请求发向一个已有的DNS服务器，并返回这个DNS服务器的结果。**如果你只希望用BlackHole做某些域名的拦截，需要对这个DNS服务器的地址进行配置。**
+	BlackHole并没有递归查找DNS的功能，如果遇到未在本地配置的域名请求，它会做一个UDP代理的工作，将请求发向一个已有的DNS服务器，并返回这个DNS服务器的结果。**如果你希望用BlackHole做某些域名的拦截，同时不影响其他域名的访问，需要对这个DNS服务器的地址进行配置。**
+
+* **DNS_TIMEOUT**
+	
+	请求外部DNS的超时时间，单位为毫秒。
+	
+* **CACHE**
+	
+	转发模式下，是否对DNS结果进行缓存。默认是true。缓存的失效时间由DNS结果的TLL值决定。缓存的保存时间不会大于DNS结果的最小TTL值。
+	
+* **TTL**
+
+	(time to live，DNS过期时间，单位是秒)。
+	
+* **LOG**
+	
+	日志的等级。可选配置为('DEBUG','INFO','WARN')，对应log4j的等级。开启'DEBUG'级别的日志会显示每次请求和应答，但是会大大降低吞吐量。
 
 #####zones
 
@@ -98,6 +111,11 @@ COMMAND为命令。目前支持的命令为：
 * shutdown
 
 	退出。
+
+* clear_cache
+
+	清除缓存(仅当使用缓存时有效)。
+
 	
 例如：
 
@@ -107,7 +125,7 @@ COMMAND为命令。目前支持的命令为：
 	
 支持SHELL的系统可以使用以下命令快速操作：
 	
-	blackhole.sh {start|reload|stop}
+	blackhole.sh {start|stop|restart|reload|zones|config}
 
 ####7. 配置DNS服务器：
 
@@ -124,7 +142,7 @@ BlackHole存在两种工作模式："拦截"和"转发"。
 
 * #####转发
 
-	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另一台DNS服务器，并将该DNS服务器的响应转发回客户端。此时性能降低为拦截模式的1/2。
+	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另一台DNS服务器，并将该DNS服务器的响应转发回客户端。此时性能降低为拦截模式的1/2。可以选择对DNS服务器的响应进行缓存，那么下次请求的开销会降低。
 	
 #####基准测试
 
