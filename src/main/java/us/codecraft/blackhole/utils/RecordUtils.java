@@ -1,6 +1,7 @@
 package us.codecraft.blackhole.utils;
 
 import org.xbill.DNS.Record;
+import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.config.Configure;
 
@@ -37,6 +38,7 @@ public class RecordUtils {
 	}
 
 	public static String recordKey(Record record) {
-		return record.getName().toString() + "_" + record.getType();
+		return record.getName().toString() + "_"
+				+ Type.string(record.getType());
 	}
 }
