@@ -35,4 +35,8 @@ public class RecordUtils {
 		}
 		return min;
 	}
+
+	public static String recordKey(Record record) {
+		return record.getName().toString() + "_" + record.getType();
+	}
 }
