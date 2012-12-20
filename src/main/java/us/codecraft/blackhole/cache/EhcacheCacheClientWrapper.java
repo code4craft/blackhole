@@ -2,11 +2,13 @@ package us.codecraft.blackhole.cache;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,6 +116,12 @@ public class EhcacheCacheClientWrapper extends StandReadyWorker implements
 				return "CACHE NOT USED";
 			}
 			Cache cache = manager.getCache(CACHE_NAME);
+			@SuppressWarnings("unchecked")
+			List<String> keys = cache.getKeys();
+			logger.info(keys.size() + " cached records cleared");
+			if (logger.isDebugEnabled()) {
+				logger.debug("[" + StringUtils.join(keys, ",") + "]");
+			}
 			cache.removeAll();
 			return "REMOVE SUCCESS";
 		}

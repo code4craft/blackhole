@@ -15,8 +15,10 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.config.Configure;
+import us.codecraft.blackhole.utils.RecordUtils;
 
 /**
  * 
@@ -44,7 +46,7 @@ public class UDPForwardConnection {
 	@Autowired
 	private Configure configure;
 
-	public byte[] forward(final byte[] query) {
+	public byte[] forward(Message query, final byte[] queryBytes) {
 		if (configure.getDnsHost() == null) {
 			logger.warn("The forward DNS server is not configured!");
 			return null;
@@ -54,7 +56,7 @@ public class UDPForwardConnection {
 		FutureTask<Object> future = new FutureTask<Object>(
 				new Callable<Object>() {
 					public Object call() throws IOException {
-						return forward0(query);
+						return forward0(queryBytes);
 					}
 				});
 		getExecutor().execute(future);
@@ -65,7 +67,8 @@ public class UDPForwardConnection {
 			// when TimeoutException is thrown,the thread will suspend
 			// until future.cancel() invoked.
 			future.cancel(true);
-			logger.warn("forward error " + e);
+			logger.warn("forward " + RecordUtils.recordKey(query.getQuestion())
+					+ " error " + e);
 		}
 		return result;
 	}

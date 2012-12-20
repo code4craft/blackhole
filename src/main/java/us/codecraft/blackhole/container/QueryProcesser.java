@@ -52,7 +52,7 @@ public class QueryProcesser {
 		if (ServerContext.hasRecord()) {
 			response = responseMessage.toWire();
 		} else {
-			response = forwardConnection.forward(queryData);
+			response = forwardConnection.forward(query, queryData);
 			if (response == null) {
 				return null;
 			}
