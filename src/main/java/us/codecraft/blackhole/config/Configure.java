@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import us.codecraft.wifesays.me.ReloadAble;
 public class Configure implements ReloadAble, InitializingBean {
 
 	public final static long DEFAULT_TTL = 2000;
+	public final static int DEFAULT_DNS_TIMEOUT = 2000;
 
 	private long ttl = DEFAULT_TTL;
 
@@ -34,6 +36,11 @@ public class Configure implements ReloadAble, InitializingBean {
 	private Logger logger = Logger.getLogger(getClass());
 
 	private String dnsHost;
+
+	private int dnsTimeOut = DEFAULT_DNS_TIMEOUT;
+
+	@SuppressWarnings("unused")
+	private String loggerLevel;
 
 	private boolean useCache;
 
@@ -135,8 +142,10 @@ public class Configure implements ReloadAble, InitializingBean {
 					}
 					String key = items[0];
 					String value = items[1];
-					config(key, value);
-					logger.info("read config success:\t" + line);
+					boolean configed = config(key, value);
+					if (configed) {
+						logger.info("read config success:\t" + line);
+					}
 				} catch (Exception e) {
 					logger.warn("parse config line error:\t" + line, e);
 				}
@@ -147,13 +156,43 @@ public class Configure implements ReloadAble, InitializingBean {
 		}
 	}
 
-	private void config(String key, String value) {
+	private void configLogLevel(String value) {
+		Logger rootLogger = Logger.getRootLogger();
+		if ("debug".equalsIgnoreCase(value)) {
+			rootLogger.setLevel(Level.DEBUG);
+		} else if ("info".equalsIgnoreCase(value)) {
+			rootLogger.setLevel(Level.INFO);
+		} else if ("warn".equalsIgnoreCase(value)) {
+			rootLogger.setLevel(Level.WARN);
+		} else {
+			// unsupported level
+			return;
+		}
+		loggerLevel = value;
+
+	}
+
+	/**
+	 * @return the dnsTimeOut
+	 */
+	public int getDnsTimeOut() {
+		return dnsTimeOut;
+	}
+
+	private boolean config(String key, String value) {
 		if (key.equalsIgnoreCase("ttl")) {
 			ttl = Integer.parseInt(value);
 		} else if (key.equalsIgnoreCase("dns")) {
 			dnsHost = value;
 		} else if (key.equalsIgnoreCase("cache")) {
 			useCache = BooleanUtils.toBooleanObject(value);
+		} else if (key.equalsIgnoreCase("log")) {
+			configLogLevel(value);
+		} else if (key.equalsIgnoreCase("dns_timeout")) {
+			dnsTimeOut = Integer.parseInt(value);
+		} else {
+			return false;
 		}
+		return true;
 	}
 }

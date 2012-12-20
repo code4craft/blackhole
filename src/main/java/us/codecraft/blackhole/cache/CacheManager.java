@@ -46,7 +46,7 @@ public class CacheManager implements InitializingBean {
 	}
 
 	private String getCacheKey(Record question) {
-		return question.getName().toString() + "_" + question.getType();
+		return RecordUtils.recordKey(question);
 	}
 
 	private int minTTL(Message response) {

@@ -5,12 +5,19 @@ export PATH
 
 case "$1" in
   start)
-    echo "Starting blackhole"
+    echo "Starting blackhole..."
     java -jar $HOME_DIR/blackhole.jar -d"$HOME_DIR">> $HOME_DIR/log &
     ;;
   stop)
     echo "Stopping blackhole"
     java -jar $HOME_DIR/wifesays.jar -cshutdown > /dev/null
+    ;;
+  restart)
+    echo "Stopping blackhole..."
+    java -jar $HOME_DIR/wifesays.jar -cshutdown > /dev/null;
+    sleep 2;
+    echo "Starting blackhole..."
+    java -jar $HOME_DIR/blackhole.jar -d"$HOME_DIR">> $HOME_DIR/log &
     ;;
   reload)
     echo "Reloading blackhole"
@@ -25,6 +32,8 @@ case "$1" in
     java -jar $HOME_DIR/wifesays.jar -creload > /dev/null
     ;;
   *)
-    echo "Usage: $0 {start|stop|reload|zones|config}"
+    echo "Usage: $0 {start|stop|reload|zones|config|restart}"
     ;;
 esac
+
+exit 0
