@@ -64,6 +64,7 @@ public class UDPForwardConnection {
 			result = (byte[]) future.get(configure.getDnsTimeOut(),
 					TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
+			future.cancel(true);
 			logger.warn("forward error " + e);
 		}
 		return result;
