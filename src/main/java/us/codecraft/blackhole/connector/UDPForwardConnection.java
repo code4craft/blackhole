@@ -19,8 +19,6 @@ import org.springframework.stereotype.Component;
 import us.codecraft.blackhole.config.Configure;
 
 /**
- * WTF ugly concurrent coding style! Fortunately it works!<br/>
- * 
  * 
  * @author yihua.huang@dianping.com
  * @date 2012-12-15
@@ -64,6 +62,8 @@ public class UDPForwardConnection {
 			result = (byte[]) future.get(configure.getDnsTimeOut(),
 					TimeUnit.MILLISECONDS);
 		} catch (Exception e) {
+			// when TimeoutException is thrown,the thread will suspend
+			// until future.cancel() invoked.
 			future.cancel(true);
 			logger.warn("forward error " + e);
 		}

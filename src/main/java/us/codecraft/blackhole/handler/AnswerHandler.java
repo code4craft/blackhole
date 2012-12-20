@@ -33,7 +33,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 	private Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
-	private AnswerContainer answerCacheContainer;
+	private AnswerContainer answerContainer;
 
 	@Autowired
 	private PatternContainer patternContainer;
@@ -47,7 +47,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		answerProviders = new LinkedList<AnswerProvider>();
-		answerProviders.add(answerCacheContainer);
+		answerProviders.add(answerContainer);
 		answerProviders.add(patternContainer);
 	}
 

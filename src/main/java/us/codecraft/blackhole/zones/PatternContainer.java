@@ -111,13 +111,11 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 				String answer = entry.getValue();
 				if (type == Type.MX) {
 					String fakeMXHost = fakeMXHost(query);
-					answerContainer.addCache(fakeMXHost, Type.A, answer);
+					answerContainer.add(fakeMXHost, Type.A, answer);
 					return fakeMXHost;
 				}
-				answerContainer.addCache(query, type, answer);
 				try {
-					answerContainer.addCache(reverseIp(answer), Type.PTR,
-							query);
+					answerContainer.add(reverseIp(answer), Type.PTR, query);
 				} catch (Throwable e) {
 					logger.info("not a ip, ignored");
 				}
