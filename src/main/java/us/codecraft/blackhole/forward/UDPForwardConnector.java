@@ -1,7 +1,6 @@
-package us.codecraft.blackhole.connector;
+package us.codecraft.blackhole.forward;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -26,13 +25,16 @@ import us.codecraft.blackhole.utils.RecordUtils;
  * @date 2012-12-15
  */
 @Component
-public class UDPForwardConnection {
+public class UDPForwardConnector {
 
-	public static UDPForwardConnection INSTANCE = new UDPForwardConnection();
+	public static UDPForwardConnector INSTANCE = new UDPForwardConnector();
 
 	private Logger logger = Logger.getLogger(getClass());
 
 	private volatile ExecutorService executor;
+
+	@Autowired
+	private DNSHostsContainer dnsHostsContainer;
 
 	private ExecutorService getExecutor() {
 		if (executor == null) {
@@ -46,9 +48,19 @@ public class UDPForwardConnection {
 	@Autowired
 	private Configure configure;
 
-	public byte[] forward(Message query, final byte[] queryBytes) {
-		if (configure.getDnsHost() == null) {
-			logger.warn("The forward DNS server is not configured!");
+	public byte[] forward(final byte[] queryBytes, Message query) {
+		return forwardToAddress(queryBytes, query, dnsHostsContainer.getHost());
+	}
+
+	public byte[] forwardDummy(final byte[] queryBytes,
+			final SocketAddress address) {
+		return forwardToAddress(queryBytes, null, address);
+	}
+
+	private byte[] forwardToAddress(final byte[] queryBytes, Message query,
+			final SocketAddress address) {
+		if (address == null) {
+			logger.warn("None of forward DNS servers are valid!");
 			return null;
 		}
 		byte[] result = null;
@@ -56,7 +68,7 @@ public class UDPForwardConnection {
 		FutureTask<Object> future = new FutureTask<Object>(
 				new Callable<Object>() {
 					public Object call() throws IOException {
-						return forward0(queryBytes);
+						return forward0(queryBytes, address);
 					}
 				});
 		getExecutor().execute(future);
@@ -67,23 +79,26 @@ public class UDPForwardConnection {
 			// when TimeoutException is thrown,the thread will suspend
 			// until future.cancel() invoked.
 			future.cancel(true);
-			logger.warn("forward " + RecordUtils.recordKey(query.getQuestion())
-					+ " error " + e);
+			dnsHostsContainer.registerFail(address);
+			if (query != null) {
+				logger.warn("forward "
+						+ RecordUtils.recordKey(query.getQuestion())
+						+ " error " + e);
+			} else {
+				logger.warn("forward error " + e);
+			}
 		}
 		return result;
 	}
 
-	private byte[] forward0(byte[] query) throws IOException {
+	private byte[] forward0(byte[] query, SocketAddress address)
+			throws IOException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("no record, forwarding to " + configure.getDnsHost()
-					+ ":" + Configure.DNS_PORT);
+			logger.debug("no record, forwarding to " + address);
 		}
 		DatagramChannel dc = null;
 		dc = DatagramChannel.open();
-		SocketAddress address = new InetSocketAddress(configure.getDnsHost(),
-				Configure.DNS_PORT);
 		ByteBuffer bb = ByteBuffer.allocate(512);
-
 		bb.clear();
 		bb.put(query);
 		bb.flip();

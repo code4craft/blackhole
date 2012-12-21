@@ -13,10 +13,10 @@ import us.codecraft.blackhole.utils.DoubleKeyMap;
 @Component
 public class AnswerContainer implements AnswerProvider {
 
-	private DoubleKeyMap<String, Integer, String> cache;
+	private DoubleKeyMap<String, Integer, String> container;
 
 	public AnswerContainer() {
-		cache = new DoubleKeyMap<String, Integer, String>(
+		container = new DoubleKeyMap<String, Integer, String>(
 				ConcurrentHashMap.class);
 	}
 
@@ -29,11 +29,11 @@ public class AnswerContainer implements AnswerProvider {
 	 */
 	@Override
 	public String getAnswer(String query, int type) {
-		return cache.get(query, type);
+		return container.get(query, type);
 	}
 
 	public void add(String query, int type, String answer) {
-		cache.put(query, type, answer);
+		container.put(query, type, answer);
 	}
 
 }

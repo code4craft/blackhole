@@ -17,6 +17,12 @@ public class UDPPackage implements Serializable {
 		this.bytes = bytes;
 	}
 
+	/**
+	 * copy on write
+	 * 
+	 * @param version
+	 * @return
+	 */
 	public byte[] getBytes(int version) {
 		byte[] bytes = Arrays.copyOf(this.bytes, this.bytes.length);
 		bytes[1] = (byte) (version & MASK);
@@ -24,6 +30,12 @@ public class UDPPackage implements Serializable {
 		return bytes;
 	}
 
+	/**
+	 * block
+	 * 
+	 * @param version
+	 * @return
+	 */
 	public synchronized byte[] getBytesSync(int version) {
 		byte[] bytes = Arrays.copyOf(this.bytes, this.bytes.length);
 		bytes[1] = (byte) (version & MASK);
