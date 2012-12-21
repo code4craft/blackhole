@@ -11,7 +11,7 @@
   />
   
   <cache name="DNS"
-    maxElementsInMemory="20000"
+    maxElementsInMemory="5000"
     eternal="true"
     overflowToDisk="false"
     diskPersistent="false"

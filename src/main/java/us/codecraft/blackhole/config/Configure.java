@@ -2,13 +2,16 @@ package us.codecraft.blackhole.config;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.net.InetSocketAddress;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import us.codecraft.blackhole.forward.DNSHostsContainer;
 import us.codecraft.wifesays.me.ReloadAble;
 
 /**
@@ -20,22 +23,20 @@ public class Configure implements ReloadAble, InitializingBean {
 
 	public final static long DEFAULT_TTL = 2000;
 	public final static int DEFAULT_DNS_TIMEOUT = 2000;
-
-	private long ttl = DEFAULT_TTL;
+	public static String FILE_PATH = "/usr/local/blackhole/";
 
 	public final static int DEFAULT_MX_PRIORY = 10;
 
+	@Autowired
+	private DNSHostsContainer dnsHostsContainer;
+	private long ttl = DEFAULT_TTL;
 	private int mxPriory = DEFAULT_MX_PRIORY;
-
-	public static String FILE_PATH = "/usr/local/blackhole/";
 
 	private String filename = FILE_PATH + "/config/blackhole.conf";
 
 	public final static int DNS_PORT = 53;
 
 	private Logger logger = Logger.getLogger(getClass());
-
-	private String dnsHost;
 
 	private int dnsTimeOut = DEFAULT_DNS_TIMEOUT;
 
@@ -89,21 +90,6 @@ public class Configure implements ReloadAble, InitializingBean {
 		this.mxPriory = mxPriory;
 	}
 
-	/**
-	 * @return the dnsHost
-	 */
-	public String getDnsHost() {
-		return dnsHost;
-	}
-
-	/**
-	 * @param dnsHost
-	 *            the dnsHost to set
-	 */
-	public void setDnsHost(String dnsHost) {
-		this.dnsHost = dnsHost;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -123,6 +109,7 @@ public class Configure implements ReloadAble, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		readConfig(filename);
+
 	}
 
 	public void readConfig(String filename) {
@@ -130,6 +117,7 @@ public class Configure implements ReloadAble, InitializingBean {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(
 					filename));
 			String line = null;
+			dnsHostsContainer.clearHosts();
 			while ((line = bufferedReader.readLine()) != null) {
 				line = line.trim();
 				if (line.startsWith("#")) {
@@ -183,7 +171,7 @@ public class Configure implements ReloadAble, InitializingBean {
 		if (key.equalsIgnoreCase("ttl")) {
 			ttl = Integer.parseInt(value);
 		} else if (key.equalsIgnoreCase("dns")) {
-			dnsHost = value;
+			dnsHostsContainer.addHost(new InetSocketAddress(value, DNS_PORT));
 		} else if (key.equalsIgnoreCase("cache")) {
 			useCache = BooleanUtils.toBooleanObject(value);
 		} else if (key.equalsIgnoreCase("log")) {

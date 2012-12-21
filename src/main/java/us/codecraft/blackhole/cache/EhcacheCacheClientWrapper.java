@@ -73,6 +73,9 @@ public class EhcacheCacheClientWrapper extends StandReadyWorker implements
 		if (manager == null || key == null) {
 			return null;
 		}
+		if (manager == null) {
+			return null;
+		}
 		Cache cache = manager.getCache(CACHE_NAME);
 		Element element = cache.get(key);
 		if (element == null) {
@@ -96,6 +99,9 @@ public class EhcacheCacheClientWrapper extends StandReadyWorker implements
 		if (key == null || value == null) {
 			throw new IllegalArgumentException(
 					"key and value should not be null");
+		}
+		if (manager == null) {
+			return false;
 		}
 		Cache cache = manager.getCache(CACHE_NAME);
 		Element element = new Element(key, value, Boolean.FALSE, 0, expireTime);
@@ -137,7 +143,12 @@ public class EhcacheCacheClientWrapper extends StandReadyWorker implements
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (configure.isUseCache()) {
-			init();
+			new Thread() {
+				@Override
+				public void run() {
+					init();
+				}
+			}.start();
 		}
 	}
 

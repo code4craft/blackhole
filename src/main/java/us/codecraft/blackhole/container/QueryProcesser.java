@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.cache.CacheManager;
-import us.codecraft.blackhole.connector.UDPForwardConnection;
+import us.codecraft.blackhole.forward.UDPForwardConnector;
 import us.codecraft.blackhole.handler.Handler;
 import us.codecraft.blackhole.handler.HandlerManager;
 
@@ -26,7 +26,7 @@ public class QueryProcesser {
 	private HandlerManager handlerManager;
 
 	@Autowired
-	private UDPForwardConnection forwardConnection;
+	private UDPForwardConnector forwardConnection;
 
 	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
@@ -52,7 +52,7 @@ public class QueryProcesser {
 		if (ServerContext.hasRecord()) {
 			response = responseMessage.toWire();
 		} else {
-			response = forwardConnection.forward(query, queryData);
+			response = forwardConnection.forward(queryData, query);
 			if (response == null) {
 				return null;
 			}
