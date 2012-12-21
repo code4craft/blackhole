@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 
 import org.xbill.DNS.ARecord;
 import org.xbill.DNS.Address;
+import org.xbill.DNS.CNAMERecord;
 import org.xbill.DNS.MXRecord;
 import org.xbill.DNS.Name;
 import org.xbill.DNS.PTRRecord;
@@ -42,6 +43,8 @@ public class RecordBuilder {
 			return new MXRecord(name, dclass, ttl, priority, new Name(answer));
 		case Type.PTR:
 			return new PTRRecord(name, dclass, ttl, new Name(answer));
+		case Type.CNAME:
+			return new CNAMERecord(name, dclass, ttl, new Name(answer));
 		default:
 			throw new IllegalStateException("type " + Type.string(type)
 					+ " is not supported ");

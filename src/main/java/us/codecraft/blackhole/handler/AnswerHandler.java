@@ -74,25 +74,29 @@ public class AnswerHandler implements Handler, InitializingBean {
 	public boolean handle(Message request, Message response) {
 		Record question = request.getQuestion();
 		String query = question.getName().toString();
-		if (question.getType() == Type.PTR) {
+		int type = question.getType();
+		if (type == Type.PTR) {
 			query = filterPTRQuery(query);
 		}
+		// some client will query with any
+		if (type == Type.ANY) {
+			type = Type.A;
+		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("query \t" + Type.string(question.getType()) + "\t"
+			logger.debug("query \t" + Type.string(type) + "\t"
 					+ DClass.string(question.getDClass()) + "\t" + query);
 		}
 		for (AnswerProvider answerProvider : answerProviders) {
-			String answer = answerProvider.getAnswer(query, question.getType());
+			String answer = answerProvider.getAnswer(query, type);
 			if (answer != null) {
 				try {
 					Record record = new RecordBuilder()
 							.dclass(question.getDClass())
-							.name(question.getName()).answer(answer)
-							.type(question.getType()).toRecord();
+							.name(question.getName()).answer(answer).type(type)
+							.toRecord();
 					response.addRecord(record, Section.ANSWER);
 					if (logger.isDebugEnabled()) {
-						logger.debug("answer\t"
-								+ Type.string(question.getType()) + "\t"
+						logger.debug("answer\t" + Type.string(type) + "\t"
 								+ DClass.string(question.getDClass()) + "\t"
 								+ answer);
 					}

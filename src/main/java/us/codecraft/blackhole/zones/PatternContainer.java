@@ -35,6 +35,7 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 	private String filename = Configure.FILE_PATH + "/config/zones";
 
 	private static final String FAKE_MX_PREFIX = "mail.";
+	private static final String FAKE_CANME_PREFIX = "cname.";
 
 	@Autowired
 	private AnswerContainer answerContainer;
@@ -114,6 +115,11 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 					answerContainer.add(fakeMXHost, Type.A, answer);
 					return fakeMXHost;
 				}
+				if (type == Type.CNAME) {
+					String fakeCNAMEHost = fakeCNAMEHost(query);
+					answerContainer.add(fakeCNAMEHost, Type.A, answer);
+					return fakeCNAMEHost;
+				}
 				try {
 					answerContainer.add(reverseIp(answer), Type.PTR, query);
 				} catch (Throwable e) {
@@ -133,6 +139,15 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 	 */
 	private String fakeMXHost(String domain) {
 		return FAKE_MX_PREFIX + domain;
+	}
+
+	/**
+	 * 
+	 * @param domain
+	 * @return
+	 */
+	private String fakeCNAMEHost(String domain) {
+		return FAKE_CANME_PREFIX + domain;
 	}
 
 	private String reverseIp(String ip) {
