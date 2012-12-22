@@ -178,6 +178,7 @@ public class Configure implements ReloadAble, InitializingBean {
 			configLogLevel(value);
 		} else if (key.equalsIgnoreCase("dns_timeout")) {
 			dnsTimeOut = Integer.parseInt(value);
+			dnsHostsContainer.setTimeout(dnsTimeOut);
 		} else {
 			return false;
 		}

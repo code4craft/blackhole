@@ -63,6 +63,7 @@ public class UDPForwardConnector {
 			logger.warn("None of forward DNS servers are valid!");
 			return null;
 		}
+		long timeStart = System.currentTimeMillis();
 		byte[] result = null;
 
 		FutureTask<Object> future = new FutureTask<Object>(
@@ -79,23 +80,24 @@ public class UDPForwardConnector {
 			// when TimeoutException is thrown,the thread will suspend
 			// until future.cancel() invoked.
 			future.cancel(true);
-			dnsHostsContainer.registerFail(address);
 			if (query != null) {
 				logger.warn("forward "
-						+ RecordUtils.recordKey(query.getQuestion())
-						+ " error " + e);
+						+ RecordUtils.recordKey(query.getQuestion()) + " to "
+						+ address + " error " + e);
 			} else {
-				logger.warn("forward error " + e);
+				logger.warn("forward " + " to " + address + " error " + e);
 			}
 		}
+		long timeCost = System.currentTimeMillis() - timeStart;
+		if (logger.isTraceEnabled()) {
+			logger.trace("time cost " + timeCost + "\t" + address);
+		}
+		dnsHostsContainer.registerTimeCost(address, timeCost);
 		return result;
 	}
 
 	private byte[] forward0(byte[] query, SocketAddress address)
 			throws IOException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("no record, forwarding to " + address);
-		}
 		DatagramChannel dc = null;
 		dc = DatagramChannel.open();
 		ByteBuffer bb = ByteBuffer.allocate(512);

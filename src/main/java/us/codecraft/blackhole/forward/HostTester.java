@@ -8,6 +8,6 @@ import java.net.SocketAddress;
  */
 public interface HostTester {
 
-	public boolean isValid(SocketAddress address);
+	public long timeCost(SocketAddress address);
 
 }

@@ -48,10 +48,9 @@ public class DNSHostTester implements HostTester {
 	 * @return
 	 */
 	@Override
-	public boolean isValid(SocketAddress address) {
-		byte[] forward = udpForwardConnector.forwardDummy(getDummyBytes(),
-				address);
-		return forward != null;
+	public long timeCost(SocketAddress address) {
+		long timeStart = System.currentTimeMillis();
+		udpForwardConnector.forwardDummy(getDummyBytes(), address);
+		return System.currentTimeMillis() - timeStart;
 	}
-
 }
