@@ -1,14 +1,10 @@
 package us.codecraft.blackhole.forward;
 
 import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,55 +17,29 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public abstract class HostsContainer implements InitializingBean {
 
-	private final static int MAX_TRIED_TIMES = 5;
+	private long sleepTime = TimeUnit.SECONDS.toMillis(1);
 
-	private List<SocketAddress> hosts = Collections
-			.synchronizedList(new ArrayList<SocketAddress>());
+	private int timeout = 3000;
 
-	private Map<SocketAddress, Boolean> isValidMap = new ConcurrentHashMap<SocketAddress, Boolean>();
+	private static final double VERY_LITTLE_DOUBLE = 1e-10;
 
-	private Map<SocketAddress, AtomicInteger> triedTimeMap = new ConcurrentHashMap<SocketAddress, AtomicInteger>();
+	private static final int REFRESH_PERIOD = 30;
 
-	private ScheduledExecutorService dnsTesterScheduler = Executors
-			.newScheduledThreadPool(1);
+	private AtomicInteger refreshDeCounter = new AtomicInteger(REFRESH_PERIOD);
+
+	private Map<SocketAddress, AveragedRequestTime> requestTimes = new ConcurrentHashMap<SocketAddress, AveragedRequestTime>();
 
 	private Logger logger = Logger.getLogger(getClass());
 
 	protected abstract HostTester getHostTester();
 
 	public void clearHosts() {
-		hosts.clear();
+		requestTimes = new ConcurrentHashMap<SocketAddress, AveragedRequestTime>();
 	}
 
 	public void addHost(SocketAddress address) {
-		if (!hosts.contains(address)) {
-			logger.info("add dns address " + address);
-			hosts.add(address);
-		}
-	}
-
-	private boolean isValid(SocketAddress address) {
-		if (isValidMap.get(address) == null) {
-			isValidMap.put(address, Boolean.TRUE);
-			return true;
-		} else {
-			return isValidMap.get(address);
-		}
-	}
-
-	private int incrementAndGetTriedTime(SocketAddress address) {
-		if (triedTimeMap.get(address) == null) {
-			triedTimeMap.put(address, new AtomicInteger());
-		}
-		return triedTimeMap.get(address).incrementAndGet();
-	}
-
-	public void registerFail(SocketAddress address) {
-		int incrementAndGetTriedTime = incrementAndGetTriedTime(address);
-		if (incrementAndGetTriedTime > MAX_TRIED_TIMES) {
-			logger.warn("Failed too many times, ignore the server. " + address);
-			isValidMap.put(address, Boolean.FALSE);
-		}
+		requestTimes.put(address, new AveragedRequestTime());
+		logger.info("add dns address " + address);
 	}
 
 	/*
@@ -80,39 +50,68 @@ public abstract class HostsContainer implements InitializingBean {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		dnsTesterScheduler.scheduleAtFixedRate(new Runnable() {
-
-			@Override
+		new Thread() {
 			public void run() {
-				checkValidHosts();
-			}
-		}, 1, 1, TimeUnit.MINUTES);
+				while (true) {
+					try {
+						Thread.sleep(sleepTime);
+						if (refreshDeCounter.get() <= 0) {
+							refreshHostsTimeout();
+							refreshDeCounter.set(REFRESH_PERIOD);
+						}
+						refreshDeCounter.decrementAndGet();
+					} catch (Throwable e) {
+						logger.warn("refresh error!", e);
+					}
+				}
+			};
+		}.start();
 	}
 
-	private void checkValidHosts() {
-		Iterator<SocketAddress> iterator = hosts.iterator();
+	/**
+	 * @param timeout
+	 *            the timeout to set
+	 */
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
+	}
+
+	public void registerTimeCost(SocketAddress address, long timeCost) {
+		requestTimes.get(address).add(timeCost);
+	}
+
+	private void refreshHostsTimeout() {
+		if (logger.isInfoEnabled()) {
+			logger.info("start to refresh DNS hosts");
+		}
+		Iterator<Entry<SocketAddress, AveragedRequestTime>> iterator = requestTimes
+				.entrySet().iterator();
 		while (iterator.hasNext()) {
-			SocketAddress address = iterator.next();
-			if (!isValid(address)) {
-				logger.debug("check host " + address);
-				boolean isValid = getHostTester().isValid(address);
-				if (isValid) {
-					triedTimeMap.put(address, new AtomicInteger());
-				}
-				isValidMap.put(address, isValid);
-			}
+			Entry<SocketAddress, AveragedRequestTime> entry = iterator.next();
+			long timeCost = getHostTester().timeCost(entry.getKey());
+			entry.getValue().add(timeCost);
 		}
 	}
 
 	public SocketAddress getHost() {
-		Iterator<SocketAddress> iterator = hosts.iterator();
+		SocketAddress fastestHost = null;
+		double minTimeCost = timeout;
+		Iterator<Entry<SocketAddress, AveragedRequestTime>> iterator = requestTimes
+				.entrySet().iterator();
 		while (iterator.hasNext()) {
-			SocketAddress address = iterator.next();
-			if (isValid(address)) {
-				return address;
+			Entry<SocketAddress, AveragedRequestTime> entry = iterator.next();
+			if (entry.getValue().get() < minTimeCost - VERY_LITTLE_DOUBLE) {
+				fastestHost = entry.getKey();
+				minTimeCost = entry.getValue().get();
 			}
 		}
-		return null;
+		if (logger.isDebugEnabled()) {
+			logger.debug("choose " + fastestHost
+					+ " for least average time cost:" + minTimeCost);
+		}
+		if (fastestHost == null) {
+			refreshDeCounter.set(0);
+		}
+		return fastestHost;
 	}
-
 }
