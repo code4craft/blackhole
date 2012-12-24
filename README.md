@@ -45,6 +45,8 @@ BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/z
 * **DNS**
 	
 	BlackHole并没有递归查找DNS的功能，如果遇到未在本地配置的域名请求，它会做一个UDP代理的工作，将请求发向一个已有的DNS服务器，并返回这个DNS服务器的结果。**如果你希望用BlackHole做某些域名的拦截，同时不影响其他域名的访问，需要对这个DNS服务器的地址进行配置。**
+	
+	支持多个DNS服务器配置，BlackHole会优先选择访问速度最快的服务器作为外部DNS。
 
 * **DNS_TIMEOUT**
 	
