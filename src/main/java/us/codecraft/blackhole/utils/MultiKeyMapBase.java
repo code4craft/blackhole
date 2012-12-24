@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 多个key的map，一些基础对象
+ * multikey map, some basic objects *
  * 
  * @author yihua.huang
  * 

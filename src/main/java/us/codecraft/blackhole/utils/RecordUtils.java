@@ -38,7 +38,7 @@ public class RecordUtils {
 	}
 
 	public static String recordKey(Record record) {
-		return record.getName().toString() + "_"
+		return record.getName().toString() + " "
 				+ Type.string(record.getType());
 	}
 }

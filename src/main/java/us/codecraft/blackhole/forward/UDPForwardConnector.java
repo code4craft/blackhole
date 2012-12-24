@@ -76,10 +76,16 @@ public class UDPForwardConnector {
 		try {
 			result = (byte[]) future.get(configure.getDnsTimeOut(),
 					TimeUnit.MILLISECONDS);
+			long timeCost = System.currentTimeMillis() - timeStart;
+			if (logger.isTraceEnabled()) {
+				logger.trace("time cost " + timeCost + "\t" + address);
+			}
+			dnsHostsContainer.registerTimeCost(address, timeCost);
 		} catch (Exception e) {
 			// when TimeoutException is thrown,the thread will suspend
 			// until future.cancel() invoked.
 			future.cancel(true);
+			dnsHostsContainer.registerFail(address);
 			if (query != null) {
 				logger.warn("forward "
 						+ RecordUtils.recordKey(query.getQuestion()) + " to "
@@ -88,11 +94,6 @@ public class UDPForwardConnector {
 				logger.warn("forward " + " to " + address + " error " + e);
 			}
 		}
-		long timeCost = System.currentTimeMillis() - timeStart;
-		if (logger.isTraceEnabled()) {
-			logger.trace("time cost " + timeCost + "\t" + address);
-		}
-		dnsHostsContainer.registerTimeCost(address, timeCost);
 		return result;
 	}
 

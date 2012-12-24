@@ -18,10 +18,9 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
 	}
 
 	/**
-	 * 初始化map，使用protoMapClass作为构建内部map的原型
+	 * init map with protoMapClass
 	 * 
 	 * @param protoMapClass
-	 *            构建内部map的类型
 	 */
 	@SuppressWarnings("rawtypes")
 	public DoubleKeyMap(Class<? extends Map> protoMapClass) {
@@ -30,24 +29,19 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
 	}
 
 	/**
-	 * 获取第一个key对应的map
 	 * 
 	 * @param key
-	 *            key
-	 * @return 单个key的map
+	 * @return
 	 */
 	public Map<K2, V> get(K1 key) {
 		return map.get(key);
 	}
 
 	/**
-	 * 获取最终value值
 	 * 
 	 * @param key1
-	 *            key1
 	 * @param key2
-	 *            key2
-	 * @return 最终value值
+	 * @return
 	 */
 	public V get(K1 key1, K2 key2) {
 		if (get(key1) == null) {
@@ -57,15 +51,11 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
 	}
 
 	/**
-	 * 添加一个元素
 	 * 
 	 * @param key1
-	 *            key1
 	 * @param key2
-	 *            key2
 	 * @param value
-	 *            value
-	 * @return 添加的value(根据内部map原型决定，可能永远为null)
+	 * @return
 	 */
 	public V put(K1 key1, K2 key2, V value) {
 		if (map.get(key1) == null) {
@@ -75,13 +65,10 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
 	}
 
 	/**
-	 * 删除某一value的值
 	 * 
 	 * @param key1
-	 *            key1
 	 * @param key2
-	 *            key2
-	 * @return 删除的结果(根据内部map原型决定，可能永远为null)
+	 * @return
 	 */
 	public V remove(K1 key1, K2 key2) {
 		if (get(key1) == null) {
@@ -96,11 +83,9 @@ public class DoubleKeyMap<K1, K2, V> extends MultiKeyMapBase {
 	}
 
 	/**
-	 * 删除第一个key对应的所有值
 	 * 
 	 * @param key1
-	 *            key1
-	 * @return 删除的map(根据内部map原型决定，可能永远为null)
+	 * @return
 	 */
 	public Map<K2, V> remove(K1 key1) {
 		Map<K2, V> remove = map.remove(key1);
