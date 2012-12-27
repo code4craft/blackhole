@@ -77,15 +77,21 @@ public abstract class HostsContainer implements InitializingBean {
 	}
 
 	public void registerTimeCost(SocketAddress address, long timeCost) {
+		AveragedRequestTime averagedRequestTime = requestTimes.get(address);
+		if (averagedRequestTime == null) {
+			return;
+		}
 		if (timeCost >= timeout) {
-			requestTimes.get(address).incrFailCount();
+			averagedRequestTime.incrFailCount();
 		} else {
-			requestTimes.get(address).add(timeCost);
+			averagedRequestTime.add(timeCost);
 		}
 	}
 
 	public void registerFail(SocketAddress address) {
-		requestTimes.get(address).incrFailCount();
+		if (requestTimes.get(address) != null) {
+			requestTimes.get(address).incrFailCount();
+		}
 	}
 
 	private void refreshHostsTimeout() {
