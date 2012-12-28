@@ -1,49 +1,65 @@
 package us.codecraft.blackhole.config;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.net.InetSocketAddress;
-
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import us.codecraft.blackhole.forward.DNSHostsContainer;
-import us.codecraft.wifesays.me.ReloadAble;
 
 /**
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
 @Component
-public class Configure implements ReloadAble, InitializingBean {
-
+public class Configure {
 	public final static long DEFAULT_TTL = 2000;
 	public final static int DEFAULT_DNS_TIMEOUT = 2000;
 	public static String FILE_PATH = "/usr/local/blackhole/";
 
 	public final static int DEFAULT_MX_PRIORY = 10;
 
-	@Autowired
-	private DNSHostsContainer dnsHostsContainer;
 	private long ttl = DEFAULT_TTL;
-	private int mxPriory = DEFAULT_MX_PRIORY;
 
-	private String filename = FILE_PATH + "/config/blackhole.conf";
+	private int mxPriory = DEFAULT_MX_PRIORY;
 
 	public final static int DNS_PORT = 53;
 
-	private Logger logger = Logger.getLogger(getClass());
-
 	private int dnsTimeOut = DEFAULT_DNS_TIMEOUT;
 
-	@SuppressWarnings("unused")
 	private String loggerLevel;
 
 	private boolean useCache;
+
+	private String configFilename = Configure.FILE_PATH
+			+ "/config/blackhole.conf";
+
+	private String zonesFilename = Configure.FILE_PATH + "/config/zones";
+
+	/**
+	 * @return the configFilename
+	 */
+	public String getConfigFilename() {
+		return configFilename;
+	}
+
+	/**
+	 * @param configFilename
+	 *            the configFilename to set
+	 */
+	public void setConfigFilename(String configFilename) {
+		this.configFilename = configFilename;
+	}
+
+	/**
+	 * @return the zonesFilename
+	 */
+	public String getZonesFilename() {
+		return zonesFilename;
+	}
+
+	/**
+	 * @param zonesFilename
+	 *            the zonesFilename to set
+	 */
+	public void setZonesFilename(String zonesFilename) {
+		this.zonesFilename = zonesFilename;
+	}
 
 	/**
 	 * @return the useCache
@@ -90,76 +106,6 @@ public class Configure implements ReloadAble, InitializingBean {
 		this.mxPriory = mxPriory;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see us.codecraft.wifesays.me.ReloadAble#reload()
-	 */
-	@Override
-	public void reload() {
-		readConfig(filename);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		readConfig(filename);
-
-	}
-
-	public void readConfig(String filename) {
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(
-					filename));
-			String line = null;
-			dnsHostsContainer.clearHosts();
-			while ((line = bufferedReader.readLine()) != null) {
-				line = line.trim();
-				if (line.startsWith("#")) {
-					continue;
-				}
-				try {
-					String[] items = line.split("=");
-					if (items.length < 2) {
-						continue;
-					}
-					String key = items[0];
-					String value = items[1];
-					boolean configed = config(key, value);
-					if (configed) {
-						logger.info("read config success:\t" + line);
-					}
-				} catch (Exception e) {
-					logger.warn("parse config line error:\t" + line, e);
-				}
-			}
-			bufferedReader.close();
-		} catch (Throwable e) {
-			logger.warn("read config file failed:" + filename, e);
-		}
-	}
-
-	private void configLogLevel(String value) {
-		Logger rootLogger = Logger.getRootLogger();
-		if ("debug".equalsIgnoreCase(value)) {
-			rootLogger.setLevel(Level.DEBUG);
-		} else if ("info".equalsIgnoreCase(value)) {
-			rootLogger.setLevel(Level.INFO);
-		} else if ("warn".equalsIgnoreCase(value)) {
-			rootLogger.setLevel(Level.WARN);
-		} else {
-			// unsupported level
-			return;
-		}
-		loggerLevel = value;
-
-	}
-
 	/**
 	 * @return the dnsTimeOut
 	 */
@@ -167,21 +113,35 @@ public class Configure implements ReloadAble, InitializingBean {
 		return dnsTimeOut;
 	}
 
-	private boolean config(String key, String value) {
-		if (key.equalsIgnoreCase("ttl")) {
-			ttl = Integer.parseInt(value);
-		} else if (key.equalsIgnoreCase("dns")) {
-			dnsHostsContainer.addHost(new InetSocketAddress(value, DNS_PORT));
-		} else if (key.equalsIgnoreCase("cache")) {
-			useCache = BooleanUtils.toBooleanObject(value);
-		} else if (key.equalsIgnoreCase("log")) {
-			configLogLevel(value);
-		} else if (key.equalsIgnoreCase("dns_timeout")) {
-			dnsTimeOut = Integer.parseInt(value);
-			dnsHostsContainer.setTimeout(dnsTimeOut);
-		} else {
-			return false;
-		}
-		return true;
+	/**
+	 * @return the loggerLevel
+	 */
+	public String getLoggerLevel() {
+		return loggerLevel;
 	}
+
+	/**
+	 * @param loggerLevel
+	 *            the loggerLevel to set
+	 */
+	public void setLoggerLevel(String loggerLevel) {
+		this.loggerLevel = loggerLevel;
+	}
+
+	/**
+	 * @param dnsTimeOut
+	 *            the dnsTimeOut to set
+	 */
+	public void setDnsTimeOut(int dnsTimeOut) {
+		this.dnsTimeOut = dnsTimeOut;
+	}
+
+	/**
+	 * @param useCache
+	 *            the useCache to set
+	 */
+	public void setUseCache(boolean useCache) {
+		this.useCache = useCache;
+	}
+
 }
