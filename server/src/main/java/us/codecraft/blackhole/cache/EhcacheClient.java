@@ -23,10 +23,10 @@ import us.codecraft.wifesays.me.StandReadyWorker;
  * @date Dec 19, 2012
  */
 @Component
-public class EhcacheCacheClientWrapper extends StandReadyWorker implements
+public class EhcacheClient extends StandReadyWorker implements
 		CacheClient, InitializingBean {
 
-	private Logger logger = Logger.getLogger(EhcacheCacheClientWrapper.class);
+	private Logger logger = Logger.getLogger(EhcacheClient.class);
 
 	@Autowired
 	private Configure configure;

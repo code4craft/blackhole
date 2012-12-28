@@ -62,7 +62,7 @@ public class BlackHole {
 			logger.warn("parse args error");
 		}
 		SpringLocator.applicationContext = new ClassPathXmlApplicationContext(
-				"spring/applicationContext*.xml");
+				"classpath*:/spring/applicationContext*.xml");
 		BlackHole blackHole = SpringLocator.getBean(BlackHole.class);
 		try {
 			blackHole.start();

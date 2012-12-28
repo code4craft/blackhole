@@ -1,22 +1,15 @@
 package us.codecraft.blackhole.zones;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
 import org.xbill.DNS.Type;
-
-import us.codecraft.blackhole.config.Configure;
-import us.codecraft.wifesays.me.ReloadAble;
 
 /**
  * Read the config to patterns and process the request record.
@@ -25,74 +18,17 @@ import us.codecraft.wifesays.me.ReloadAble;
  * @date Dec 14, 2012
  */
 @Component
-public class PatternContainer implements AnswerProvider, InitializingBean,
-		ReloadAble {
+public class PatternContainer implements AnswerProvider {
 
 	private volatile Map<Pattern, String> patterns;
 
 	private Logger logger = Logger.getLogger(getClass());
-
-	private String filename = Configure.FILE_PATH + "/config/zones";
 
 	private static final String FAKE_MX_PREFIX = "mail.";
 	private static final String FAKE_CANME_PREFIX = "cname.";
 
 	@Autowired
 	private AnswerContainer answerContainer;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-
-		readConfig(filename);
-
-	}
-
-	public void readConfig(String filename) {
-		try {
-			Map<Pattern, String> patternsTemp = new LinkedHashMap<Pattern, String>();
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(
-					filename));
-			String line = null;
-			while ((line = bufferedReader.readLine()) != null) {
-				line = line.trim();
-				if (line.startsWith("#")) {
-					continue;
-				}
-				try {
-					String[] items = line.split("\\s+");
-					if (items.length < 2) {
-						continue;
-					}
-					String ip = items[0];
-					String pattern = items[1];
-					// ip format check
-					Address.getByAddress(ip);
-					patternsTemp.put(compileStringToPattern(pattern), ip);
-					logger.info("read config success:\t" + line);
-				} catch (Exception e) {
-					logger.warn("parse config line error:\t" + line + "\t" + e);
-				}
-			}
-			patterns = patternsTemp;
-			bufferedReader.close();
-		} catch (Throwable e) {
-			logger.warn("read config file failed:" + filename, e);
-		}
-	}
-
-	private Pattern compileStringToPattern(String patternStr) {
-		patternStr += ".";
-		patternStr = patternStr.replace(".", "\\.");
-		patternStr = patternStr.replace("*", ".*");
-		patternStr += "$";
-		return Pattern.compile(patternStr);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -160,13 +96,12 @@ public class PatternContainer implements AnswerProvider, InitializingBean,
 		return stringBuilder.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see us.codecraft.wifesays.me.ReloadAble#reload()
+	/**
+	 * @param patterns
+	 *            the patterns to set
 	 */
-	@Override
-	public void reload() {
-		readConfig(filename);
+	public void setPatterns(Map<Pattern, String> patterns) {
+		this.patterns = patterns;
 	}
+
 }
