@@ -18,7 +18,7 @@ hostd具有三大特性：
 	
 ###3. 安装
 
-Mac下hostd下载pkd包安装即可。hostd将安装到/usr/local/hostd/目录。hostd需要jre 1.6以上的运行环境。
+Mac下hostd下载pkd包安装即可，下载地址[hostd-1.0.0-alpha.pkg](http://code.google.com/p/jblackhole/downloads/detail?name=hostd-1.0.0-alpha.pkg)。hostd将安装到/usr/local/hostd/目录。hostd需要jre 1.6以上的运行环境。
 
 ###4. 使用
 
