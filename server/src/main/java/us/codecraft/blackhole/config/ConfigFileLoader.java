@@ -9,6 +9,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import us.codecraft.blackhole.forward.DNSHostsContainer;
 import us.codecraft.wifesays.me.ReloadAble;
@@ -17,13 +18,27 @@ import us.codecraft.wifesays.me.ReloadAble;
  * @author yihua.huang@dianping.com
  * @date Dec 28, 2012
  */
-public class ConfigFileLoader implements InitializingBean, ReloadAble {
+@Component
+public class ConfigFileLoader implements InitializingBean, ReloadAble,
+		FileLoader {
 
 	@Autowired
 	DNSHostsContainer dnsHostsContainer;
 
 	@Autowired
 	Configure configure;
+
+	private long lastReadTime = System.currentTimeMillis();
+
+	private boolean reloadOff = false;
+
+	/**
+	 * @param reloadOff
+	 *            the reloadOff to set
+	 */
+	public void setReloadOff(boolean reloadOff) {
+		this.reloadOff = reloadOff;
+	}
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -54,6 +69,7 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble {
 				}
 			}
 			bufferedReader.close();
+			lastReadTime = System.currentTimeMillis();
 		} catch (Throwable e) {
 			logger.warn("read config file failed:" + filename, e);
 		}
@@ -102,7 +118,9 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble {
 	 */
 	@Override
 	public void reload() {
-		readConfig(configure.getConfigFilename());
+		if (!reloadOff) {
+			readConfig(Configure.configFilename);
+		}
 	}
 
 	/*
@@ -114,6 +132,16 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		reload();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see us.codecraft.blackhole.config.FileLoader#getLastReadTime()
+	 */
+	@Override
+	public long getLastReadTime() {
+		return lastReadTime;
 	}
 
 }

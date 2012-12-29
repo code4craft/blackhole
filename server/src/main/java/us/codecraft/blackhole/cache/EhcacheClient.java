@@ -23,8 +23,8 @@ import us.codecraft.wifesays.me.StandReadyWorker;
  * @date Dec 19, 2012
  */
 @Component
-public class EhcacheClient extends StandReadyWorker implements
-		CacheClient, InitializingBean {
+public class EhcacheClient extends StandReadyWorker implements CacheClient,
+		InitializingBean {
 
 	private Logger logger = Logger.getLogger(EhcacheClient.class);
 
@@ -121,17 +121,21 @@ public class EhcacheClient extends StandReadyWorker implements
 			if (manager == null) {
 				return "CACHE NOT USED";
 			}
-			Cache cache = manager.getCache(CACHE_NAME);
-			@SuppressWarnings("unchecked")
-			List<String> keys = cache.getKeys();
-			logger.info(keys.size() + " cached records cleared");
-			if (logger.isDebugEnabled()) {
-				logger.debug("[" + StringUtils.join(keys, ",") + "]");
-			}
-			cache.removeAll();
+			clearCache();
 			return "REMOVE SUCCESS";
 		}
 		return null;
+	}
+
+	public void clearCache() {
+		Cache cache = manager.getCache(CACHE_NAME);
+		@SuppressWarnings("unchecked")
+		List<String> keys = cache.getKeys();
+		logger.info(keys.size() + " cached records cleared");
+		if (logger.isDebugEnabled()) {
+			logger.debug("[" + StringUtils.join(keys, ",") + "]");
+		}
+		cache.removeAll();
 	}
 
 	/*
