@@ -24,7 +24,7 @@ public class CacheManager implements InitializingBean {
 	@Autowired
 	private Configure configure;
 
-	private ExecutorService cacheSaveExecutors;
+	private volatile ExecutorService cacheSaveExecutors;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -57,7 +57,7 @@ public class CacheManager implements InitializingBean {
 
 	public void setToCache(final Message query, final byte[] responseBytes) {
 		if (configure.isUseCache()) {
-			cacheSaveExecutors.execute(new Runnable() {
+			getCacheSaveExecutors().execute(new Runnable() {
 
 				@Override
 				public void run() {
@@ -76,6 +76,18 @@ public class CacheManager implements InitializingBean {
 
 	}
 
+	/**
+	 * @return the cacheSaveExecutors
+	 */
+	public ExecutorService getCacheSaveExecutors() {
+		if (cacheSaveExecutors == null) {
+			synchronized (this) {
+				cacheSaveExecutors = Executors.newFixedThreadPool(50);
+			}
+		}
+		return cacheSaveExecutors;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -85,7 +97,7 @@ public class CacheManager implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (configure.isUseCache()) {
-			cacheSaveExecutors = Executors.newFixedThreadPool(50);
+			getCacheSaveExecutors();
 		}
 	}
 
