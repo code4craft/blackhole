@@ -69,6 +69,8 @@ public class MacMain {
 	public static void main(String[] args) {
 		parseArgs(args);
 		startCheck();
+		Configure.zonesFilename = "/etc/hostd";
+		Configure.configFilename = "/etc/blackhole.conf";
 		SpringLocator.applicationContext = new ClassPathXmlApplicationContext(
 				"classpath*:/spring/applicationContext*.xml");
 		DNSMonitor dnsMonitor = SpringLocator.getBean(DNSMonitor.class);

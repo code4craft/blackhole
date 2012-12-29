@@ -26,40 +26,10 @@ public class Configure {
 
 	private boolean useCache;
 
-	private String configFilename = Configure.FILE_PATH
+	public static String configFilename = Configure.FILE_PATH
 			+ "/config/blackhole.conf";
 
-	private String zonesFilename = Configure.FILE_PATH + "/config/zones";
-
-	/**
-	 * @return the configFilename
-	 */
-	public String getConfigFilename() {
-		return configFilename;
-	}
-
-	/**
-	 * @param configFilename
-	 *            the configFilename to set
-	 */
-	public void setConfigFilename(String configFilename) {
-		this.configFilename = configFilename;
-	}
-
-	/**
-	 * @return the zonesFilename
-	 */
-	public String getZonesFilename() {
-		return zonesFilename;
-	}
-
-	/**
-	 * @param zonesFilename
-	 *            the zonesFilename to set
-	 */
-	public void setZonesFilename(String zonesFilename) {
-		this.zonesFilename = zonesFilename;
-	}
+	public static String zonesFilename = Configure.FILE_PATH + "/config/zones";
 
 	/**
 	 * @return the useCache

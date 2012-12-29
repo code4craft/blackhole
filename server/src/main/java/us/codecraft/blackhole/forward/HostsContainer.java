@@ -137,4 +137,5 @@ public abstract class HostsContainer implements InitializingBean {
 		}
 		return fastestHost;
 	}
+
 }

@@ -20,13 +20,16 @@ import us.codecraft.wifesays.me.ReloadAble;
  * @date Dec 28, 2012
  */
 @Component
-public class ZonesFileLoader implements InitializingBean, ReloadAble {
+public class ZonesFileLoader implements InitializingBean, ReloadAble,
+		FileLoader {
 
 	@Autowired
 	private Configure configure;
 
 	@Autowired
 	private PatternContainer patternContainer;
+
+	private long lastReadTime = System.currentTimeMillis();
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -47,10 +50,12 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 						continue;
 					}
 					String ip = items[0];
-					String pattern = items[1];
-					// ip format check
-					Address.getByAddress(ip);
-					patternsTemp.put(compileStringToPattern(pattern), ip);
+					for (int i = 1; i < items.length; i++) {
+						String pattern = items[i];
+						// ip format check
+						Address.getByAddress(ip);
+						patternsTemp.put(compileStringToPattern(pattern), ip);
+					}
 					logger.info("read config success:\t" + line);
 				} catch (Exception e) {
 					logger.warn("parse config line error:\t" + line + "\t" + e);
@@ -58,6 +63,7 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 			}
 			patternContainer.setPatterns(patternsTemp);
 			bufferedReader.close();
+			lastReadTime = System.currentTimeMillis();
 		} catch (Throwable e) {
 			logger.warn("read config file failed:" + filename, e);
 		}
@@ -78,7 +84,7 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 	 */
 	@Override
 	public void reload() {
-		readConfig(configure.getZonesFilename());
+		readConfig(Configure.zonesFilename);
 	}
 
 	/*
@@ -90,5 +96,15 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		reload();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see us.codecraft.blackhole.config.FileLoader#getLastReadTime()
+	 */
+	@Override
+	public long getLastReadTime() {
+		return lastReadTime;
 	}
 }

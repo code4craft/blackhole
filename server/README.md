@@ -157,5 +157,9 @@ BlackHole存在两种工作模式："拦截"和"转发"。
 
 目前BlackHole的稳定性未得到广泛证明，但是作者在不断更新中，欢迎使用并及时反馈。
 
+####10. 协议
+
+BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。
+
 作者邮箱：
 yihua.huang#dianping.com
