@@ -24,7 +24,7 @@ public class Configure {
 
 	private String loggerLevel;
 
-	private boolean useCache;
+	private boolean useCache = true;
 
 	public static String configFilename = Configure.FILE_PATH
 			+ "/config/blackhole.conf";

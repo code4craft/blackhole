@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>us.codecraft</groupId>
-	<artifactId>blackhole-localserver</artifactId>
+	<artifactId>blackhole-hostd</artifactId>
 	<version>1.0.0-alpha</version>
 	<name>blackhole-selfhost</name>
 	<description>Blackhole selfhost is the blackhole server with some tools to easily change system DNS server to use.</description>

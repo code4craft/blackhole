@@ -3,6 +3,7 @@ package us.codecraft.blackhole.selfhost;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -70,7 +71,8 @@ public class DNSMonitor implements ShutDownAble {
 		inetConnectinoProperties.getDnsServer().add(0, "127.0.0.1");
 		MacInetInetManager macInetInetManager = MacInetInetManager
 				.getInstance();
-		macInetInetManager.setConnectionDns(inetConnectinoProperties);
+		macInetInetManager.setConnectionDns(inetConnectinoProperties.getName(),
+				Collections.singletonList("127.0.0.1"));
 		macInetInetManager.clearDnsCache();
 		inetConnectinoProperties.getDnsServer().remove(0);
 	}

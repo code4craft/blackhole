@@ -58,7 +58,7 @@ hostd还有一个不常用的配置文件：/etc/blackhole.conf，是hostd使用
 
 ###7. 源码
 
-hostd的源码托管在git[github](https://github.com/flashsword20/blackhole/tree/master/localserver/mac)，是开源DNS服务器BlackHole的一个分支。
+hostd的源码托管在[github](https://github.com/flashsword20/blackhole/tree/master/localserver/mac)，是开源DNS服务器BlackHole的一个分支。可以关注这个项目以获取最新版本。
 
 
 作者邮箱：
