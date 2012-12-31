@@ -18,7 +18,7 @@ hostd具有三大特性：
 	
 ###3. 安装
 
-Mac下hostd下载pkd包安装即可，下载地址[hostd-1.0.0-alpha.pkg](http://code.google.com/p/jblackhole/downloads/detail?name=hostd-1.0.0-alpha.pkg)。hostd将安装到/usr/local/hostd/目录。hostd需要jre 1.6以上的运行环境。
+Mac下hostd下载pkd包安装即可，下载地址[hostd-1.0.0-alpha.pkg](http://vdisk.weibo.com/s/m6qSi)。hostd将安装到/usr/local/hostd/目录。hostd需要java 1.6以上的运行环境。
 
 ###4. 使用
 
@@ -28,7 +28,7 @@ hostd需要root权限启动，启动之后方可拦截DNS请求。
 
 关闭：hostd stop
 
-或者你可以使用"sudo hostd"命令快捷启动hostd并编辑配置文件。若hostd已启动，则此命令仅仅会打开配置文件供你编辑。
+如果直接使用"sudo hostd"，则默认快捷启动hostd并编辑配置文件。此时若hostd已启动，则此命令仅仅会打开配置文件供你编辑。
 
 
 ###5. 配置
@@ -49,12 +49,18 @@ hostd还有一个不常用的配置文件：/etc/blackhole.conf，是hostd使用
 
 #####Q: hostd无法生效？
 
-#####A: 遇到这个问题，请你做以下检查：
+遇到这个问题，请你做以下检查：
 1.请检查hostd进程是否已启动，未启动时即使/etc/hostd进行了配置也无法起作用。方法是再次使用sudo hostd start启动，若未报错，则表示之前未启动。
 
-2.hostd是运行了一个本地DNS服务器，并将本地DNS服务器设置为127.0.0.1以达到DNS拦截的作用，所以建议你查看DNS配置是否为127.0.0.1。查看方式：在终端下输入nslookup xx.com，或者选择"网络偏好设置"=>"高级"=>"DNS服务器"来进行查看。如果首要DNS服务器未配置为"127.0.0.1"，则重新启动hostd即可。
+2.hostd是运行了一个本地DNS服务器，并将本地DNS服务器设置为127.0.0.1以达到DNS拦截的作用，所以建议你查看DNS配置是否为127.0.0.1。查看方式：运行tools/showdns.sh。如果首要DNS服务器未配置为"127.0.0.1"，则退出hostd并重新启动hostd即可。
 
 3.如果使用Chome浏览器，那么因为浏览器DNS缓存的原因，域名的配置可能要最长一分钟才能生效，请多尝试几次。
+
+#####Q: hostd关闭之后无法正常访问网络？
+
+hostd启动时会将系统的DNS服务器改为127.0.0.1，并将系统之前的DNS服务器保存在tools/dns文件中，在退出时(使用hostd stop关闭或者kill命令退出时)，hostd会将DNS服务器恢复。也有可能程序非正常退出，此时可以使用tools/resetdns.sh恢复系统DNS服务器。
+
+hostd使用mac下的scutils来进行DNS服务器的修改，这个更改会在系统重启后丢失。如果尝试上述方法仍然无法访问，可以重新启动系统。不过作者至今为止没有遇到过这种情况。
 
 ###7. 源码
 
