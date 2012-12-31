@@ -1,10 +1,13 @@
 package us.codecraft.blackhole.selfhost;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Collections;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -41,6 +44,8 @@ public class DNSMonitor implements ShutDownAble {
 	@Autowired
 	private Configure configure;
 
+	private String dnsFileName;
+
 	public void start() {
 		try {
 
@@ -75,6 +80,19 @@ public class DNSMonitor implements ShutDownAble {
 				Collections.singletonList("127.0.0.1"));
 		macInetInetManager.clearDnsCache();
 		inetConnectinoProperties.getDnsServer().remove(0);
+		saveDnsToFile();
+	}
+
+	private void saveDnsToFile() {
+		dnsFileName = Configure.FILE_PATH + "/tools/dns";
+		try {
+			FileWriter output = new FileWriter(dnsFileName);
+			IOUtils.write(StringUtils.join(
+					inetConnectinoProperties.getDnsServer(), " "), output);
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void setDnsBack() {

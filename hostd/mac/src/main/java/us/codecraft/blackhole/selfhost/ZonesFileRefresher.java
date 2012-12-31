@@ -33,6 +33,8 @@ public class ZonesFileRefresher implements InitializingBean {
 	private ScheduledExecutorService scheduledExecutorService = Executors
 			.newScheduledThreadPool(1);
 
+	private long lastFileModifiedTime;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -40,13 +42,17 @@ public class ZonesFileRefresher implements InitializingBean {
 	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
+		File zonesFile = new File(Configure.zonesFilename);
+		lastFileModifiedTime = zonesFile.lastModified();
+
 		scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
 
 			public void run() {
 				File zonesFile = new File(Configure.zonesFilename);
+				// When two files' last modify time not equal, we consider it is
+				// changed.
 				synchronized (this) {
-					if (zonesFile.lastModified() > zonesFileLoader
-							.getLastReadTime()) {
+					if (zonesFile.lastModified() != lastFileModifiedTime) {
 						zonesFileLoader.reload();
 						ehcacheClient.clearCache();
 						MacInetInetManager macInetInetManager = MacInetInetManager
@@ -55,6 +61,6 @@ public class ZonesFileRefresher implements InitializingBean {
 					}
 				}
 			}
-		}, 1, 1, TimeUnit.SECONDS);
+		}, 500, 500, TimeUnit.MILLISECONDS);
 	}
 }

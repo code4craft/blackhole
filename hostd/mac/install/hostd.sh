@@ -17,7 +17,7 @@ function startIfNot()
 {
     java -jar $HOME_DIR/bin/lib/wifesays-${VERSION}.jar -cstatus > /dev/null
     if [ $? -ne 0 ]; then
-      nohup java -jar $HOME_DIR/bin/blackhole-localserver-${VERSION}.jar -d$HOME_DIR 1>>$HOME_DIR/log/`date "+%Y-%m-%d"`.log 2>$HOME_DIR/log/error.log &
+      nohup java -jar $HOME_DIR/bin/blackhole-hostd-${VERSION}.jar -d$HOME_DIR 1>>$HOME_DIR/log/`date "+%Y-%m-%d"`.log 2>$HOME_DIR/log/error.log &
     fi
 }
 
@@ -31,7 +31,7 @@ else
   start)
     checkUser;
     echo "Starting hostd..."
-    nohup java -jar $HOME_DIR/bin/blackhole-localserver-${VERSION}.jar -d$HOME_DIR 1>>$HOME_DIR/log/`date "+%Y-%m-%d"`.log 2>$HOME_DIR/log/error.log &
+    nohup java -jar $HOME_DIR/bin/blackhole-hostd-${VERSION}.jar -d$HOME_DIR 1>>$HOME_DIR/log/`date "+%Y-%m-%d"`.log 2>$HOME_DIR/log/error.log &
     sleep 0.5
     ;;
   stop)

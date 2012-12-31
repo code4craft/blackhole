@@ -4,18 +4,19 @@
 #		address		domain
 # like: 127.0.0.1	codecraft.us
 #	Char "*" matches all chars with any length.
-#	Lines starting with "#" will be considered as comments.
-#	If more than one line works for a query, the first line will have effect. 	    
+#	Lines starting with "#" will be considered comments.
+#	If more than one line works for a query, the first line will have effort. 	    
 #
 # Samples:
 # 
 #	127.0.0.1	codecraft.us
-#		response all domain query end with "codecraft.us" to 127.0.0.1
+#		intercept all domain query end with "codecraft.us" to 127.0.0.1
 #
 #	127.0.0.1	*
-#		response all query with all domain to 127.0.0.1
+#		intercept all query with all domain to 127.0.0.1
 #
 #	127.0.0.1	flashsword20.*.*
-#		response all query like "flashsword20.diandian.com" "flashsword20.github.com"
+#		intercept all query like "flashsword20.diandian.com" "flashsword20.github.com"
 #
-
+#	127.0.0.1      codecraft.us  flashsword20.*.*
+#               intercept all query like "blog.codecraft.us" or "flashsword20.*.*" to 127.0.0.1
