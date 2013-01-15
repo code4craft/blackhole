@@ -53,6 +53,7 @@ public class ZonesFileRefresher implements InitializingBean {
 				// changed.
 				synchronized (this) {
 					if (zonesFile.lastModified() != lastFileModifiedTime) {
+						lastFileModifiedTime = zonesFile.lastModified();
 						zonesFileLoader.reload();
 						ehcacheClient.clearCache();
 						MacInetInetManager macInetInetManager = MacInetInetManager

@@ -18,7 +18,7 @@ hostd具有三大特性：
 	
 ###3. 安装
 
-Mac下hostd下载pkd包安装即可，下载地址[hostd-1.0.0-alpha.pkg](http://vdisk.weibo.com/s/m6qSi)。hostd将安装到/usr/local/hostd/目录。hostd需要java 1.6以上的运行环境。
+Mac下hostd下载pkd包安装即可，下载地址[hostd-1.0.0-alpha.pkg](http://vdisk.weibo.com/s/meeAh)。hostd将安装到/usr/local/hostd/目录。hostd需要java 1.6以上的运行环境。
 
 ###4. 使用
 
