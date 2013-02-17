@@ -4,11 +4,12 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.cache.CacheManager;
-import us.codecraft.blackhole.forward.UDPForwardConnector;
+import us.codecraft.blackhole.forward.Forwarder;
 import us.codecraft.blackhole.handler.Handler;
 import us.codecraft.blackhole.handler.HandlerManager;
 
@@ -25,8 +26,9 @@ public class QueryProcesser {
 	@Autowired
 	private HandlerManager handlerManager;
 
+	@Qualifier("multiUDPForwarderConnector")
 	@Autowired
-	private UDPForwardConnector forwardConnection;
+	private Forwarder forwarder;
 
 	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
@@ -52,7 +54,7 @@ public class QueryProcesser {
 		if (ServerContext.hasRecord()) {
 			response = responseMessage.toWire();
 		} else {
-			response = forwardConnection.forward(queryData, query);
+			response = forwarder.forward(queryData, query);
 			if (response == null) {
 				return null;
 			}

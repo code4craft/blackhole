@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
@@ -24,8 +25,9 @@ import us.codecraft.blackhole.utils.RecordUtils;
  * @author yihua.huang@dianping.com
  * @date 2012-12-15
  */
+@Qualifier("UDPForwardConnector")
 @Component
-public class UDPForwardConnector {
+public class UDPForwardConnector implements Forwarder {
 
 	public static UDPForwardConnector INSTANCE = new UDPForwardConnector();
 
@@ -48,6 +50,7 @@ public class UDPForwardConnector {
 	@Autowired
 	private Configure configure;
 
+	@Override
 	public byte[] forward(final byte[] queryBytes, Message query) {
 		return forwardToAddress(queryBytes, query, dnsHostsContainer.getHost());
 	}

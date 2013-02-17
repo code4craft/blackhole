@@ -67,7 +67,7 @@ public class CacheManager implements InitializingBean {
 						cacheClient.set(getCacheKey(question), new UDPPackage(
 								responseBytes), minTTL(response));
 					} catch (Throwable e) {
-						logger.warn("set to cache error " + e);
+						logger.warn("set to cache error ", e);
 					}
 
 				}

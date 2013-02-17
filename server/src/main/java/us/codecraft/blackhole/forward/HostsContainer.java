@@ -1,7 +1,9 @@
 package us.codecraft.blackhole.forward;
 
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -105,6 +107,19 @@ public abstract class HostsContainer implements InitializingBean {
 			long timeCost = getHostTester().timeCost(entry.getKey());
 			entry.getValue().add(timeCost);
 		}
+	}
+
+	public List<SocketAddress> getAllAvaliableHosts() {
+		List<SocketAddress> results = new ArrayList<SocketAddress>();
+		Iterator<Entry<SocketAddress, AveragedRequestTime>> iterator = requestTimes
+				.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<SocketAddress, AveragedRequestTime> next = iterator.next();
+			if (next.getValue().get() < timeout) {
+				results.add(next.getKey());
+			}
+		}
+		return results;
 	}
 
 	public SocketAddress getHost() {
