@@ -1,7 +1,6 @@
 package us.codecraft.blackhole.forward.concurrent;
 
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * @author yihua.huang@dianping.com
@@ -14,11 +13,6 @@ public class MultiReceiverTest {
 	@Before
 	public void setUp() {
 		multireReceiver = new MultiUDPReceiver();
-	}
-
-	@Test
-	public void testReceive() {
-		multireReceiver.receive();
 	}
 
 }
