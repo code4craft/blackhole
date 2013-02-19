@@ -23,9 +23,12 @@ public class ForwardAnswer {
 
 	private final Set<SocketAddress> hostSet;
 
+	private final long startTime;
+
 	public ForwardAnswer(Message query, Set<SocketAddress> hostSet) {
 		this.query = query;
 		this.hostSet = hostSet;
+		this.startTime = System.currentTimeMillis();
 	}
 
 	public byte[] getAnswer() {
@@ -50,6 +53,10 @@ public class ForwardAnswer {
 
 	public Set<SocketAddress> getHostSet() {
 		return hostSet;
+	}
+
+	public long getStartTime() {
+		return startTime;
 	}
 
 }

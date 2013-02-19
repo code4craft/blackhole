@@ -1,13 +1,11 @@
 package us.codecraft.blackhole.multiforward;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
+import us.codecraft.blackhole.config.Configure;
 import us.codecraft.blackhole.forward.DNSHostsContainer;
 import us.codecraft.blackhole.forward.Forwarder;
 
@@ -34,12 +33,11 @@ public class MultiUDPForwarder implements Forwarder {
 	@Autowired
 	private MultiUDPReceiver multiUDPReceiver;
 
-	private Random random = new Random();
-
-	private final static int PORT_BASE = 40311;
-
 	@Autowired
 	private DNSHostsContainer dnsHostsContainer;
+
+	@Autowired
+	private Configure configure;
 
 	/*
 	 * (non-Javadoc)
@@ -49,6 +47,9 @@ public class MultiUDPForwarder implements Forwarder {
 	 */
 	@Override
 	public byte[] forward(byte[] queryBytes, Message query) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("forward query " + query);
+		}
 		// get address
 		List<SocketAddress> allAvaliableHosts = dnsHostsContainer
 				.getAllAvaliableHosts();
@@ -56,16 +57,21 @@ public class MultiUDPForwarder implements Forwarder {
 		ByteBuffer byteBuffer = ByteBuffer.allocate(512);
 		ForwardAnswer forwardAnswer = new ForwardAnswer(query,
 				new HashSet<SocketAddress>(allAvaliableHosts));
+		// send fake dns query to detect dns poisoning
+		allAvaliableHosts.add(0, configure.getFakeDnsServer());
+		multiUDPReceiver.registerReceiver(query.getHeader().getID(),
+				forwardAnswer);
 		try {
-			DatagramChannel datagramChannel = DatagramChannel.open();
-			bindToPort(datagramChannel);
-			multiUDPReceiver.registerReceiver(datagramChannel, forwardAnswer);
+			DatagramChannel datagramChannel = multiUDPReceiver
+					.getDatagramChannel();
 			for (SocketAddress host : allAvaliableHosts) {
 				byteBuffer.clear();
 				byteBuffer.put(queryBytes);
 				byteBuffer.flip();
 				datagramChannel.send(byteBuffer, host);
-				logger.info("forward to " + host);
+				if (logger.isDebugEnabled()) {
+					logger.debug("forward to " + host);
+				}
 			}
 		} catch (IOException e) {
 			logger.warn("error", e);
@@ -83,25 +89,10 @@ public class MultiUDPForwarder implements Forwarder {
 			}
 		}
 		if (forwardAnswer.getAnswer() == null) {
-			logger.warn("timeout for all");
+			logger.warn("timeout for query "
+					+ query.getQuestion().getName().toString());
 		}
 		return forwardAnswer.getAnswer();
-	}
-
-	private int bindToPort(DatagramChannel datagramChannel) {
-		boolean portAvaliable = true;
-		int port = 0;
-		do {
-			try {
-				// todo some algorithm to reduce the retry time
-				port = PORT_BASE + random.nextInt(1000);
-				datagramChannel.bind(new InetSocketAddress(port));
-				portAvaliable = true;
-			} catch (Exception e) {
-				portAvaliable = false;
-			}
-		} while (!portAvaliable);
-		return port;
 	}
 
 }
