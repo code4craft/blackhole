@@ -1,5 +1,8 @@
 package us.codecraft.blackhole.config;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,6 +26,9 @@ public class Configure {
 	private int dnsTimeOut = DEFAULT_DNS_TIMEOUT;
 
 	private String loggerLevel;
+
+	private SocketAddress fakeDnsServer;
+	private final static String DEFAULT_FAKE_DNS_SERVER = "144.223.234.234";
 
 	private boolean useCache = true;
 
@@ -112,6 +118,18 @@ public class Configure {
 	 */
 	public void setUseCache(boolean useCache) {
 		this.useCache = useCache;
+	}
+
+	public SocketAddress getFakeDnsServer() {
+		if (fakeDnsServer == null) {
+			this.fakeDnsServer = new InetSocketAddress(DEFAULT_FAKE_DNS_SERVER,
+					DNS_PORT);
+		}
+		return fakeDnsServer;
+	}
+
+	public void setFakeDnsServer(String fakeDnsServer) {
+		this.fakeDnsServer = new InetSocketAddress(fakeDnsServer, DNS_PORT);
 	}
 
 }
