@@ -101,7 +101,7 @@ public class BlackListService implements InitializingBean, ShutDownAble {
 	 */
 	@Override
 	public void shutDown() {
-		String filename = Configure.FILE_PATH + "blacklist";
+		String filename = Configure.FILE_PATH + "/blacklist";
 		try {
 			flushToFile(filename);
 		} catch (IOException e) {
@@ -117,7 +117,7 @@ public class BlackListService implements InitializingBean, ShutDownAble {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String filename = Configure.FILE_PATH + "blacklist";
+		String filename = Configure.FILE_PATH + "/blacklist";
 		try {
 			loadFromFile(filename);
 		} catch (IOException e) {
