@@ -16,6 +16,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import us.codecraft.blackhole.config.Configure;
+import us.codecraft.wifesays.me.ShutDownAble;
 import us.codecraft.wifesays.me.StandReadyWorker;
 
 /**
@@ -24,16 +25,17 @@ import us.codecraft.wifesays.me.StandReadyWorker;
  */
 @Component
 public class EhcacheClient extends StandReadyWorker implements CacheClient,
-		InitializingBean {
+		InitializingBean, ShutDownAble {
 
 	private Logger logger = Logger.getLogger(EhcacheClient.class);
 
 	@Autowired
 	private Configure configure;
 
-	private CacheManager manager;
+	private static volatile CacheManager manager;
 
 	private static final String CACHE_NAME = "DNS";
+
 	private static final String CACHE_CONF = "ehcache.xml";
 
 	private static final String CLEAR = "clear_cache";
@@ -49,7 +51,13 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
 		InputStream inputStream = null;
 		try {
 			inputStream = classPathResource.getInputStream();
-			manager = new CacheManager(inputStream);
+			if (manager == null) {
+				synchronized (EhcacheClient.class) {
+					if (manager == null) {
+						manager = new CacheManager(inputStream);
+					}
+				}
+			}
 		} catch (Exception e) {
 			logger.error("init ehcache error!", e);
 		} finally {
@@ -124,6 +132,29 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
 			clearCache();
 			return "REMOVE SUCCESS";
 		}
+		if (whatWifeSays.startsWith(CLEAR)) {
+			String[] split = whatWifeSays.split(":");
+			if (split.length >= 2) {
+				String address = split[1];
+				if (!address.endsWith(".")) {
+					address += ".";
+				}
+				String type = "A";
+				if (split.length > 2) {
+					type = split[2];
+				}
+				String key = address + " " + type;
+				if (manager == null) {
+					return "CACHE NOT USED";
+				}
+				Cache cache = manager.getCache(CACHE_NAME);
+				if (cache.get(key) == null) {
+					return "KEY " + key + " NOT EXIST";
+				}
+				cache.remove(key);
+				return "REMOVE SUCCESS";
+			}
+		}
 		return null;
 	}
 
@@ -154,6 +185,18 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
 				}
 			}.start();
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see us.codecraft.wifesays.me.ShutDownAble#shutDown()
+	 */
+	@Override
+	public void shutDown() {
+		Cache cache = manager.getCache(CACHE_NAME);
+		cache.flush();
+		logger.info("flush ehcache to file success");
 	}
 
 }
