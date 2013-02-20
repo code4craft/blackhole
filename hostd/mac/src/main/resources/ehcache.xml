@@ -1,0 +1,27 @@
+<ehcache>
+  <diskStore path="/usr/local/hostd/cache"/>
+  <defaultCache
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="120"
+    timeToLiveSeconds="120"
+    overflowToDisk="true"
+    diskPersistent="true"
+    memoryStoreEvictionPolicy="LRU"
+  />
+  
+  <cache name="DNS"
+    maxElementsInMemory="5000"
+    eternal="true"
+    overflowToDisk="true"
+    diskPersistent="true"
+    memoryStoreEvictionPolicy="LRU"
+  />
+  <cache name="MISC"
+    maxElementsInMemory="50000"
+    eternal="true"
+    overflowToDisk="true"
+    diskPersistent="true"
+    memoryStoreEvictionPolicy="LRU"
+  />
+</ehcache>

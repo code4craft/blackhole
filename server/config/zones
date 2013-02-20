@@ -19,7 +19,3 @@
 #	127.0.0.1	flashsword20.*.*
 #		response all query like "flashsword20.diandian.com" "flashsword20.github.com"
 #
-127.0.0.1	www.dianping.com
-127.0.0.1	*.dianping.com
-127.0.0.1	*.diandian.com
-192.168.9.1a02	*

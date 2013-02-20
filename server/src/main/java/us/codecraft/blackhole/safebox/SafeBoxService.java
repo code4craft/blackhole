@@ -86,7 +86,7 @@ public class SafeBoxService implements InitializingBean, ShutDownAble {
 	 */
 	@Override
 	public void shutDown() {
-		String filename = Configure.FILE_PATH + "safebox";
+		String filename = Configure.FILE_PATH + "/safebox";
 		try {
 			flushToFile(filename);
 		} catch (IOException e) {
@@ -102,7 +102,7 @@ public class SafeBoxService implements InitializingBean, ShutDownAble {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String filename = Configure.FILE_PATH + "safebox";
+		String filename = Configure.FILE_PATH + "/safebox";
 		try {
 			loadFromFile(filename);
 		} catch (IOException e) {

@@ -55,7 +55,6 @@ public class ZonesFileRefresher implements InitializingBean {
 					if (zonesFile.lastModified() != lastFileModifiedTime) {
 						lastFileModifiedTime = zonesFile.lastModified();
 						zonesFileLoader.reload();
-						ehcacheClient.clearCache();
 						MacInetInetManager macInetInetManager = MacInetInetManager
 								.getInstance();
 						macInetInetManager.clearDnsCache();

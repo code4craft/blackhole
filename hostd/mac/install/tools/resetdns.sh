@@ -34,5 +34,6 @@ quit
 EOF
 
 dscacheutil -flushcache
+killall -HUP mDNSResponder
 
 fi
