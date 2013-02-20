@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
+import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.blackhole.forward.DNSHostsContainer;
@@ -25,8 +26,6 @@ import us.codecraft.blackhole.forward.Forwarder;
 @Qualifier("multiUDPForwarderConnector")
 @Component
 public class MultiUDPForwarder implements Forwarder {
-
-	private int timeout = 3000;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -76,11 +75,11 @@ public class MultiUDPForwarder implements Forwarder {
 		} catch (IOException e) {
 			logger.warn("error", e);
 		}
-
+		long time1 = System.currentTimeMillis();
 		if (forwardAnswer.getAnswer() == null) {
 			try {
 				forwardAnswer.getLock().lockInterruptibly();
-				forwardAnswer.getCondition().await(timeout,
+				forwardAnswer.getCondition().await(configure.getDnsTimeOut(),
 						TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				logger.warn("error", e);
@@ -90,7 +89,9 @@ public class MultiUDPForwarder implements Forwarder {
 		}
 		if (forwardAnswer.getAnswer() == null) {
 			logger.warn("timeout for query "
-					+ query.getQuestion().getName().toString());
+					+ query.getQuestion().getName().toString() + " "
+					+ Type.string(query.getQuestion().getType())
+					+ " time cost " + (System.currentTimeMillis() - time1));
 		}
 		return forwardAnswer.getAnswer();
 	}

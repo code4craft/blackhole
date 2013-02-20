@@ -1,10 +1,8 @@
 package us.codecraft.blackhole.multiforward;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.Arrays;
@@ -23,10 +21,11 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.blacklist.BlackListService;
 import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.blackhole.forward.DNSHostsContainer;
+import us.codecraft.blackhole.safebox.BlackListService;
+import us.codecraft.blackhole.safebox.SafeBoxService;
 
 /**
  * @author yihua.huang@dianping.com
@@ -41,8 +40,6 @@ public class MultiUDPReceiver implements InitializingBean {
 
 	private ExecutorService processExecutors = Executors.newFixedThreadPool(4);
 
-	private ExecutorService checkExecutors = Executors.newFixedThreadPool(4);
-
 	private final static int PORT_RECEIVE = 40311;
 
 	@Autowired
@@ -52,6 +49,12 @@ public class MultiUDPReceiver implements InitializingBean {
 
 	@Autowired
 	private DNSHostsContainer dnsHostsContainer;
+
+	@Autowired
+	private ConnectionTimer connectionTimer;
+
+	@Autowired
+	private SafeBoxService safeBoxService;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -65,35 +68,8 @@ public class MultiUDPReceiver implements InitializingBean {
 		super();
 	}
 
-	private void checkReable(Message query, Message message) {
-		Record[] answers = message.getSectionArray(Section.ANSWER);
-		for (Record answer : answers) {
-			if (answer.getType() == Type.A || answer.getType() == Type.AAAA) {
-				String address = StringUtils.removeEnd(answer.rdataToString(),
-						".");
-				try {
-					if (logger.isDebugEnabled()) {
-						logger.debug("try to reach host " + address);
-					}
-					if (!InetAddress.getByName(address).isReachable(1000)) {
-						blackListService.registerInvalidAddress(query, address);
-					} else {
-						cacheManager.setToCache(query, message.toWire());
-					}
-				} catch (UnknownHostException e) {
-					logger.warn("unkown host " + address + " " + e);
-				} catch (IOException e) {
-					logger.warn("ping " + address + " error " + e);
-				}
-			}
-		}
-	}
-
 	private byte[] removeFakeAddress(Message message, byte[] bytes) {
 		Record[] answers = message.getSectionArray(Section.ANSWER);
-		if (answers == null || answers.length == 0) {
-			return null;
-		}
 		boolean changed = false;
 		for (Record answer : answers) {
 			String address = StringUtils.removeEnd(answer.rdataToString(), ".");
@@ -107,11 +83,17 @@ public class MultiUDPReceiver implements InitializingBean {
 				changed = true;
 			}
 		}
+		if (message.getQuestion().getType() == Type.A
+				&& (message.getSectionArray(Section.ANSWER) == null || message
+						.getSectionArray(Section.ANSWER).length == 0)
+				&& (message.getSectionArray(Section.ADDITIONAL) == null || message
+						.getSectionArray(Section.ADDITIONAL).length == 0)
+				&& (message.getSectionArray(Section.AUTHORITY) == null || message
+						.getSectionArray(Section.AUTHORITY).length == 0)) {
+			logger.info("remove message " + message.getQuestion());
+			return null;
+		}
 		if (changed) {
-			if (message.getSectionArray(Section.ANSWER) == null
-					|| message.getSectionArray(Section.ANSWER).length == 0) {
-				return null;
-			}
 			return message.toWire();
 		}
 		return bytes;
@@ -143,13 +125,13 @@ public class MultiUDPReceiver implements InitializingBean {
 						try {
 							handleAnswer(byteBuffer, remoteAddress);
 						} catch (Throwable e) {
-							logger.warn("forward exception ", e);
+							logger.warn("forward exception " + e);
 						}
 					}
 				});
 
 			} catch (Throwable e) {
-				logger.warn("receive exception", e);
+				logger.warn("receive exception" + e);
 			}
 		}
 	}
@@ -177,9 +159,11 @@ public class MultiUDPReceiver implements InitializingBean {
 	private void addToBlacklist(Message message) {
 		for (Record answer : message.getSectionArray(Section.ANSWER)) {
 			String address = StringUtils.removeEnd(answer.rdataToString(), ".");
-			logger.info("detected dns poisoning, add address " + address
-					+ " to blacklist");
-			blackListService.addToBlacklist(address);
+			if (!blackListService.inBlacklist(address)) {
+				logger.info("detected dns poisoning, add address " + address
+						+ " to blacklist");
+				blackListService.addToBlacklist(address);
+			}
 		}
 	}
 
@@ -191,6 +175,9 @@ public class MultiUDPReceiver implements InitializingBean {
 		// fake dns server return an answer, it must be dns poisoning
 		if (remoteAddress.equals(configure.getFakeDnsServer())) {
 			addToBlacklist(message);
+			String domain = StringUtils.removeEnd(message.getQuestion()
+					.getName().toString(), ".");
+			safeBoxService.setPoisoned(domain);
 			return;
 		}
 		if (logger.isDebugEnabled()) {
@@ -210,25 +197,15 @@ public class MultiUDPReceiver implements InitializingBean {
 				forwardAnswer.setAnswer(result);
 				try {
 					forwardAnswer.getLock().lockInterruptibly();
-					forwardAnswer.getCondition().signal();
+					forwardAnswer.getCondition().signalAll();
 				} catch (InterruptedException e) {
 				} finally {
 					forwardAnswer.getLock().unlock();
 				}
 			}
 		}
-		checkExecutors.submit(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					checkReable(forwardAnswer.getQuery(), message);
-				} catch (Throwable e) {
-					logger.warn("check error ", e);
-				}
-
-			}
-		});
+		connectionTimer.checkConnectTimeForAnswer(forwardAnswer.getQuery(),
+				message);
 
 	}
 

@@ -27,6 +27,8 @@ public class Configure {
 
 	private String loggerLevel;
 
+	private boolean enableSafeBox = true;
+
 	private SocketAddress fakeDnsServer;
 	private final static String DEFAULT_FAKE_DNS_SERVER = "144.223.234.234";
 
@@ -36,6 +38,14 @@ public class Configure {
 			+ "/config/blackhole.conf";
 
 	public static String zonesFilename = Configure.FILE_PATH + "/config/zones";
+
+	public boolean isEnableSafeBox() {
+		return enableSafeBox;
+	}
+
+	public void setEnableSafeBox(boolean enableSafeBox) {
+		this.enableSafeBox = enableSafeBox;
+	}
 
 	/**
 	 * @return the useCache

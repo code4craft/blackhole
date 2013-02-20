@@ -91,6 +91,8 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble,
 			dnsHostsContainer.setTimeout(dnsTimeout);
 		} else if (key.equalsIgnoreCase("fake_dns")) {
 			configure.setFakeDnsServer(value);
+		} else if (key.equalsIgnoreCase("safe_box")) {
+			configure.setEnableSafeBox(BooleanUtils.toBooleanObject(value));
 		}
 
 		else {

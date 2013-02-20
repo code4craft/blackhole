@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.forward.concurrent;
+package us.codecraft.blackhole.multiforward;
 
 import java.io.IOException;
 import java.net.InetAddress;

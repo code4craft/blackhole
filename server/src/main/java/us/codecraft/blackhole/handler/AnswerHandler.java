@@ -20,6 +20,7 @@ import us.codecraft.blackhole.container.ServerContext;
 import us.codecraft.blackhole.zones.AnswerContainer;
 import us.codecraft.blackhole.zones.AnswerProvider;
 import us.codecraft.blackhole.zones.PatternContainer;
+import us.codecraft.blackhole.zones.SafeBoxAnswerProvider;
 
 /**
  * @author yihua.huang@dianping.com
@@ -38,6 +39,9 @@ public class AnswerHandler implements Handler, InitializingBean {
 	@Autowired
 	private PatternContainer patternContainer;
 
+	@Autowired
+	private SafeBoxAnswerProvider safeBoxAnswerProvider;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -49,6 +53,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 		answerProviders = new LinkedList<AnswerProvider>();
 		answerProviders.add(answerContainer);
 		answerProviders.add(patternContainer);
+		answerProviders.add(safeBoxAnswerProvider);
 	}
 
 	// b._dns-sd._udp.0.129.37.10.in-addr.arpa.

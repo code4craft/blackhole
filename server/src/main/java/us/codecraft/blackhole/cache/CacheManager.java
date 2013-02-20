@@ -8,7 +8,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
-import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 
 import us.codecraft.blackhole.config.Configure;
@@ -35,9 +34,8 @@ public class CacheManager implements InitializingBean {
 		if (!configure.isUseCache()) {
 			return null;
 		}
-		Record question = query.getQuestion();
 		UDPPackage udpPackage = cacheClient
-				.<UDPPackage> get(getCacheKey(question));
+				.<UDPPackage> get(getCacheKey(query));
 		if (udpPackage == null) {
 			return null;
 		}
@@ -45,8 +43,24 @@ public class CacheManager implements InitializingBean {
 		return bytes;
 	}
 
-	private String getCacheKey(Record question) {
-		return RecordUtils.recordKey(question);
+	public <T> boolean set(Message query, T value, int expireTime) {
+		return cacheClient.set(getCacheKey(query), value, expireTime);
+	}
+
+	public <T> T get(Message query) {
+		return cacheClient.get(getCacheKey(query));
+	}
+
+	public <T> boolean set(String key, T value, int expireTime) {
+		return cacheClient.set(key, value, expireTime);
+	}
+
+	public <T> T get(String key) {
+		return cacheClient.get(key);
+	}
+
+	public String getCacheKey(Message query) {
+		return RecordUtils.recordKey(query.getQuestion());
 	}
 
 	private int minTTL(Message response) {
@@ -63,8 +77,7 @@ public class CacheManager implements InitializingBean {
 				public void run() {
 					try {
 						Message response = new Message(responseBytes);
-						Record question = query.getQuestion();
-						cacheClient.set(getCacheKey(question), new UDPPackage(
+						cacheClient.set(getCacheKey(query), new UDPPackage(
 								responseBytes), minTTL(response));
 					} catch (Throwable e) {
 						logger.warn("set to cache error ", e);
@@ -79,7 +92,7 @@ public class CacheManager implements InitializingBean {
 	/**
 	 * @return the cacheSaveExecutors
 	 */
-	public ExecutorService getCacheSaveExecutors() {
+	private ExecutorService getCacheSaveExecutors() {
 		if (cacheSaveExecutors == null) {
 			synchronized (this) {
 				cacheSaveExecutors = Executors.newFixedThreadPool(50);
