@@ -42,13 +42,13 @@ public class ZonesFileRefresher implements InitializingBean {
 	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		File zonesFile = new File(Configure.zonesFilename);
+		File zonesFile = new File(Configure.getZonesFilename());
 		lastFileModifiedTime = zonesFile.lastModified();
 
 		scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
 
 			public void run() {
-				File zonesFile = new File(Configure.zonesFilename);
+				File zonesFile = new File(Configure.getZonesFilename());
 				// When two files' last modify time not equal, we consider it is
 				// changed.
 				synchronized (this) {
