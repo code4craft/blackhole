@@ -3,7 +3,7 @@ BlackHole
 
 ####1. 简介
 
-BlackHole是一个迷你型的DNS服务器。它的主要特色是可以通过简单配置，将DNS请求导向某些特定IP。
+BlackHole是一个迷你型的DNS服务器。它的主要特色是可以通过简单配置，将DNS请求导向某些特定IP。同时可以通过特征判断的方式，防止DNS污染。
 
 ####2. 用途
 
@@ -15,12 +15,14 @@ BlackHole最简单直接的用途是在开发和测试环境中将域名指向�
 	
 表示将所有以.codecraft.us形式结尾的域名全部指向127.0.0.1。
 
-BlackHole的另一个愿景是：用于机构的内部DNS拦截。如果内部DNS希望将某些域名导向特定IP，从而达到封禁的目的，则可以通过简单配置BlackHole完成。
+BlackHole还可以防止DNS污染攻击，对于某些无法访问的网站可以起到作用。BlackHole防止DNS攻击的方式参见：[http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/](http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/)
+
+BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/恢复等操作，无需用户自己修改，目前有Mac版本。
 
 
 ####3. 安装BlackHole:
 
-将[https://github.com/flashsword20/blackhole/tree/master/bin](https://github.com/flashsword20/blackhole/tree/master/bin)下的文件全部拷贝到/usr/local/blackhole目录下即可。
+将[https://github.com/code4craft/blackhole/tree/master/server/bin](https://github.com/code4craft/blackhole/tree/master/server/bin)下的文件全部拷贝到/usr/local/blackhole目录下即可。
 
 ####4. 配置BlackHole:
 
@@ -88,9 +90,7 @@ BlackHole的配置跟Hosts文件是一样的，但是支持通配符"*"。
 
 blackhole使用Java编写，可以使用于任何平台。支持shell的平台使用"blackhole.sh start"即可启动BlackHole。因为使用了53端口，所以需要具有root权限。
 
-Windows下可以使用Java命令来启动。
-
-	java -jar blackhole.jar -dFOLDER
+Windows下可以使用start.bat脚本来启动，不需要管理员权限运行。
 
 FOLDER为blackhole所在文件夹。
 
@@ -144,22 +144,22 @@ BlackHole存在两种工作模式："拦截"和"转发"。
 
 * #####转发
 
-	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另一台DNS服务器，并将该DNS服务器的响应转发回客户端。此时性能降低为拦截模式的1/2。可以选择对DNS服务器的响应进行缓存，那么下次请求的开销会降低。
+	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另外的DNS服务器，并将该DNS服务器的响应转发回客户端。BlackHole转发模式下会进行DNS污染的防御。
 	
 #####基准测试
 
 在基准测试中，拦截模式下不开启cache，qps为BIND的50%，为17000，如果开启cache，对于有缓存的数据达到40000qps，优于BIND，已经能满足企业内网需要。
 
 基准测试结果见：
-[BlackHole vs BIND benchmark](https://github.com/flashsword20/blackhole/blob/master/benchmark)
+[BlackHole vs BIND benchmark](https://github.com/code4craft/blackhole/blob/master/server/benchmark)
 
 ####9. 稳定性
 
-目前BlackHole的稳定性未得到广泛证明，但是作者在不断更新中，欢迎使用并及时反馈。
+目前BlackHole的稳定性未得到广泛证明，但是作者在不断更新中，欢迎使用并及时反馈。如果经常出现访问不了的情况，请关闭本地cache(blackhole.conf中设置cache=false)。
 
 ####10. 协议
 
 BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。
 
 作者邮箱：
-yihua.huang#dianping.com
+code4crafter@gmail.com
