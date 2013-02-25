@@ -26,7 +26,6 @@ case "$1" in
   zones)
     vi $HOME_DIR/config/zones
     java -jar $HOME_DIR/wifesays.jar -creload > /dev/null
-    java -jar $HOME_DIR/wifesays.jar -cclear_cache > /dev/null
     ;;
   config)
     vi $HOME_DIR/config/blackhole.conf
