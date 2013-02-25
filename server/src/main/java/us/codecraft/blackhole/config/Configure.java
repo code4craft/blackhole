@@ -34,10 +34,18 @@ public class Configure {
 
 	private boolean useCache = true;
 
-	public static String configFilename = Configure.FILE_PATH
+	private static String configFilename = Configure.FILE_PATH
 			+ "/config/blackhole.conf";
 
-	public static String zonesFilename = Configure.FILE_PATH + "/config/zones";
+	public static String getConfigFilename() {
+		return Configure.FILE_PATH + "/config/blackhole.conf";
+	}
+
+	private static String zonesFilename = Configure.FILE_PATH + "/config/zones";
+
+	public static String getZonesFilename() {
+		return Configure.FILE_PATH + "/config/zones";
+	}
 
 	public boolean isEnableSafeBox() {
 		return enableSafeBox;

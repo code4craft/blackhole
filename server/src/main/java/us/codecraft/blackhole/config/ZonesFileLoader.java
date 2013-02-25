@@ -84,7 +84,7 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble,
 	 */
 	@Override
 	public void reload() {
-		readConfig(Configure.zonesFilename);
+		readConfig(Configure.getZonesFilename());
 	}
 
 	/*

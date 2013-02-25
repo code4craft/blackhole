@@ -125,7 +125,7 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble,
 	@Override
 	public void reload() {
 		if (!reloadOff) {
-			readConfig(Configure.configFilename);
+			readConfig(Configure.getConfigFilename());
 		}
 	}
 
