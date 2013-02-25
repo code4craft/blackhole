@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:util="http://www.springframework.org/schema/util"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+        <context:annotation-config />
+
+        <context:component-scan base-package="us.codecraft" />
+        
+        <beans>
+        	<bean name="udpSocketMonitor" class="us.codecraft.blackhole.connector.UDPSocketMonitor">
+        		<constructor-arg name="host" type="java.lang.String" value="0.0.0.0"></constructor-arg>
+        		<constructor-arg name="port" type="int" value="53"></constructor-arg>
+        	</bean>
+        	<bean name="wifesaysTcpSocketMonitor" class="us.codecraft.wifesays.me.TCPSocketMonitor">
+        		<constructor-arg name="host" type="java.lang.String" value="0.0.0.0"></constructor-arg>
+        		<constructor-arg name="port" type="int" value="40310"></constructor-arg>
+        	</bean>
+        	<bean name="husbandEar" class="us.codecraft.wifesays.me.HusbandEar">
+        		<property name="startDelay" value="3000"></property>
+        	</bean>
+        </beans>
+
+
+</beans>
