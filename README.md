@@ -47,4 +47,4 @@ BlackHole存在两种工作模式："拦截"和"转发"。
 BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。
 
 作者邮箱：
-yihua.huang#dianping.com
+code4crafter@gmail.com
