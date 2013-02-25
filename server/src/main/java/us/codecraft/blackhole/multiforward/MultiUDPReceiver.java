@@ -145,7 +145,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		datagramChannel = DatagramChannel.open();
-		datagramChannel.bind(new InetSocketAddress(PORT_RECEIVE));
+		datagramChannel.socket().bind(new InetSocketAddress(PORT_RECEIVE));
 		new Thread(new Runnable() {
 
 			@Override
