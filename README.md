@@ -19,7 +19,19 @@ BlackHole还可以防止DNS污染攻击，对于某些无法访问的网站可�
 
 BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/恢复等操作，无需用户自己修改，目前有Mac版本。
 
-####3. 原理：
+####3. 安装及配置
+
+若想使用BlackHole作为DNS服务器，则将[https://github.com/code4craft/blackhole/tree/master/server/bin](https://github.com/code4craft/blackhole/tree/master/server/bin)下的文件下载即可。
+
+Linux系列系统请将文件复制到/usr/local/blackhole/文件夹下，若不在此目录，请将blackhole.sh中
+
+	HOME_DIR=/usr/local/blackhole
+	
+修改成你的目录。然后通过sudo blackhole start可以启动。
+
+Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
+
+####4. 原理：
 
 BlackHole存在两种工作模式："拦截"和"转发"。
 
@@ -38,11 +50,11 @@ BlackHole存在两种工作模式："拦截"和"转发"。
 基准测试结果见：
 [BlackHole vs BIND benchmark](https://github.com/flashsword20/blackhole/blob/master/benchmark)
 
-####4. 稳定性
+####5. 稳定性
 
 目前BlackHole的稳定性未得到广泛证明，但是作者在不断更新中，欢迎使用并及时反馈。如果经常出现访问不了的情况，请关闭本地cache(blackhole.conf中设置cache=false)。
 
-####5. 协议
+####6. 协议
 
 BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。
 
