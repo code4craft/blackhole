@@ -18,13 +18,15 @@ import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ShutDownAble;
+import us.codecraft.wifesays.me.StandReadyWorker;
 
 /**
  * @author yihua.huang@dianping.com
  * @date Feb 19, 2013
  */
 @Component
-public class BlackListService implements InitializingBean, ShutDownAble {
+public class BlackListService extends StandReadyWorker implements
+		InitializingBean, ShutDownAble {
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -33,6 +35,8 @@ public class BlackListService implements InitializingBean, ShutDownAble {
 	private Set<String> blacklist = new HashSet<String>();
 
 	private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+
+	private static final String FLUSH_CMD = "flush";
 
 	public void registerInvalidAddress(Message query, String address) {
 		String questionName = query.getQuestion().getName().toString();
@@ -123,6 +127,25 @@ public class BlackListService implements InitializingBean, ShutDownAble {
 		} catch (IOException e) {
 			logger.warn("load file " + filename + " error! " + e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * us.codecraft.wifesays.me.StandReady#doWhatYouShouldDo(java.lang.String)
+	 */
+	@Override
+	public String doWhatYouShouldDo(String whatWifeSays) {
+		if (FLUSH_CMD.equalsIgnoreCase(whatWifeSays)) {
+			String filename = Configure.FILE_PATH + "/blacklist";
+			try {
+				flushToFile(filename);
+			} catch (IOException e) {
+				logger.warn("write to file " + filename + " error! " + e);
+			}
+		}
+		return "SUCCESS";
 	}
 
 }

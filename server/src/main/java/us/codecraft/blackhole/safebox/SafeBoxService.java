@@ -15,19 +15,23 @@ import org.springframework.stereotype.Component;
 
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ShutDownAble;
+import us.codecraft.wifesays.me.StandReadyWorker;
 
 /**
  * @author yihua.huang@dianping.com
  * @date Feb 20, 2013
  */
 @Component
-public class SafeBoxService implements InitializingBean, ShutDownAble {
+public class SafeBoxService extends StandReadyWorker implements
+		InitializingBean, ShutDownAble {
 
 	private Logger logger = Logger.getLogger(getClass());
 
 	private Map<String, Boolean> poisons = new ConcurrentHashMap<String, Boolean>();
 
 	private Map<String, String> answers = new ConcurrentHashMap<String, String>();
+
+	private static final String FLUSH_CMD = "flush";
 
 	public void flushToFile(String filename) throws IOException {
 		PrintWriter writer = new PrintWriter(new File(filename));
@@ -108,6 +112,25 @@ public class SafeBoxService implements InitializingBean, ShutDownAble {
 		} catch (IOException e) {
 			logger.warn("load file " + filename + " error! " + e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * us.codecraft.wifesays.me.StandReady#doWhatYouShouldDo(java.lang.String)
+	 */
+	@Override
+	public String doWhatYouShouldDo(String whatWifeSays) {
+		if (FLUSH_CMD.equalsIgnoreCase(whatWifeSays)) {
+			String filename = Configure.FILE_PATH + "/safebox";
+			try {
+				flushToFile(filename);
+			} catch (IOException e) {
+				logger.warn("write to file " + filename + " error! " + e);
+			}
+		}
+		return "SUCCESS";
 	}
 
 }
