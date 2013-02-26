@@ -1,0 +1,6 @@
+[submodule "wifesays"]
+	path = wifesays
+	url = git@github.com:code4craft/wifesays.git
+[submodule "dnstools"]
+	path = dnstools
+	url = git@github.com:code4craft/dnstools.git
