@@ -27,7 +27,7 @@ Linux系列系统请将文件复制到/usr/local/blackhole/文件夹下，若不
 
 	HOME_DIR=/usr/local/blackhole
 	
-修改成你的目录。然后通过sudo blackhole start可以启动。
+修改成你的目录。然后通过sudo blackhole.sh start可以启动。
 
 Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
 
