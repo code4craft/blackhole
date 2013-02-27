@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.multiforward;
+package us.codecraft.blackhole.forward;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,11 +21,10 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
+import us.codecraft.blackhole.antipollution.BlackListService;
+import us.codecraft.blackhole.antipollution.SafeHostService;
 import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.forward.DNSHostsContainer;
-import us.codecraft.blackhole.safebox.BlackListService;
-import us.codecraft.blackhole.safebox.SafeBoxService;
 
 /**
  * @author yihua.huang@dianping.com
@@ -54,7 +53,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	private ConnectionTimer connectionTimer;
 
 	@Autowired
-	private SafeBoxService safeBoxService;
+	private SafeHostService safeBoxService;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -172,7 +171,7 @@ public class MultiUDPReceiver implements InitializingBean {
 		byte[] answer = Arrays.copyOfRange(byteBuffer.array(), 0,
 				byteBuffer.remaining());
 		final Message message = new Message(answer);
-		// fake dns server return an answer, it must be dns poisoning
+		// fake dns server return an answer, it must be dns pollution
 		if (remoteAddress.equals(configure.getFakeDnsServer())) {
 			addToBlacklist(message);
 			String domain = StringUtils.removeEnd(message.getQuestion()

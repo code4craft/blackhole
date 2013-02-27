@@ -6,7 +6,7 @@ import java.net.InetAddress;
 import org.junit.Before;
 import org.junit.Test;
 
-import us.codecraft.blackhole.multiforward.MultiUDPReceiver;
+import us.codecraft.blackhole.forward.MultiUDPReceiver;
 
 /**
  * @author yihua.huang@dianping.com

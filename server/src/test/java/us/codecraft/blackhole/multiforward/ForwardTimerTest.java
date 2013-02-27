@@ -2,6 +2,8 @@ package us.codecraft.blackhole.multiforward;
 
 import org.junit.Test;
 
+import us.codecraft.blackhole.forward.ConnectionTimer;
+
 /**
  * @author yihua.huang@dianping.com
  * @date Feb 20, 2013

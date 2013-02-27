@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.safebox;
+package us.codecraft.blackhole.antipollution;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,7 +22,7 @@ import us.codecraft.wifesays.me.StandReadyWorker;
  * @date Feb 20, 2013
  */
 @Component
-public class SafeBoxService extends StandReadyWorker implements
+public class SafeHostService extends StandReadyWorker implements
 		InitializingBean, ShutDownAble {
 
 	private Logger logger = Logger.getLogger(getClass());
@@ -90,7 +90,7 @@ public class SafeBoxService extends StandReadyWorker implements
 	 */
 	@Override
 	public void shutDown() {
-		String filename = Configure.FILE_PATH + "/safebox";
+		String filename = Configure.FILE_PATH + "/safehost";
 		try {
 			flushToFile(filename);
 		} catch (IOException e) {
@@ -106,7 +106,7 @@ public class SafeBoxService extends StandReadyWorker implements
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String filename = Configure.FILE_PATH + "/safebox";
+		String filename = Configure.FILE_PATH + "/safehost";
 		try {
 			loadFromFile(filename);
 		} catch (IOException e) {
@@ -123,7 +123,7 @@ public class SafeBoxService extends StandReadyWorker implements
 	@Override
 	public String doWhatYouShouldDo(String whatWifeSays) {
 		if (FLUSH_CMD.equalsIgnoreCase(whatWifeSays)) {
-			String filename = Configure.FILE_PATH + "/safebox";
+			String filename = Configure.FILE_PATH + "/safehost";
 			try {
 				flushToFile(filename);
 			} catch (IOException e) {

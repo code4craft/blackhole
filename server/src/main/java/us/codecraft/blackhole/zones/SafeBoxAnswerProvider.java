@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Type;
 
+import us.codecraft.blackhole.antipollution.SafeHostService;
 import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.safebox.SafeBoxService;
 
 /**
  * @author yihua.huang@dianping.com
@@ -16,7 +16,7 @@ import us.codecraft.blackhole.safebox.SafeBoxService;
 public class SafeBoxAnswerProvider implements AnswerProvider {
 
 	@Autowired
-	private SafeBoxService safeBoxService;
+	private SafeHostService safeBoxService;
 
 	@Autowired
 	private Configure configure;
