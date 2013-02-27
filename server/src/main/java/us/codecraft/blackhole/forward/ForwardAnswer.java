@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.multiforward;
+package us.codecraft.blackhole.forward;
 
 import java.net.SocketAddress;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.multiforward;
+package us.codecraft.blackhole.forward;
 
 import java.io.IOException;
 import java.net.SocketAddress;
@@ -10,20 +10,16 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.forward.DNSHostsContainer;
-import us.codecraft.blackhole.forward.Forwarder;
 
 /**
  * @author yihua.huang@dianping.com
  * @date Jan 16, 2013
  */
-@Qualifier("multiUDPForwarderConnector")
 @Component
 public class MultiUDPForwarder implements Forwarder {
 

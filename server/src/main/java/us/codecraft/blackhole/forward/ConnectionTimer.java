@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.multiforward;
+package us.codecraft.blackhole.forward;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -19,8 +19,8 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
+import us.codecraft.blackhole.antipollution.SafeHostService;
 import us.codecraft.blackhole.cache.CacheManager;
-import us.codecraft.blackhole.safebox.SafeBoxService;
 
 /**
  * @author yihua.huang@dianping.com
@@ -30,7 +30,7 @@ import us.codecraft.blackhole.safebox.SafeBoxService;
 public class ConnectionTimer {
 
 	@Autowired
-	private SafeBoxService safeBoxService;
+	private SafeHostService safeBoxService;
 	/**
 	 * 
 	 */

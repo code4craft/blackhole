@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.safebox;
+package us.codecraft.blackhole.antipollution;
 
 import java.io.BufferedReader;
 import java.io.File;

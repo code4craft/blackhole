@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
@@ -26,7 +25,6 @@ public class QueryProcesser {
 	@Autowired
 	private HandlerManager handlerManager;
 
-	@Qualifier("multiUDPForwarderConnector")
 	@Autowired
 	private Forwarder forwarder;
 
