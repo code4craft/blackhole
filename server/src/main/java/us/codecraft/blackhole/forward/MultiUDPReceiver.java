@@ -203,8 +203,8 @@ public class MultiUDPReceiver implements InitializingBean {
 				}
 			}
 		}
-		connectionTimer.checkConnectTimeForAnswer(forwardAnswer.getQuery(),
-				message);
+		// connectionTimer.checkConnectTimeForAnswer(forwardAnswer.getQuery(),
+		// message);
 
 	}
 
