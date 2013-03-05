@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Blackhole by code4craft</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Blackhole</h1>
+        <p class="header">A simple DNS unrecursive server.It can easily be configured to intercept some kind of request to one address.</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/code4craft/blackhole/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/code4craft/blackhole/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/code4craft/blackhole">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/code4craft">code4craft</a></p>
+
+
+      </header>
+      <section>
+        <h4>1. 简介</h4>
+
+<p>BlackHole是一个迷你型的DNS服务器。它的主要特色是可以通过简单配置，将DNS请求导向某些特定IP。同时可以通过特征判断的方式，防止DNS污染。</p>
+
+<h4>2. 用途</h4>
+
+<p>BlackHole最简单直接的用途是在开发和测试环境中将域名指向某个IP。与修改hosts文件相比，BlackHole配置更方便，并且支持通配符。</p>
+
+<p>例如：</p>
+
+<pre><code>127.0.0.1   *.codecraft.us
+</code></pre>
+
+<p>表示将所有以.codecraft.us形式结尾的域名全部指向127.0.0.1。</p>
+
+<p>BlackHole还可以防止DNS污染攻击，对于某些无法访问的网站可以起到作用。BlackHole防止DNS攻击的方式参见：<a href="http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/">http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/</a></p>
+
+<p>BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/恢复等操作，无需用户自己修改，目前有Mac版本。</p>
+
+<h4>3. 安装及配置</h4>
+
+<p>若想使用BlackHole作为DNS服务器，则将<a href="https://github.com/code4craft/blackhole/tree/master/server/bin">https://github.com/code4craft/blackhole/tree/master/server/bin</a>下的文件下载即可。</p>
+
+<p>Linux系列系统请将文件复制到/usr/local/blackhole/文件夹下，若不在此目录，请将blackhole.sh中</p>
+
+<pre><code>HOME_DIR=/usr/local/blackhole
+</code></pre>
+
+<p>修改成你的目录。然后通过sudo blackhole.sh start可以启动。</p>
+
+<p>Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。</p>
+
+<h4>4. 原理：</h4>
+
+<p>BlackHole存在两种工作模式："拦截"和"转发"。</p>
+
+<ul>
+<li>
+<h5>拦截</h5>
+
+<p>当DNS客户端的请求在BlackHole中有对应配置时，则进入拦截模式。拦截模式使用正则表达式匹配域名并拦截。同时支持PTR反解。</p>
+</li>
+<li>
+<h5>转发</h5>
+
+<p>当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另外的DNS服务器，并将该DNS服务器的响应转发回客户端。  </p>
+
+<h5>基准测试</h5>
+</li>
+</ul><p>在基准测试中，拦截模式下不开启cache，qps为BIND的50%，为17000，如果开启cache，对于有缓存的数据达到40000qps，优于BIND，已经能满足企业内网需要。</p>
+
+<p>基准测试结果见：
+<a href="https://github.com/flashsword20/blackhole/blob/master/benchmark">BlackHole vs BIND benchmark</a></p>
+
+<h4>5. 稳定性</h4>
+
+<p>目前BlackHole的稳定性未得到广泛证明，但是作者在不断更新中，欢迎使用并及时反馈。如果经常出现访问不了的情况，请关闭本地cache(blackhole.conf中设置cache=false)。</p>
+
+<h4>6. 协议</h4>
+
+<p>BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。</p>
+
+<p>作者邮箱：
+<a href="mailto:code4crafter@gmail.com">code4crafter@gmail.com</a></p>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
