@@ -70,6 +70,7 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble,
 	}
 
 	private Pattern compileStringToPattern(String patternStr) {
+		patternStr = "^" + patternStr;
 		patternStr += ".";
 		patternStr = patternStr.replace(".", "\\.");
 		patternStr = patternStr.replace("*", ".*");
