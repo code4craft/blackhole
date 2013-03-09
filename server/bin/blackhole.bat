@@ -1,3 +1,2 @@
-set pa=%cd%
-echo %pa%
-java -jar blackhole.jar -d%pa%
+set path=%cd%
+java -jar Djava.io.tmpdir=%path% blackhole.jar -d%path%
