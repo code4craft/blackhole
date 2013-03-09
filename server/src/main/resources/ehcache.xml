@@ -1,5 +1,5 @@
 <ehcache>
-  <diskStore path="/usr/local/blackhole/cache"/>
+  <diskStore path="java.io.tmpdir"/>
   <defaultCache
     maxElementsInMemory="10000"
     eternal="false"
