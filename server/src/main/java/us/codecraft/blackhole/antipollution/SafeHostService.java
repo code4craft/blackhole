@@ -129,8 +129,9 @@ public class SafeHostService extends StandReadyWorker implements
 			} catch (IOException e) {
 				logger.warn("write to file " + filename + " error! " + e);
 			}
+			return "SUCCESS";
 		}
-		return "SUCCESS";
+		return null;
 	}
 
 }
