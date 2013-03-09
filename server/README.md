@@ -86,6 +86,8 @@ BlackHole的配置跟Hosts文件是一样的，但是支持通配符"*"。
 
 支持SHELL的系统可以使用blackhole.sh zones来快速配置zones文件。
 
+如果两条规则存在交集，请把想要生效的规则放在前面。
+
 ####5. 运行BlackHole:
 
 blackhole使用Java编写，可以使用于任何平台。支持shell的平台使用"blackhole.sh start"即可启动BlackHole。因为使用了53端口，所以需要具有root权限。
