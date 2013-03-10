@@ -53,7 +53,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>./lib/</classpathPrefix>
-							<mainClass>us.codecraft.blackhole.monitor.BlackHole</mainClass>
+							<mainClass>us.codecraft.blackhole.main.BlackHole</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
