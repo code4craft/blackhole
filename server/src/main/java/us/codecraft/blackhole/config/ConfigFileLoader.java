@@ -19,16 +19,13 @@ import us.codecraft.wifesays.me.ReloadAble;
  * @date Dec 28, 2012
  */
 @Component
-public class ConfigFileLoader implements InitializingBean, ReloadAble,
-		FileLoader {
+public class ConfigFileLoader implements InitializingBean, ReloadAble {
 
 	@Autowired
 	DNSHostsContainer dnsHostsContainer;
 
 	@Autowired
 	Configure configure;
-
-	private long lastReadTime = System.currentTimeMillis();
 
 	private boolean reloadOff = false;
 
@@ -69,7 +66,6 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble,
 				}
 			}
 			bufferedReader.close();
-			lastReadTime = System.currentTimeMillis();
 		} catch (Throwable e) {
 			logger.warn("read config file failed:" + filename, e);
 		}
@@ -138,16 +134,6 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble,
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		reload();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see us.codecraft.blackhole.config.FileLoader#getLastReadTime()
-	 */
-	@Override
-	public long getLastReadTime() {
-		return lastReadTime;
 	}
 
 }
