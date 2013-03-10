@@ -20,16 +20,13 @@ import us.codecraft.wifesays.me.ReloadAble;
  * @date Dec 28, 2012
  */
 @Component
-public class ZonesFileLoader implements InitializingBean, ReloadAble,
-		FileLoader {
+public class ZonesFileLoader implements InitializingBean, ReloadAble {
 
 	@Autowired
 	private Configure configure;
 
 	@Autowired
 	private PatternContainer patternContainer;
-
-	private long lastReadTime = System.currentTimeMillis();
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -63,7 +60,6 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble,
 			}
 			patternContainer.setPatterns(patternsTemp);
 			bufferedReader.close();
-			lastReadTime = System.currentTimeMillis();
 		} catch (Throwable e) {
 			logger.warn("read config file failed:" + filename, e);
 		}
@@ -99,13 +95,4 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble,
 		reload();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see us.codecraft.blackhole.config.FileLoader#getLastReadTime()
-	 */
-	@Override
-	public long getLastReadTime() {
-		return lastReadTime;
-	}
 }

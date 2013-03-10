@@ -15,7 +15,7 @@ import us.codecraft.blackhole.config.ConfigFileLoader;
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.blackhole.config.ZonesFileLoader;
 import us.codecraft.blackhole.forward.DNSHostsContainer;
-import us.codecraft.blackhole.monitor.BlackHole;
+import us.codecraft.blackhole.main.BlackHole;
 import us.codecraft.dnstools.InetConnectinoProperties;
 import us.codecraft.dnstools.MacInetInetManager;
 import us.codecraft.wifesays.me.ShutDownAble;
