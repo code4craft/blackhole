@@ -59,8 +59,10 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 						for (int i = configIp ? 2 : 1; i < items.length; i++) {
 							String pattern = items[i];
 							// ip format check
-							nsPatternsTemp.put(compileStringToPattern(pattern),
-									ip);
+							Pattern compileStringToPattern = compileStringToPattern(pattern);
+							nsPatternsTemp.put(compileStringToPattern, ip);
+							answerPatternsTemp.put(compileStringToPattern,
+									AnswerPatternContainer.DO_NOTHING);
 						}
 
 					} else {

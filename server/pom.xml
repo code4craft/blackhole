@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>us.codecraft</groupId>
 	<artifactId>blackhole</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<name>blackhole</name>
 	<description>A simple DNS authoritative server.It can easily be configured to intercept some kind of request to one address.</description>
 	<properties>
