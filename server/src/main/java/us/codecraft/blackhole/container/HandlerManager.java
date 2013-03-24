@@ -39,9 +39,9 @@ public class HandlerManager implements InitializingBean {
 
 	public void registerHandlers() {
 		handlers = new LinkedList<Handler>();
-		handlers.add(nsForwardHandler);
 		handlers.add(headerHandler);
 		handlers.add(answerHandler);
+		handlers.add(nsForwardHandler);
 	}
 
 	/**

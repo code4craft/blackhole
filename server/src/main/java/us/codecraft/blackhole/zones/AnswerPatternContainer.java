@@ -24,6 +24,11 @@ public class AnswerPatternContainer implements AnswerProvider {
 
 	private Logger logger = Logger.getLogger(getClass());
 
+	/**
+	 * When the address configured as "DO_NOTHING",it will not return any
+	 * address.
+	 */
+	public static final String DO_NOTHING = "do_nothing";
 	private static final String FAKE_MX_PREFIX = "mail.";
 	private static final String FAKE_CANME_PREFIX = "cname.";
 
@@ -46,6 +51,9 @@ public class AnswerPatternContainer implements AnswerProvider {
 			Matcher matcher = entry.getKey().matcher(query);
 			if (matcher.find()) {
 				String answer = entry.getValue();
+				if (answer.equals(DO_NOTHING)) {
+					return null;
+				}
 				if (type == Type.MX) {
 					String fakeMXHost = fakeMXHost(query);
 					answerContainer.add(fakeMXHost, Type.A, answer);
