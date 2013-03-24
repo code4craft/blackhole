@@ -8,6 +8,10 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.xbill.DNS.Message;
 
 /**
+ * This object is used for interacting between {@link MultiUDPForwarder} and
+ * {@link MultiUDPReceiver}.It use wait/notify mechanism of
+ * {@link ReentrantLock}.
+ * 
  * @author yihua.huang@dianping.com
  * @date Feb 17, 2013
  */

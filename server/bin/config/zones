@@ -18,4 +18,11 @@
 #
 #	127.0.0.1	flashsword20.*.*
 #		response all query like "flashsword20.diandian.com" "flashsword20.github.com"
+#       NS      8.8.8.8         *.google.com
+#               use 8.8.8.8 as the dns server for *.google.com
 #
+#       NS      *.163.com
+#               query DNS servers configured in blackhole.conf for answer
+#
+#       NS      8.8.8.8,192.168.0.1         *.google.com
+#               query 8.8.8.8 and 192.168.0.1 for answer

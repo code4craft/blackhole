@@ -27,6 +27,8 @@ import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.config.Configure;
 
 /**
+ * Listen on port 40311 using reactor mode.
+ * 
  * @author yihua.huang@dianping.com
  * @date Jan 16, 2013
  */
