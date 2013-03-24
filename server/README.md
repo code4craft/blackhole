@@ -66,9 +66,13 @@ BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/z
 	
 	日志的等级。可选配置为('DEBUG','INFO','WARN')，对应log4j的等级。开启'DEBUG'级别的日志会显示每次请求和应答，但是会大大降低吞吐量。
 
+* **FAKE_DNS**
+	
+	伪造的DNS服务器，用于检测DNS污染。一般无须更改。
+
 #####zones
 
-zones是DNS系统的域名配置文件。BlackHole简化了zones的配置，去掉了SOA、NX等配置项。
+zones是DNS系统的域名配置文件。BlackHole简化了zones的配置。
 
 BlackHole的配置跟Hosts文件是一样的，但是支持通配符"*"。
 
@@ -84,7 +88,19 @@ BlackHole的配置跟Hosts文件是一样的，但是支持通配符"*"。
 
 这表示把所有请求导向本地。这个配置在某些场合(例如测试邮件发送服务)会有用。
 
-支持SHELL的系统可以使用blackhole.sh zones来快速配置zones文件。
+BlackHole还支持NS记录的配置。NS记录的意思是，对于某些域名的请求，总是向某个DNS服务器查找结果。例如，你可以使用组合配置：
+
+	173.194.72.103 *.google.com
+	NS 8.8.8.8 docs.google.com
+
+这两项配置的意思是：将*.google.com的地址都指向173.194.72.103，但是对于docs.google.com域名，则请求8.8.8.8 DNS服务器，并将其返回的值作为结果。
+
+NS记录配置总是优先于普通配置。NS记录的IP地址可以是单个、多个或者没有。以下配置都是合法的：
+
+	NS 8.8.8.8,192.168.0.1 docs.google.com 	#使用8.8.8.8,192.168.0.1两个地址(用","分隔，中间无空格)
+	NS docs.google.com 						#使用blackhole.conf中配置的DNS服务器
+
+支持SHELL的系统可以使用blackhole.sh zones来快速配置zones文件。修改zones文件是动态生效的。
 
 如果两条规则存在交集，请把想要生效的规则放在前面。
 
