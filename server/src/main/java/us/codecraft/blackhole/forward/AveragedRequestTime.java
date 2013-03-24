@@ -3,6 +3,9 @@ package us.codecraft.blackhole.forward;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * Plan to summarize the total request time of each server.<br>
+ * Not used yet.
+ * 
  * @author yihua.huang@dianping.com
  * @date Dec 22, 2012
  */

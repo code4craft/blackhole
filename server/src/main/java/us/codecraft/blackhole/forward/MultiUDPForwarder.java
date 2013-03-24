@@ -17,6 +17,11 @@ import org.xbill.DNS.Type;
 import us.codecraft.blackhole.config.Configure;
 
 /**
+ * Forward DNS query to hosts contained in {@link DNSHostsContainer}.Use the
+ * same port 40311 for all UDP diagram and the instance of
+ * {@link MultiUDPReceiver} will listen on the port 40311.Use wait/notify to
+ * synchronize.
+ * 
  * @author yihua.huang@dianping.com
  * @date Jan 16, 2013
  */
@@ -42,24 +47,36 @@ public class MultiUDPForwarder implements Forwarder {
 	 */
 	@Override
 	public byte[] forward(byte[] queryBytes, Message query) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("forward query " + query);
-		}
 		// get address
 		List<SocketAddress> allAvaliableHosts = dnsHostsContainer
 				.getAllAvaliableHosts();
+		return forward(queryBytes, query, allAvaliableHosts);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see us.codecraft.blackhole.forward.Forwarder#forward(byte[],
+	 * org.xbill.DNS.Message, java.util.List)
+	 */
+	@Override
+	public byte[] forward(byte[] queryBytes, Message query,
+			List<SocketAddress> hosts) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("forward query " + query);
+		}
 		// send to all address
 		ByteBuffer byteBuffer = ByteBuffer.allocate(512);
 		ForwardAnswer forwardAnswer = new ForwardAnswer(query,
-				new HashSet<SocketAddress>(allAvaliableHosts));
+				new HashSet<SocketAddress>(hosts));
 		// send fake dns query to detect dns poisoning
-		allAvaliableHosts.add(0, configure.getFakeDnsServer());
+		hosts.add(0, configure.getFakeDnsServer());
 		multiUDPReceiver.registerReceiver(query.getHeader().getID(),
 				forwardAnswer);
 		try {
 			DatagramChannel datagramChannel = multiUDPReceiver
 					.getDatagramChannel();
-			for (SocketAddress host : allAvaliableHosts) {
+			for (SocketAddress host : hosts) {
 				byteBuffer.clear();
 				byteBuffer.put(queryBytes);
 				byteBuffer.flip();

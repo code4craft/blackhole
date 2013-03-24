@@ -9,8 +9,6 @@ import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.forward.Forwarder;
-import us.codecraft.blackhole.handler.Handler;
-import us.codecraft.blackhole.handler.HandlerManager;
 
 /**
  * Main logic of blackhole.<br/>
@@ -41,16 +39,18 @@ public class QueryProcesser {
 		if (cache != null) {
 			return cache;
 		}
-		Message responseMessage = new Message(query.getHeader().getID());
+		MessageWrapper responseMessage = new MessageWrapper(new Message(query
+				.getHeader().getID()));
 		for (Handler handler : handlerManager.getHandlers()) {
-			boolean handle = handler.handle(query, responseMessage);
+			boolean handle = handler.handle(new MessageWrapper(query),
+					responseMessage);
 			if (!handle) {
 				break;
 			}
 		}
 		byte[] response = null;
 		if (ServerContext.hasRecord()) {
-			response = responseMessage.toWire();
+			response = responseMessage.getMessage().toWire();
 		} else {
 			response = forwarder.forward(queryData, query);
 			if (response == null) {

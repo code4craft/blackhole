@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
 
-import us.codecraft.blackhole.zones.PatternContainer;
+import us.codecraft.blackhole.utils.RecordUtils;
+import us.codecraft.blackhole.zones.AnswerPatternContainer;
+import us.codecraft.blackhole.zones.NSPatternContainer;
 import us.codecraft.wifesays.me.ReloadAble;
 
 /**
@@ -26,13 +28,17 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 	private Configure configure;
 
 	@Autowired
-	private PatternContainer patternContainer;
+	private AnswerPatternContainer answerPatternContainer;
+
+	@Autowired
+	private NSPatternContainer nsPatternContainer;
 
 	private Logger logger = Logger.getLogger(getClass());
 
 	public void readConfig(String filename) {
 		try {
-			Map<Pattern, String> patternsTemp = new LinkedHashMap<Pattern, String>();
+			Map<Pattern, String> answerPatternsTemp = new LinkedHashMap<Pattern, String>();
+			Map<Pattern, String> nsPatternsTemp = new LinkedHashMap<Pattern, String>();
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(
 					filename));
 			String line = null;
@@ -46,19 +52,35 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 					if (items.length < 2) {
 						continue;
 					}
-					String ip = items[0];
-					for (int i = 1; i < items.length; i++) {
-						String pattern = items[i];
-						// ip format check
-						Address.getByAddress(ip);
-						patternsTemp.put(compileStringToPattern(pattern), ip);
+					if (items[0].equalsIgnoreCase("NS")) {
+						boolean configIp = RecordUtils
+								.areValidIpv4Addresses(items[1]);
+						String ip = configIp ? items[1] : "";
+						for (int i = configIp ? 2 : 1; i < items.length; i++) {
+							String pattern = items[i];
+							// ip format check
+							nsPatternsTemp.put(compileStringToPattern(pattern),
+									ip);
+						}
+
+					} else {
+						String ip = items[0];
+						for (int i = 1; i < items.length; i++) {
+							String pattern = items[i];
+							// ip format check
+							Address.getByAddress(ip);
+							answerPatternsTemp.put(
+									compileStringToPattern(pattern), ip);
+						}
 					}
+
 					logger.info("read config success:\t" + line);
 				} catch (Exception e) {
 					logger.warn("parse config line error:\t" + line + "\t" + e);
 				}
 			}
-			patternContainer.setPatterns(patternsTemp);
+			answerPatternContainer.setPatterns(answerPatternsTemp);
+			nsPatternContainer.setPatterns(nsPatternsTemp);
 			bufferedReader.close();
 		} catch (Throwable e) {
 			logger.warn("read config file failed:" + filename, e);

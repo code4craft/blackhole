@@ -3,7 +3,8 @@ package us.codecraft.blackhole.utils;
 import java.util.List;
 
 /**
- * Like <a href="http://redis.io/topics/data-types">sortedset</a> in redis.<br>
+ * A java implementation of <a
+ * href="http://redis.io/topics/data-types">sortedset</a> in redis.<br>
  * 
  * 
  * @author yihua.huang@dianping.com

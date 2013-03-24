@@ -1,5 +1,6 @@
 package us.codecraft.blackhole.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Type;
 
@@ -40,5 +41,39 @@ public class RecordUtils {
 	public static String recordKey(Record record) {
 		return record.getName().toString() + " "
 				+ Type.string(record.getType());
+	}
+
+	public static boolean isValidIpv4Address(String address) {
+		if (StringUtils.isBlank(address)) {
+			return false;
+		}
+		String[] items = address.split("\\.");
+		if (items.length != 4) {
+			return false;
+		}
+		for (String item : items) {
+			try {
+				int parseInt = Integer.parseInt(item);
+				if (parseInt < 0 || parseInt > 255) {
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean areValidIpv4Addresses(String addresses) {
+		if (StringUtils.isBlank(addresses)) {
+			return false;
+		}
+		String[] items = addresses.split("\\,");
+		for (String item : items) {
+			if (!isValidIpv4Address(item)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

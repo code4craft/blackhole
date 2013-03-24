@@ -23,6 +23,9 @@ import us.codecraft.blackhole.antipollution.SafeHostService;
 import us.codecraft.blackhole.cache.CacheManager;
 
 /**
+ * Check the connecting time of host.Use to detect whether the DNS answer is
+ * correct.
+ * 
  * @author yihua.huang@dianping.com
  * @date Feb 20, 2013
  */
@@ -32,14 +35,20 @@ public class ConnectionTimer {
 	@Autowired
 	private SafeHostService safeBoxService;
 	/**
-	 * 
+	 * If the server doesn't support ICMP protocol, try http instead.
 	 */
 	private static final int PORT_FOR_TEST = 80;
 
 	@Autowired
 	private CacheManager cacheManager;
 
+	/**
+	 * Time out for connection timer.
+	 */
 	private static final int TIME_OUT = 1000;
+	/**
+	 * expire time for connect time cache.
+	 */
 	private static final int EXPIRE_TIME = 3600 * 1000 * 5;
 
 	private ExecutorService checkExecutors = Executors.newFixedThreadPool(4);
