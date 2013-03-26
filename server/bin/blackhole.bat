@@ -1,2 +1,2 @@
-set path=%cd%
-java -jar Djava.io.tmpdir=%path% blackhole.jar -d%path%
+set cpath=%cd%
+java -jar -Djava.io.tmpdir=%cpath% blackhole.jar -d%cpath%
