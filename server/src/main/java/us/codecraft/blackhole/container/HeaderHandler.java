@@ -25,8 +25,17 @@ public class HeaderHandler implements Handler {
 			response.getMessage().getHeader().setFlag(Flags.RD);
 		}
 		Record queryRecord = request.getMessage().getQuestion();
+		// try {
+		// queryRecord = Record.fromString(new Name("ww.fake.com."), Type.A,
+		// DClass.ANY, 1, "127.0.0.1", new Name("ww.fake.com."));
+		// } catch (TextParseException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		response.getMessage().addRecord(queryRecord, Section.QUESTION);
 		return true;
 	}
-
 }

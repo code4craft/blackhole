@@ -33,7 +33,6 @@ public class QueryProcesser {
 	private CacheManager cacheManager;
 
 	public byte[] process(byte[] queryData) throws IOException {
-
 		Message query = new Message(queryData);
 		byte[] cache = cacheManager.getFromCache(query);
 		if (cache != null) {
