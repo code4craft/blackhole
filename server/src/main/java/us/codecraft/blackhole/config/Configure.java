@@ -30,7 +30,6 @@ public class Configure {
 	private boolean enableSafeBox = true;
 
 	private SocketAddress fakeDnsServer;
-	private final static String DEFAULT_FAKE_DNS_SERVER = "144.223.234.234";
 
 	private boolean useCache = true;
 
@@ -154,10 +153,6 @@ public class Configure {
 	}
 
 	public SocketAddress getFakeDnsServer() {
-		if (fakeDnsServer == null) {
-			this.fakeDnsServer = new InetSocketAddress(DEFAULT_FAKE_DNS_SERVER,
-					DNS_PORT);
-		}
 		return fakeDnsServer;
 	}
 
