@@ -12,6 +12,8 @@ public class MessageWrapper {
 
 	private Message message;
 
+	private boolean hasRecord;
+
 	/**
 	 * @param message
 	 */
@@ -19,11 +21,20 @@ public class MessageWrapper {
 		if (message == null) {
 			throw new IllegalArgumentException("Message should not be null!");
 		}
+		this.hasRecord = false;
 		this.message = message;
 	}
 
 	public Message getMessage() {
 		return message;
+	}
+
+	public boolean hasRecord() {
+		return hasRecord;
+	}
+
+	public void setHasRecord(boolean hasRecord) {
+		this.hasRecord = hasRecord;
 	}
 
 	public void setMessage(Message message) {

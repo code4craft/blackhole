@@ -106,7 +106,7 @@ public class AnswerHandler implements Handler, InitializingBean {
 								+ DClass.string(question.getDClass()) + "\t"
 								+ answer);
 					}
-					ServerContext.setHasRecord(true);
+					response.setHasRecord(true);
 					return false;
 				} catch (Throwable e) {
 					logger.warn("handling exception " + e);

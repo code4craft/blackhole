@@ -7,7 +7,6 @@ import java.net.DatagramSocket;
 import org.apache.log4j.Logger;
 
 import us.codecraft.blackhole.container.QueryProcesser;
-import us.codecraft.blackhole.container.ServerContext;
 
 public class UDPConnectionWorker implements Runnable {
 
@@ -32,7 +31,6 @@ public class UDPConnectionWorker implements Runnable {
 		try {
 
 			byte[] response = null;
-			ServerContext.setUdpSocket(socket);
 			response = queryProcesser.process(inDataPacket.getData());
 			if (response == null) {
 				return;

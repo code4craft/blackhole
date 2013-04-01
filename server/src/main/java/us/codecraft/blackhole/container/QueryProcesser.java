@@ -48,7 +48,7 @@ public class QueryProcesser {
 			}
 		}
 		byte[] response = null;
-		if (ServerContext.hasRecord()) {
+		if (responseMessage.hasRecord()) {
 			response = responseMessage.getMessage().toWire();
 		} else {
 			response = forwarder.forward(queryData, query);
