@@ -71,8 +71,7 @@ public class MultiUDPForwarder implements Forwarder {
 				new HashSet<SocketAddress>(hosts));
 		// send fake dns query to detect dns poisoning
 		hosts.add(0, configure.getFakeDnsServer());
-		multiUDPReceiver.registerReceiver(query.getHeader().getID(),
-				forwardAnswer);
+		multiUDPReceiver.registerReceiver(query, forwardAnswer);
 		try {
 			DatagramChannel datagramChannel = multiUDPReceiver
 					.getDatagramChannel();

@@ -35,7 +35,7 @@ import us.codecraft.blackhole.config.Configure;
 @Component
 public class MultiUDPReceiver implements InitializingBean {
 
-	private Map<Integer, ForwardAnswer> answers = new ConcurrentHashMap<Integer, ForwardAnswer>();
+	private Map<String, ForwardAnswer> answers = new ConcurrentHashMap<String, ForwardAnswer>();
 
 	private DatagramChannel datagramChannel;
 
@@ -100,16 +100,22 @@ public class MultiUDPReceiver implements InitializingBean {
 		return bytes;
 	}
 
-	public void registerReceiver(Integer id, ForwardAnswer forwardAnswer) {
-		answers.put(id, forwardAnswer);
+	private String getKey(Message message) {
+		return message.getHeader().getID() + "_"
+				+ message.getQuestion().getName().toString() + "_"
+				+ message.getQuestion().getType();
 	}
 
-	public ForwardAnswer getAnswer(Integer id) {
-		return answers.get(id);
+	public void registerReceiver(Message message, ForwardAnswer forwardAnswer) {
+		answers.put(getKey(message), forwardAnswer);
 	}
 
-	public void removeAnswer(Integer id) {
-		answers.remove(id);
+	public ForwardAnswer getAnswer(Message message) {
+		return answers.get(getKey(message));
+	}
+
+	public void removeAnswer(Message message) {
+		answers.remove(getKey(message));
 	}
 
 	private void receive() {
@@ -184,8 +190,7 @@ public class MultiUDPReceiver implements InitializingBean {
 		if (logger.isDebugEnabled()) {
 			logger.debug("get message from " + remoteAddress + "\n" + message);
 		}
-		final ForwardAnswer forwardAnswer = getAnswer(message.getHeader()
-				.getID());
+		final ForwardAnswer forwardAnswer = getAnswer(message);
 		if (forwardAnswer == null) {
 			logger.warn("Oops!Received some unexpected messages! ");
 			return;
