@@ -26,7 +26,6 @@ public class QueryProcesser {
 	@Autowired
 	private Forwarder forwarder;
 
-	@SuppressWarnings("unused")
 	private Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
@@ -34,6 +33,10 @@ public class QueryProcesser {
 
 	public byte[] process(byte[] queryData) throws IOException {
 		Message query = new Message(queryData);
+		if (logger.isDebugEnabled()) {
+			logger.debug("get query "
+					+ query.getQuestion().getName().toString());
+		}
 		byte[] cache = cacheManager.getFromCache(query);
 		if (cache != null) {
 			return cache;
@@ -60,5 +63,4 @@ public class QueryProcesser {
 
 		return response;
 	}
-
 }

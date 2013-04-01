@@ -63,49 +63,55 @@ public class MultiUDPForwarder implements Forwarder {
 	public byte[] forward(byte[] queryBytes, Message query,
 			List<SocketAddress> hosts) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("forward query " + query);
+			logger.debug("forward query " + query.getQuestion().getName());
 		}
 		// send to all address
 		ByteBuffer byteBuffer = ByteBuffer.allocate(512);
 		ForwardAnswer forwardAnswer = new ForwardAnswer(query,
 				new HashSet<SocketAddress>(hosts));
-		// send fake dns query to detect dns poisoning
-		hosts.add(0, configure.getFakeDnsServer());
-		multiUDPReceiver.registerReceiver(query, forwardAnswer);
+		if (configure.getFakeDnsServer() != null) {
+			// send fake dns query to detect dns poisoning
+			hosts.add(0, configure.getFakeDnsServer());
+		}
 		try {
-			DatagramChannel datagramChannel = multiUDPReceiver
-					.getDatagramChannel();
-			for (SocketAddress host : hosts) {
-				byteBuffer.clear();
-				byteBuffer.put(queryBytes);
-				byteBuffer.flip();
-				datagramChannel.send(byteBuffer, host);
-				if (logger.isDebugEnabled()) {
-					logger.debug("forward to " + host);
+
+			multiUDPReceiver.registerReceiver(query, forwardAnswer);
+			try {
+				DatagramChannel datagramChannel = multiUDPReceiver
+						.getDatagramChannel();
+				for (SocketAddress host : hosts) {
+					byteBuffer.clear();
+					byteBuffer.put(queryBytes);
+					byteBuffer.flip();
+					datagramChannel.send(byteBuffer, host);
+					if (logger.isDebugEnabled()) {
+						logger.debug("forward to " + host);
+					}
+				}
+			} catch (IOException e) {
+				logger.warn("error", e);
+			}
+			long time1 = System.currentTimeMillis();
+			if (forwardAnswer.getAnswer() == null) {
+				try {
+					forwardAnswer.getLock().lockInterruptibly();
+					forwardAnswer.getCondition().await(
+							configure.getDnsTimeOut(), TimeUnit.MILLISECONDS);
+				} catch (InterruptedException e) {
+					logger.warn("error", e);
+				} finally {
+					forwardAnswer.getLock().unlock();
 				}
 			}
-		} catch (IOException e) {
-			logger.warn("error", e);
-		}
-		long time1 = System.currentTimeMillis();
-		if (forwardAnswer.getAnswer() == null) {
-			try {
-				forwardAnswer.getLock().lockInterruptibly();
-				forwardAnswer.getCondition().await(configure.getDnsTimeOut(),
-						TimeUnit.MILLISECONDS);
-			} catch (InterruptedException e) {
-				logger.warn("error", e);
-			} finally {
-				forwardAnswer.getLock().unlock();
+			if (forwardAnswer.getAnswer() == null) {
+				logger.info("timeout for query "
+						+ query.getQuestion().getName().toString() + " "
+						+ Type.string(query.getQuestion().getType())
+						+ " time cost " + (System.currentTimeMillis() - time1));
 			}
-		}
-		if (forwardAnswer.getAnswer() == null) {
-			logger.warn("timeout for query "
-					+ query.getQuestion().getName().toString() + " "
-					+ Type.string(query.getQuestion().getType())
-					+ " time cost " + (System.currentTimeMillis() - time1));
+		} finally {
+			multiUDPReceiver.removeAnswer(query, configure.getDnsTimeOut());
 		}
 		return forwardAnswer.getAnswer();
 	}
-
 }

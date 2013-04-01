@@ -8,8 +8,11 @@ import java.nio.channels.DatagramChannel;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -42,6 +45,64 @@ public class MultiUDPReceiver implements InitializingBean {
 	private ExecutorService processExecutors = Executors.newFixedThreadPool(4);
 
 	private final static int PORT_RECEIVE = 40311;
+
+	private DelayQueue<DelayStringKey> delayRemoveQueue = new DelayQueue<DelayStringKey>();
+
+	private static class DelayStringKey implements Delayed {
+
+		private final String key;
+
+		private final long initDelay;
+
+		private long startTime;
+
+		/**
+		 * @param key
+		 * @param delay
+		 *            in ms
+		 */
+		public DelayStringKey(String key, long initDelay) {
+			this.startTime = System.currentTimeMillis();
+			this.key = key;
+			this.initDelay = initDelay;
+		}
+
+		public String getKey() {
+			return key;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Comparable#compareTo(java.lang.Object)
+		 */
+		@Override
+		public int compareTo(Delayed o) {
+			long delayA = startTime + initDelay - System.currentTimeMillis();
+			long delayB = o.getDelay(TimeUnit.MILLISECONDS);
+			if (delayA > delayB) {
+				return 1;
+			} else if (delayA < delayB) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * java.util.concurrent.Delayed#getDelay(java.util.concurrent.TimeUnit)
+		 */
+		@Override
+		public long getDelay(TimeUnit unit) {
+			return unit.convert(
+					startTime + initDelay - System.currentTimeMillis(),
+					TimeUnit.MILLISECONDS);
+		}
+
+	}
 
 	@Autowired
 	private CacheManager cacheManager;
@@ -114,8 +175,8 @@ public class MultiUDPReceiver implements InitializingBean {
 		return answers.get(getKey(message));
 	}
 
-	public void removeAnswer(Message message) {
-		answers.remove(getKey(message));
+	public void removeAnswer(Message message, long timeOut) {
+		delayRemoveQueue.add(new DelayStringKey(getKey(message), timeOut));
 	}
 
 	private void receive() {
@@ -161,6 +222,28 @@ public class MultiUDPReceiver implements InitializingBean {
 
 			}
 		}).start();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				removeAnswerFromQueue();
+
+			}
+		}).start();
+	}
+
+	private void removeAnswerFromQueue() {
+		while (true) {
+			try {
+				DelayStringKey delayRemoveKey = delayRemoveQueue.take();
+				answers.remove(delayRemoveKey.getKey());
+				if (logger.isDebugEnabled()) {
+					logger.debug("remove key " + delayRemoveKey.getKey());
+				}
+			} catch (Exception e) {
+				logger.warn("remove answer error", e);
+			}
+		}
 	}
 
 	private void addToBlacklist(Message message) {
@@ -180,19 +263,22 @@ public class MultiUDPReceiver implements InitializingBean {
 				byteBuffer.remaining());
 		final Message message = new Message(answer);
 		// fake dns server return an answer, it must be dns pollution
-		if (remoteAddress.equals(configure.getFakeDnsServer())) {
+		if (configure.getFakeDnsServer() != null
+				&& remoteAddress.equals(configure.getFakeDnsServer())) {
 			addToBlacklist(message);
 			String domain = StringUtils.removeEnd(message.getQuestion()
 					.getName().toString(), ".");
 			safeBoxService.setPoisoned(domain);
 			return;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("get message from " + remoteAddress + "\n" + message);
+		if (logger.isTraceEnabled()) {
+			logger.trace("get message from " + remoteAddress + "\n" + message);
 		}
 		final ForwardAnswer forwardAnswer = getAnswer(message);
 		if (forwardAnswer == null) {
-			logger.warn("Oops!Received some unexpected messages! ");
+			logger.info("Received messages for "
+					+ message.getQuestion().getName().toString()
+					+ " after timeout!");
 			return;
 		}
 		dnsHostsContainer.registerTimeCost(remoteAddress,
