@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.cache.CacheManager;
-import us.codecraft.blackhole.forward.Forwarder;
 
 /**
  * Main logic of blackhole.<br/>
@@ -22,9 +21,6 @@ public class QueryProcesser {
 
 	@Autowired
 	private HandlerManager handlerManager;
-
-	@Autowired
-	private Forwarder forwarder;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -53,12 +49,6 @@ public class QueryProcesser {
 		byte[] response = null;
 		if (responseMessage.hasRecord()) {
 			response = responseMessage.getMessage().toWire();
-		} else {
-			response = forwarder.forward(queryData, query);
-			if (response == null) {
-				return null;
-			}
-			cacheManager.setToCache(query, response);
 		}
 
 		return response;

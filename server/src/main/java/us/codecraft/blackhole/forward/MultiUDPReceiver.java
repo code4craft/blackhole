@@ -42,7 +42,7 @@ public class MultiUDPReceiver implements InitializingBean {
 
 	private DatagramChannel datagramChannel;
 
-	private ExecutorService processExecutors = Executors.newFixedThreadPool(4);
+	private ExecutorService processExecutors = Executors.newFixedThreadPool(1);
 
 	private final static int PORT_RECEIVE = 40311;
 
@@ -186,12 +186,14 @@ public class MultiUDPReceiver implements InitializingBean {
 				byteBuffer.clear();
 				final SocketAddress remoteAddress = datagramChannel
 						.receive(byteBuffer);
+				final byte[] answer = Arrays.copyOfRange(byteBuffer.array(), 0,
+						byteBuffer.remaining());
 				processExecutors.submit(new Runnable() {
 
 					@Override
 					public void run() {
 						try {
-							handleAnswer(byteBuffer, remoteAddress);
+							handleAnswer(answer, remoteAddress);
 						} catch (Throwable e) {
 							logger.warn("forward exception " + e);
 						}
@@ -257,10 +259,8 @@ public class MultiUDPReceiver implements InitializingBean {
 		}
 	}
 
-	private void handleAnswer(ByteBuffer byteBuffer, SocketAddress remoteAddress)
+	private void handleAnswer(byte[] answer, SocketAddress remoteAddress)
 			throws IOException {
-		byte[] answer = Arrays.copyOfRange(byteBuffer.array(), 0,
-				byteBuffer.remaining());
 		final Message message = new Message(answer);
 		// fake dns server return an answer, it must be dns pollution
 		if (configure.getFakeDnsServer() != null
@@ -283,18 +283,17 @@ public class MultiUDPReceiver implements InitializingBean {
 		}
 		dnsHostsContainer.registerTimeCost(remoteAddress,
 				System.currentTimeMillis() - forwardAnswer.getStartTime());
-		if (forwardAnswer.getAnswer() == null) {
-			byte[] result = removeFakeAddress(message, answer);
-			if (result != null) {
-				forwardAnswer.setAnswer(result);
-				try {
-					forwardAnswer.getLock().lockInterruptibly();
-					forwardAnswer.getCondition().signalAll();
-				} catch (InterruptedException e) {
-				} finally {
-					forwardAnswer.getLock().unlock();
-				}
+		answer = removeFakeAddress(message, answer);
+		if (answer != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("response message "
+						+ message.getHeader().getID()
+						+ " to "
+						+ forwardAnswer.getResponser().getInDataPacket()
+								.getPort());
 			}
+			forwardAnswer.getResponser().response(answer);
+			cacheManager.setToCache(message, answer);
 		}
 		// connectionTimer.checkConnectTimeForAnswer(forwardAnswer.getQuery(),
 		// message);

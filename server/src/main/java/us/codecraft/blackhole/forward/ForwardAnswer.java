@@ -1,66 +1,42 @@
 package us.codecraft.blackhole.forward;
 
-import java.net.SocketAddress;
-import java.util.Set;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.xbill.DNS.Message;
 
+import us.codecraft.blackhole.connector.UDPConnectionResponser;
+
 /**
- * This object is used for interacting between {@link MultiUDPForwarder} and
- * {@link MultiUDPReceiver}.It use wait/notify mechanism of
- * {@link ReentrantLock}.
- * 
  * @author yihua.huang@dianping.com
- * @date Feb 17, 2013
+ * @date Apr 10, 2013
  */
 public class ForwardAnswer {
 
-	private byte[] answer;
-
 	private final Message query;
 
-	private final ReentrantLock lock = new ReentrantLock();
-
-	private final Condition condition = lock.newCondition();
-
-	private final Set<SocketAddress> hostSet;
+	private final UDPConnectionResponser responser;
 
 	private final long startTime;
 
-	public ForwardAnswer(Message query, Set<SocketAddress> hostSet) {
+	/**
+	 * @param responser
+	 * @param startTime
+	 */
+	public ForwardAnswer(Message query, UDPConnectionResponser responser) {
+		super();
 		this.query = query;
-		this.hostSet = hostSet;
+		this.responser = responser;
 		this.startTime = System.currentTimeMillis();
 	}
 
-	public byte[] getAnswer() {
-		return answer;
-	}
-
-	public void setAnswer(byte[] answer) {
-		this.answer = answer;
-	}
-
-	public ReentrantLock getLock() {
-		return lock;
-	}
-
-	public Condition getCondition() {
-		return condition;
-	}
-
-	public Message getQuery() {
-		return query;
-	}
-
-	public Set<SocketAddress> getHostSet() {
-		return hostSet;
+	public UDPConnectionResponser getResponser() {
+		return responser;
 	}
 
 	public long getStartTime() {
 		return startTime;
+	}
+
+	public Message getQuery() {
+		return query;
 	}
 
 }

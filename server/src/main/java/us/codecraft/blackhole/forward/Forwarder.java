@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.xbill.DNS.Message;
 
+import us.codecraft.blackhole.connector.UDPConnectionResponser;
+
 /**
  * @author yihua.huang@dianping.com
  * @date Jan 16, 2013
@@ -18,7 +20,8 @@ public interface Forwarder {
 	 * @param query
 	 * @return
 	 */
-	public byte[] forward(final byte[] queryBytes, Message query);
+	public void forward(final byte[] queryBytes, Message query,
+			UDPConnectionResponser responser);
 
 	/**
 	 * Forward query bytes to external DNS host(s) and get a valid DNS answer.
@@ -27,7 +30,7 @@ public interface Forwarder {
 	 * @param query
 	 * @return
 	 */
-	public byte[] forward(final byte[] queryBytes, Message query,
-			List<SocketAddress> hosts);
+	public void forward(final byte[] queryBytes, Message query,
+			List<SocketAddress> hosts, UDPConnectionResponser responser);
 
 }
