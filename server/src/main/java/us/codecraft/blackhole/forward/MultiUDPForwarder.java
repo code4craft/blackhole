@@ -66,7 +66,7 @@ public class MultiUDPForwarder implements Forwarder {
 					+ query.getHeader().getID());
 		}
 		// send to all address
-		ByteBuffer byteBuffer = ByteBuffer.allocate(512);
+
 		ForwardAnswer forwardAnswer = new ForwardAnswer(query, responser);
 		if (configure.getFakeDnsServer() != null) {
 			// send fake dns query to detect dns poisoning
@@ -76,16 +76,11 @@ public class MultiUDPForwarder implements Forwarder {
 
 			multiUDPReceiver.registerReceiver(query, forwardAnswer);
 			try {
-				DatagramChannel datagramChannel = multiUDPReceiver
-						.getDatagramChannel();
 				for (SocketAddress host : hosts) {
-					byteBuffer.clear();
-					byteBuffer.put(queryBytes);
-					byteBuffer.flip();
-					datagramChannel.send(byteBuffer, host);
-					if (logger.isDebugEnabled()) {
-						logger.debug("forward to " + host);
-					}
+					send(queryBytes, host);
+					logger.debug("forward query "
+							+ query.getQuestion().getName() + "_"
+							+ query.getHeader().getID());
 				}
 			} catch (IOException e) {
 				logger.warn("error", e);
@@ -93,5 +88,10 @@ public class MultiUDPForwarder implements Forwarder {
 		} finally {
 			multiUDPReceiver.removeAnswer(query, configure.getDnsTimeOut());
 		}
+	}
+
+	private void send(byte[] queryBytes, SocketAddress host) throws IOException {
+		DatagramChannel datagramChannel = multiUDPReceiver.getDatagramChannel();
+		datagramChannel.send(ByteBuffer.wrap(queryBytes), host);
 	}
 }

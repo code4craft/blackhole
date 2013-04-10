@@ -30,7 +30,7 @@ public class UDPSocketMonitor extends Thread {
 	private int port;
 	private static final short udpLength = 512;
 	private DatagramSocket socket;
-	private ExecutorService executorService = Executors.newFixedThreadPool(1);
+	private ExecutorService executorService = Executors.newFixedThreadPool(5);
 	@Autowired
 	private QueryProcesser queryProcesser;
 	@Autowired

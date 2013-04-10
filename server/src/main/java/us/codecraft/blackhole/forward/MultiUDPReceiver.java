@@ -42,7 +42,7 @@ public class MultiUDPReceiver implements InitializingBean {
 
 	private DatagramChannel datagramChannel;
 
-	private ExecutorService processExecutors = Executors.newFixedThreadPool(1);
+	private ExecutorService processExecutors = Executors.newFixedThreadPool(50);
 
 	private final static int PORT_RECEIVE = 40311;
 
@@ -188,7 +188,7 @@ public class MultiUDPReceiver implements InitializingBean {
 						.receive(byteBuffer);
 				final byte[] answer = Arrays.copyOfRange(byteBuffer.array(), 0,
 						byteBuffer.remaining());
-				processExecutors.submit(new Runnable() {
+				processExecutors.execute(new Runnable() {
 
 					@Override
 					public void run() {
@@ -216,6 +216,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		datagramChannel = DatagramChannel.open();
 		datagramChannel.socket().bind(new InetSocketAddress(PORT_RECEIVE));
+		datagramChannel.configureBlocking(true);
 		new Thread(new Runnable() {
 
 			@Override
@@ -284,14 +285,12 @@ public class MultiUDPReceiver implements InitializingBean {
 		dnsHostsContainer.registerTimeCost(remoteAddress,
 				System.currentTimeMillis() - forwardAnswer.getStartTime());
 		answer = removeFakeAddress(message, answer);
+		if (logger.isDebugEnabled()) {
+			logger.debug("response message " + message.getHeader().getID()
+					+ " to "
+					+ forwardAnswer.getResponser().getInDataPacket().getPort());
+		}
 		if (answer != null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("response message "
-						+ message.getHeader().getID()
-						+ " to "
-						+ forwardAnswer.getResponser().getInDataPacket()
-								.getPort());
-			}
 			forwardAnswer.getResponser().response(answer);
 			cacheManager.setToCache(message, answer);
 		}
