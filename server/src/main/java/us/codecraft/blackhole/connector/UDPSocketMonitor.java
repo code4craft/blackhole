@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import us.codecraft.blackhole.container.QueryProcesser;
+import us.codecraft.blackhole.forward.Forwarder;
 
 /**
  * Authored by EagleDNS<a href="http://www.unlogic.se/projects/eagledns">
@@ -29,9 +30,11 @@ public class UDPSocketMonitor extends Thread {
 	private int port;
 	private static final short udpLength = 512;
 	private DatagramSocket socket;
-	private ExecutorService executorService = Executors.newFixedThreadPool(100);
+	private ExecutorService executorService = Executors.newFixedThreadPool(1);
 	@Autowired
 	private QueryProcesser queryProcesser;
+	@Autowired
+	private Forwarder forwarder;
 
 	public UDPSocketMonitor(String host, int port) throws IOException {
 		super();
@@ -54,11 +57,11 @@ public class UDPSocketMonitor extends Thread {
 
 				byte[] in = new byte[udpLength];
 				DatagramPacket indp = new DatagramPacket(in, in.length);
-
 				indp.setLength(in.length);
 				socket.receive(indp);
-				executorService.execute(new UDPConnectionWorker(socket, indp,
-						queryProcesser));
+				executorService.execute(new UDPConnectionWorker(indp,
+						queryProcesser,
+						new UDPConnectionResponser(socket, indp), forwarder));
 			} catch (SocketException e) {
 
 				// This is usally thrown on shutdown
