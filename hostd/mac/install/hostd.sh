@@ -1,7 +1,7 @@
 #!/bin/sh
 HOME_DIR=/usr/local/hostd
 PATH=$PATH:$HOME_DIR
-VERSION="1.1.0"
+VERSION="1.1.2"
 WIFESAYS_VERSION="1.0.0-alpha"
 export PATH
 export HOME_DIR
@@ -32,7 +32,7 @@ else
   start)
     checkUser;
     echo "Starting hostd..."
-    nohup java -jar $HOME_DIR/bin/blackhole-hostd-${VERSION}.jar -d$HOME_DIR 1>>$HOME_DIR/log/`date "+%Y-%m-%d"`.log 2>$HOME_DIR/log/error.log &
+    nohup java -jar $HOME_DIR/bin/blackhole-hostd-${VERSION}.jar -d$HOME_DIR 1>>$HOME_DIR/log/`date "+%Y-%m-%d"`.log &
     sleep 0.5
     ;;
   stop)
@@ -43,11 +43,6 @@ else
     echo "Usage: $0 [start|stop]"
     ;;
 esac
-fi
-
-if [ -f $HOME_DIR/log/error.log ] ; then
-  cat $HOME_DIR/log/error.log
-  rm $HOME_DIR/log/error.log
 fi
 
 exit 0
