@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +27,7 @@ import us.codecraft.blackhole.antipollution.BlackListService;
 import us.codecraft.blackhole.antipollution.SafeHostService;
 import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.config.Configure;
+import us.codecraft.blackhole.connector.ThreadPools;
 
 /**
  * Listen on port 40311 using reactor mode.
@@ -41,8 +41,6 @@ public class MultiUDPReceiver implements InitializingBean {
 	private Map<String, ForwardAnswer> answers = new ConcurrentHashMap<String, ForwardAnswer>();
 
 	private DatagramChannel datagramChannel;
-
-	private ExecutorService processExecutors = Executors.newFixedThreadPool(50);
 
 	private final static int PORT_RECEIVE = 40311;
 
@@ -108,7 +106,6 @@ public class MultiUDPReceiver implements InitializingBean {
 	private CacheManager cacheManager;
 	@Autowired
 	private BlackListService blackListService;
-
 	@Autowired
 	private DNSHostsContainer dnsHostsContainer;
 
@@ -117,6 +114,8 @@ public class MultiUDPReceiver implements InitializingBean {
 
 	@Autowired
 	private SafeHostService safeBoxService;
+	@Autowired
+	private ThreadPools threadPools;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -180,6 +179,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	}
 
 	private void receive() {
+		ExecutorService processExecutors = threadPools.getMainProcessExecutor();
 		final ByteBuffer byteBuffer = ByteBuffer.allocate(512);
 		while (true) {
 			try {
