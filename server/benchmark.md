@@ -1,4 +1,4 @@
-##blackhole 1.1.2 forward 
+##blackhole 1.1.2 forward LAN
 
 Statistics:
 
@@ -6,28 +6,29 @@ Statistics:
   Ended due to:         reaching end of file
 
   Queries sent:         10000 queries
-  Queries completed:    9999 queries
-  Queries lost:         1 queries
+  Queries completed:    9798 queries
+  Queries lost:         202 queries
   Queries delayed(?):   0 queries
 
-  RTT max:         	0.090405 sec
-  RTT min:              0.002834 sec
-  RTT average:          0.004628 sec
-  RTT std deviation:    0.001620 sec
+  RTT max:         	0.072913 sec
+  RTT min:              0.001082 sec
+  RTT average:          0.001737 sec
+  RTT std deviation:    0.001715 sec
   RTT out of range:     0 queries
 
-  Percentage completed:  99.99%
-  Percentage lost:        0.01%
+  Percentage completed:  97.98%
+  Percentage lost:        2.02%
 
-  Started at:           Wed Apr 10 22:40:01 2013
-  Finished at:          Wed Apr 10 22:40:48 2013
-  Ran for:              47.490153 seconds
+  Started at:           Thu Apr 11 09:49:07 2013
+  Finished at:          Thu Apr 11 09:49:18 2013
+  Ran for:              11.271377 seconds
 
-  Queries per second:   210.548911 qps
+  Queries per second:   869.281544 qps
+
   
 --------
 
-##blackhole 1.1.3 
+##blackhole 1.1.3 forward LAN
 
 Statistics:
 
@@ -35,24 +36,25 @@ Statistics:
   Ended due to:         reaching end of file
 
   Queries sent:         10000 queries
-  Queries completed:    9219 queries
-  Queries lost:         781 queries
+  Queries completed:    9993 queries
+  Queries lost:         7 queries
   Queries delayed(?):   0 queries
 
-  RTT max:         	0.150081 sec
-  RTT min:              0.002681 sec
-  RTT average:          0.023121 sec
-  RTT std deviation:    0.030433 sec
+  RTT max:         	0.016467 sec
+  RTT min:              0.001326 sec
+  RTT average:          0.003475 sec
+  RTT std deviation:    0.000992 sec
   RTT out of range:     0 queries
 
-  Percentage completed:  92.19%
-  Percentage lost:        7.81%
+  Percentage completed:  99.93%
+  Percentage lost:        0.07%
 
-  Started at:           Wed Apr 10 22:58:39 2013
-  Finished at:          Wed Apr 10 22:58:48 2013
-  Ran for:              9.003867 seconds
+  Started at:           Thu Apr 11 09:52:55 2013
+  Finished at:          Thu Apr 11 09:52:58 2013
+  Ran for:              2.748319 seconds
 
-  Queries per second:   1023.893400 qps
+  Queries per second:   3636.040794 qps 
+  
   
  ---
   
@@ -112,62 +114,4 @@ Statistics:
 
   Queries per second:   274.735608 qps
   
------
-Thread*5
-
-Statistics:
-
-  Parse input file:     once
-  Ended due to:         reaching end of file
-
-  Queries sent:         10000 queries
-  Queries completed:    10000 queries
-  Queries lost:         0 queries
-  Queries delayed(?):   0 queries
-
-  RTT max:         	0.007052 sec
-  RTT min:              0.000097 sec
-  RTT average:          0.000416 sec
-  RTT std deviation:    0.000358 sec
-  RTT out of range:     0 queries
-
-  Percentage completed: 100.00%
-  Percentage lost:        0.00%
-
-  Started at:           Thu Apr 11 07:14:18 2013
-  Finished at:          Thu Apr 11 07:14:18 2013
-  Ran for:              0.246149 seconds
-
-  Queries per second:   40625.799820 qps
-  
------
-thread*1
-
-Statistics:
-
-  Parse input file:     once
-  Ended due to:         reaching end of file
-
-  Queries sent:         10000 queries
-  Queries completed:    10000 queries
-  Queries lost:         0 queries
-  Queries delayed(?):   0 queries
-
-  RTT max:         	0.000839 sec
-  RTT min:              0.000094 sec
-  RTT average:          0.000248 sec
-  RTT std deviation:    0.000080 sec
-  RTT out of range:     0 queries
-
-  Percentage completed: 100.00%
-  Percentage lost:        0.00%
-
-  Started at:           Thu Apr 11 07:17:02 2013
-  Finished at:          Thu Apr 11 07:17:02 2013
-  Ran for:              0.166115 seconds
-
-  Queries per second:   60199.259549 qps
-  
-  
-  queryperf -d input/dianping.sample -s 127.0.0.1 -t 1 -q 20
   
