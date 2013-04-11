@@ -3,7 +3,7 @@ hostd
 
 ###1. 简介
 
-hostd是一款简单可配置的本地DNS服务器，它用于在本地开发环境中临时将某个域名指向特定IP，是修改hosts文件的替代方案。目前在10.8下无法使用。
+hostd是一款简单可配置的本地DNS服务器，它用于在本地开发环境中临时将某个域名指向特定IP，是修改hosts文件的替代方案。
 
 ###2. 特色
 
@@ -18,7 +18,7 @@ hostd具有三大特性：
 	
 ###3. 安装
 
-Mac下hostd下载pkd包安装即可，下载地址[hostd-1.0.0-alpha.pkg](http://vdisk.weibo.com/s/meeAh)。hostd将安装到/usr/local/hostd/目录。hostd需要java 1.6以上的运行环境。
+Mac下hostd下载pkd包安装即可，下载地址[hostd-1.1.2.pkg](http://vdisk.weibo.com/s/xedCs)。hostd将安装到/usr/local/hostd/目录。hostd需要java 1.6以上的运行环境。
 
 ###4. 使用
 
@@ -64,7 +64,7 @@ hostd使用mac下的scutils来进行DNS服务器的修改，这个更改会在�
 
 ###7. 源码
 
-hostd的源码托管在[github](https://github.com/flashsword20/blackhole/tree/master/localserver/mac)，是开源DNS服务器BlackHole的一个分支。可以关注这个项目以获取最新版本。
+hostd的源码托管在[github](https://github.com/code4craft/blackhole/tree/master/localserver/mac)，是开源DNS服务器BlackHole的一个分支。可以关注这个项目以获取最新版本。
 
 
 作者邮箱：
