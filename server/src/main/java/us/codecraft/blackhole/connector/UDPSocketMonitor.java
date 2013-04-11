@@ -7,11 +7,11 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import us.codecraft.blackhole.config.Configure;
 import us.codecraft.blackhole.container.QueryProcesser;
 import us.codecraft.blackhole.forward.Forwarder;
 
@@ -30,11 +30,14 @@ public class UDPSocketMonitor extends Thread {
 	private int port;
 	private static final short udpLength = 512;
 	private DatagramSocket socket;
-	private ExecutorService executorService = Executors.newFixedThreadPool(5);
 	@Autowired
 	private QueryProcesser queryProcesser;
 	@Autowired
 	private Forwarder forwarder;
+	@Autowired
+	private Configure configure;
+	@Autowired
+	private ThreadPools threadPools;
 
 	public UDPSocketMonitor(String host, int port) throws IOException {
 		super();
@@ -48,7 +51,7 @@ public class UDPSocketMonitor extends Thread {
 
 	@Override
 	public void run() {
-
+		ExecutorService executorService = threadPools.getMainProcessExecutor();
 		log.info("Starting UDP socket monitor on address "
 				+ this.getAddressAndPort());
 

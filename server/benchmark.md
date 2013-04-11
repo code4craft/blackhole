@@ -113,5 +113,61 @@ Statistics:
   Queries per second:   274.735608 qps
   
 -----
+Thread*5
 
+Statistics:
 
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         10000 queries
+  Queries completed:    10000 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:         	0.007052 sec
+  RTT min:              0.000097 sec
+  RTT average:          0.000416 sec
+  RTT std deviation:    0.000358 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Thu Apr 11 07:14:18 2013
+  Finished at:          Thu Apr 11 07:14:18 2013
+  Ran for:              0.246149 seconds
+
+  Queries per second:   40625.799820 qps
+  
+-----
+thread*1
+
+Statistics:
+
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         10000 queries
+  Queries completed:    10000 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:         	0.000839 sec
+  RTT min:              0.000094 sec
+  RTT average:          0.000248 sec
+  RTT std deviation:    0.000080 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Thu Apr 11 07:17:02 2013
+  Finished at:          Thu Apr 11 07:17:02 2013
+  Ran for:              0.166115 seconds
+
+  Queries per second:   60199.259549 qps
+  
+  
+  queryperf -d input/dianping.sample -s 127.0.0.1 -t 1 -q 20
+  

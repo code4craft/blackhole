@@ -11,6 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import us.codecraft.blackhole.connector.ThreadPools;
 import us.codecraft.blackhole.forward.DNSHostsContainer;
 import us.codecraft.wifesays.me.ReloadAble;
 
@@ -22,10 +23,13 @@ import us.codecraft.wifesays.me.ReloadAble;
 public class ConfigFileLoader implements InitializingBean, ReloadAble {
 
 	@Autowired
-	DNSHostsContainer dnsHostsContainer;
+	private DNSHostsContainer dnsHostsContainer;
 
 	@Autowired
-	Configure configure;
+	private Configure configure;
+
+	@Autowired
+	private ThreadPools threadPools;
 
 	private boolean reloadOff = false;
 
@@ -89,6 +93,8 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble {
 			configure.setFakeDnsServer(value);
 		} else if (key.equalsIgnoreCase("safe_box")) {
 			configure.setEnableSafeBox(BooleanUtils.toBooleanObject(value));
+		} else if (key.equalsIgnoreCase("thread_num")) {
+			configure.setThreadNum(Integer.parseInt(value));
 		}
 
 		else {
@@ -123,6 +129,7 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble {
 		if (!reloadOff) {
 			readConfig(Configure.getConfigFilename());
 		}
+		threadPools.resize();
 	}
 
 	/*
@@ -133,7 +140,7 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble {
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		reload();
+		readConfig(Configure.getConfigFilename());
 	}
 
 }
