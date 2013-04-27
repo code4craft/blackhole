@@ -18,7 +18,7 @@ hostd具有三大特性：
 	
 ###3. 安装
 
-Mac下hostd下载pkd包安装即可，下载地址[hostd-1.0.0-alpha.pkg](http://vdisk.weibo.com/s/meeAh)。hostd将安装到/usr/local/hostd/目录。hostd需要java 1.6以上的运行环境。
+Mac下hostd下载pkd包安装即可，下载地址[hostd-1.1.2.pkg](http://vdisk.weibo.com/s/xedCs)。hostd将安装到/usr/local/hostd/目录。hostd需要java 1.6以上的运行环境。
 
 ###4. 使用
 
@@ -64,7 +64,7 @@ hostd使用mac下的scutils来进行DNS服务器的修改，这个更改会在�
 
 ###7. 源码
 
-hostd的源码托管在[github](https://github.com/flashsword20/blackhole/tree/master/localserver/mac)，是开源DNS服务器BlackHole的一个分支。可以关注这个项目以获取最新版本。
+hostd的源码托管在[github](https://github.com/code4craft/blackhole/tree/master/localserver/mac)，是开源DNS服务器BlackHole的一个分支。可以关注这个项目以获取最新版本。
 
 
 作者邮箱：

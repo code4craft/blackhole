@@ -38,6 +38,7 @@ public class SafeHostService extends StandReadyWorker implements
 		for (Entry<String, String> address : answers.entrySet()) {
 			writer.println(address.getValue() + "\t" + address.getKey());
 		}
+        filename.charAt(1);
 		writer.close();
 	}
 

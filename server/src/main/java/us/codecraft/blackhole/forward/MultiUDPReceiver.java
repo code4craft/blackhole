@@ -38,6 +38,11 @@ import us.codecraft.blackhole.connector.ThreadPools;
 @Component
 public class MultiUDPReceiver implements InitializingBean {
 
+	/**
+	 * 
+	 */
+	private static final int dnsPackageLength = 512;
+
 	private Map<String, ForwardAnswer> answers = new ConcurrentHashMap<String, ForwardAnswer>();
 
 	private DatagramChannel datagramChannel;
@@ -187,8 +192,8 @@ public class MultiUDPReceiver implements InitializingBean {
 				final SocketAddress remoteAddress = datagramChannel
 						.receive(byteBuffer);
 				final byte[] answer = Arrays.copyOfRange(byteBuffer.array(), 0,
-						byteBuffer.remaining());
-				processExecutors.execute(new Runnable() {
+						dnsPackageLength);
+				processExecutors.submit(new Runnable() {
 
 					@Override
 					public void run() {

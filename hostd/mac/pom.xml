@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>us.codecraft</groupId>
 	<artifactId>blackhole-hostd</artifactId>
-	<version>1.1.2-dev</version>
+	<version>1.1.2</version>
 	<name>blackhole-selfhost</name>
 	<description>Blackhole selfhost is the blackhole server with some tools to easily change system DNS server to use.</description>
 	<dependencies>
