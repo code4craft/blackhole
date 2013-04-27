@@ -1,29 +1,32 @@
 package us.codecraft.blackhole.connector;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 
 import org.apache.log4j.Logger;
+import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.container.QueryProcesser;
+import us.codecraft.blackhole.forward.Forwarder;
 
 public class UDPConnectionWorker implements Runnable {
 
 	private static final Logger logger = Logger
 			.getLogger(UDPConnectionWorker.class);
 
-	private final DatagramSocket socket;
+	private final UDPConnectionResponser responser;
 	private final DatagramPacket inDataPacket;
 
 	private QueryProcesser queryProcesser;
+	private Forwarder forwarder;
 
-	public UDPConnectionWorker(DatagramSocket socket,
-			DatagramPacket inDataPacket, QueryProcesser queryProcesser) {
+	public UDPConnectionWorker(DatagramPacket inDataPacket,
+			QueryProcesser queryProcesser, UDPConnectionResponser responser,
+			Forwarder forwarder) {
 		super();
-		this.socket = socket;
+		this.responser = responser;
 		this.inDataPacket = inDataPacket;
 		this.queryProcesser = queryProcesser;
+		this.forwarder = forwarder;
 	}
 
 	public void run() {
@@ -32,26 +35,12 @@ public class UDPConnectionWorker implements Runnable {
 
 			byte[] response = null;
 			response = queryProcesser.process(inDataPacket.getData());
-			if (response == null) {
-				return;
+			if (response != null) {
+				responser.response(response);
+			} else {
+				forwarder.forward(inDataPacket.getData(), new Message(
+						inDataPacket.getData()), responser);
 			}
-			DatagramPacket outdp = new DatagramPacket(response,
-					response.length, inDataPacket.getAddress(),
-					inDataPacket.getPort());
-
-			outdp.setData(response);
-			outdp.setLength(response.length);
-			outdp.setAddress(inDataPacket.getAddress());
-			outdp.setPort(inDataPacket.getPort());
-
-			try {
-				socket.send(outdp);
-			} catch (IOException e) {
-
-				logger.debug("Error sending UDP response to "
-						+ inDataPacket.getAddress() + ", " + e);
-			}
-
 		} catch (Throwable e) {
 
 			logger.warn(

@@ -33,6 +33,8 @@ public class Configure {
 
 	private boolean useCache = true;
 
+	private int threadNum = 4;
+
 	private static String configFilename;
 
 	public static String getConfigFilename() {
@@ -158,6 +160,14 @@ public class Configure {
 
 	public void setFakeDnsServer(String fakeDnsServer) {
 		this.fakeDnsServer = new InetSocketAddress(fakeDnsServer, DNS_PORT);
+	}
+
+	public int getThreadNum() {
+		return threadNum;
+	}
+
+	public void setThreadNum(int threadNum) {
+		this.threadNum = threadNum;
 	}
 
 }

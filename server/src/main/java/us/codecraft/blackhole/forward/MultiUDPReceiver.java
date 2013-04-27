@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +27,7 @@ import us.codecraft.blackhole.antipollution.BlackListService;
 import us.codecraft.blackhole.antipollution.SafeHostService;
 import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.config.Configure;
+import us.codecraft.blackhole.connector.ThreadPools;
 
 /**
  * Listen on port 40311 using reactor mode.
@@ -46,8 +46,6 @@ public class MultiUDPReceiver implements InitializingBean {
 	private Map<String, ForwardAnswer> answers = new ConcurrentHashMap<String, ForwardAnswer>();
 
 	private DatagramChannel datagramChannel;
-
-	private ExecutorService processExecutors = Executors.newFixedThreadPool(4);
 
 	private final static int PORT_RECEIVE = 40311;
 
@@ -113,7 +111,6 @@ public class MultiUDPReceiver implements InitializingBean {
 	private CacheManager cacheManager;
 	@Autowired
 	private BlackListService blackListService;
-
 	@Autowired
 	private DNSHostsContainer dnsHostsContainer;
 
@@ -122,6 +119,8 @@ public class MultiUDPReceiver implements InitializingBean {
 
 	@Autowired
 	private SafeHostService safeBoxService;
+	@Autowired
+	private ThreadPools threadPools;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -185,6 +184,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	}
 
 	private void receive() {
+		ExecutorService processExecutors = threadPools.getMainProcessExecutor();
 		final ByteBuffer byteBuffer = ByteBuffer.allocate(512);
 		while (true) {
 			try {
@@ -221,6 +221,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		datagramChannel = DatagramChannel.open();
 		datagramChannel.socket().bind(new InetSocketAddress(PORT_RECEIVE));
+		datagramChannel.configureBlocking(true);
 		new Thread(new Runnable() {
 
 			@Override
@@ -266,7 +267,6 @@ public class MultiUDPReceiver implements InitializingBean {
 
 	private void handleAnswer(byte[] answer, SocketAddress remoteAddress)
 			throws IOException {
-
 		final Message message = new Message(answer);
 		// fake dns server return an answer, it must be dns pollution
 		if (configure.getFakeDnsServer() != null
@@ -289,18 +289,15 @@ public class MultiUDPReceiver implements InitializingBean {
 		}
 		dnsHostsContainer.registerTimeCost(remoteAddress,
 				System.currentTimeMillis() - forwardAnswer.getStartTime());
-		if (forwardAnswer.getAnswer() == null) {
-			byte[] result = removeFakeAddress(message, answer);
-			if (result != null) {
-				forwardAnswer.setAnswer(result);
-				try {
-					forwardAnswer.getLock().lockInterruptibly();
-					forwardAnswer.getCondition().signalAll();
-				} catch (InterruptedException e) {
-				} finally {
-					forwardAnswer.getLock().unlock();
-				}
-			}
+		answer = removeFakeAddress(message, answer);
+		if (logger.isDebugEnabled()) {
+			logger.debug("response message " + message.getHeader().getID()
+					+ " to "
+					+ forwardAnswer.getResponser().getInDataPacket().getPort());
+		}
+		if (answer != null) {
+			forwardAnswer.getResponser().response(answer);
+			cacheManager.setToCache(message, answer);
 		}
 		// connectionTimer.checkConnectTimeForAnswer(forwardAnswer.getQuery(),
 		// message);

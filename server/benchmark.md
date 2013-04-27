@@ -1,0 +1,47 @@
+###1.1.2
+ Queries per second:   17020.533091 qps
+  
+  Queries per second:   17968.598926 qps
+  
+  Queries per second:   9929.740407 qps
+  
+  Queries per second:   6730.895729 qps
+  
+  Queries per second:   13743.787636 qps
+  
+  Queries per second:   17946.626016 qps
+  
+  Queries per second:   15181.713176 qps
+  
+  Queries per second:   8420.535018 qps
+  
+  Queries per second:   7355.708610 qps
+  
+  Queries per second:   7070.555627 qps
+  
+  Avg:	12137
+
+ -------- 
+  
+###1.1.3
+  Queries per second:   19214.104324 qps
+  
+  Queries per second:   8840.774761 qps
+  
+  Queries per second:   12835.476201 qps
+  
+  Queries per second:   20727.255323 qps
+  
+  Queries per second:   17055.128750 qps
+  
+  Queries per second:   20098.186952 qps
+  
+  Queries per second:   8976.868585 qps
+  
+  Queries per second:   16209.558405 qps
+  
+  Queries per second:   18838.347946 qps
+  
+  Queries per second:   10039.901489 qps
+  
+  Avg: 15284
