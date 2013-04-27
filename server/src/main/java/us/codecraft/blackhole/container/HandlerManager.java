@@ -18,9 +18,6 @@ public class HandlerManager implements InitializingBean {
 	private List<Handler> handlers;
 
 	@Autowired
-	private NSForwardHandler nsForwardHandler;
-
-	@Autowired
 	private AnswerHandler answerHandler;
 
 	@Autowired
@@ -41,7 +38,6 @@ public class HandlerManager implements InitializingBean {
 		handlers = new LinkedList<Handler>();
 		handlers.add(headerHandler);
 		handlers.add(answerHandler);
-		handlers.add(nsForwardHandler);
 	}
 
 	/**

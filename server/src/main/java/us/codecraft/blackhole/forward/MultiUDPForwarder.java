@@ -4,17 +4,15 @@ import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
-import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.config.Configure;
+import us.codecraft.blackhole.connector.UDPConnectionResponser;
 
 /**
  * Forward DNS query to hosts contained in {@link DNSHostsContainer}.Use the
@@ -46,11 +44,12 @@ public class MultiUDPForwarder implements Forwarder {
 	 * org.xbill.DNS.Message)
 	 */
 	@Override
-	public byte[] forward(byte[] queryBytes, Message query) {
+	public void forward(byte[] queryBytes, Message query,
+			UDPConnectionResponser responser) {
 		// get address
 		List<SocketAddress> allAvaliableHosts = dnsHostsContainer
 				.getAllAvaliableHosts();
-		return forward(queryBytes, query, allAvaliableHosts);
+		forward(queryBytes, query, allAvaliableHosts, responser);
 	}
 
 	/*
@@ -60,15 +59,15 @@ public class MultiUDPForwarder implements Forwarder {
 	 * org.xbill.DNS.Message, java.util.List)
 	 */
 	@Override
-	public byte[] forward(byte[] queryBytes, Message query,
-			List<SocketAddress> hosts) {
+	public void forward(byte[] queryBytes, Message query,
+			List<SocketAddress> hosts, UDPConnectionResponser responser) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("forward query " + query.getQuestion().getName());
+			logger.debug("forward query " + query.getQuestion().getName() + "_"
+					+ query.getHeader().getID());
 		}
 		// send to all address
-		ByteBuffer byteBuffer = ByteBuffer.allocate(512);
-		ForwardAnswer forwardAnswer = new ForwardAnswer(query,
-				new HashSet<SocketAddress>(hosts));
+
+		ForwardAnswer forwardAnswer = new ForwardAnswer(query, responser);
 		if (configure.getFakeDnsServer() != null) {
 			// send fake dns query to detect dns poisoning
 			hosts.add(0, configure.getFakeDnsServer());
@@ -77,41 +76,22 @@ public class MultiUDPForwarder implements Forwarder {
 
 			multiUDPReceiver.registerReceiver(query, forwardAnswer);
 			try {
-				DatagramChannel datagramChannel = multiUDPReceiver
-						.getDatagramChannel();
 				for (SocketAddress host : hosts) {
-					byteBuffer.clear();
-					byteBuffer.put(queryBytes);
-					byteBuffer.flip();
-					datagramChannel.send(byteBuffer, host);
-					if (logger.isDebugEnabled()) {
-						logger.debug("forward to " + host);
-					}
+					send(queryBytes, host);
+					logger.debug("forward query "
+							+ query.getQuestion().getName() + "_"
+							+ query.getHeader().getID());
 				}
 			} catch (IOException e) {
 				logger.warn("error", e);
 			}
-			long time1 = System.currentTimeMillis();
-			if (forwardAnswer.getAnswer() == null) {
-				try {
-					forwardAnswer.getLock().lockInterruptibly();
-					forwardAnswer.getCondition().await(
-							configure.getDnsTimeOut(), TimeUnit.MILLISECONDS);
-				} catch (InterruptedException e) {
-					logger.warn("error", e);
-				} finally {
-					forwardAnswer.getLock().unlock();
-				}
-			}
-			if (forwardAnswer.getAnswer() == null) {
-				logger.info("timeout for query "
-						+ query.getQuestion().getName().toString() + " "
-						+ Type.string(query.getQuestion().getType())
-						+ " time cost " + (System.currentTimeMillis() - time1));
-			}
 		} finally {
 			multiUDPReceiver.removeAnswer(query, configure.getDnsTimeOut());
 		}
-		return forwardAnswer.getAnswer();
+	}
+
+	private void send(byte[] queryBytes, SocketAddress host) throws IOException {
+		DatagramChannel datagramChannel = multiUDPReceiver.getDatagramChannel();
+		datagramChannel.send(ByteBuffer.wrap(queryBytes), host);
 	}
 }
