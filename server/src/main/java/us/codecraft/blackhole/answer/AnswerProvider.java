@@ -1,9 +1,7 @@
-package us.codecraft.blackhole.zones;
-
-import us.codecraft.blackhole.container.AnswerHandler;
+package us.codecraft.blackhole.answer;
 
 /**
- * Provide the answer.An answerProvider must be registered in
+ * Provide the answer.An answerContainer must be registered in
  * {@link AnswerHandler#regitestProviders()} before it takes effect.
  * 
  * @author yihua.huang@dianping.com

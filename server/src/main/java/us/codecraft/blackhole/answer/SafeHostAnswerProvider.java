@@ -1,11 +1,11 @@
-package us.codecraft.blackhole.zones;
+package us.codecraft.blackhole.answer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.antipollution.SafeHostService;
+import us.codecraft.blackhole.antipollution.SafeHostManager;
 import us.codecraft.blackhole.config.Configure;
 
 /**
@@ -13,10 +13,10 @@ import us.codecraft.blackhole.config.Configure;
  * @date Feb 20, 2013
  */
 @Component
-public class SafeBoxAnswerProvider implements AnswerProvider {
+public class SafeHostAnswerProvider implements AnswerProvider {
 
 	@Autowired
-	private SafeHostService safeBoxService;
+	private SafeHostManager safeBoxService;
 
 	@Autowired
 	private Configure configure;
@@ -25,7 +25,7 @@ public class SafeBoxAnswerProvider implements AnswerProvider {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * us.codecraft.blackhole.zones.AnswerProvider#getAnswer(java.lang.String,
+	 * us.codecraft.blackhole.answer.AnswerProvider#getAnswer(java.lang.String,
 	 * int)
 	 */
 	@Override

@@ -5,13 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ShutDownAble;
@@ -19,26 +22,65 @@ import us.codecraft.wifesays.me.StandReadyWorker;
 
 /**
  * @author yihua.huang@dianping.com
- * @date Feb 20, 2013
+ * @date Feb 19, 2013
  */
 @Component
-public class SafeHostService extends StandReadyWorker implements
+public class BlackListManager extends StandReadyWorker implements
 		InitializingBean, ShutDownAble {
 
 	private Logger logger = Logger.getLogger(getClass());
 
-	private Map<String, Boolean> poisons = new ConcurrentHashMap<String, Boolean>();
+	private Map<String, Set<String>> invalidAddresses = new ConcurrentHashMap<String, Set<String>>();
 
-	private Map<String, String> answers = new ConcurrentHashMap<String, String>();
+	private Set<String> blacklist = new HashSet<String>();
+
+	private ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
 	private static final String FLUSH_CMD = "flush";
 
+	public void registerInvalidAddress(Message query, String address) {
+		String questionName = query.getQuestion().getName().toString();
+		logger.info("register error address " + address + " for  query "
+				+ questionName);
+		Set<String> questionNames = invalidAddresses.get(address);
+		if (questionNames == null) {
+			questionNames = new HashSet<String>();
+			invalidAddresses.put(address, questionNames);
+		}
+		questionNames.add(questionName);
+		if (questionNames.size() >= 2) {
+			try {
+				readWriteLock.writeLock().lock();
+				blacklist.add(address);
+			} finally {
+				readWriteLock.writeLock().unlock();
+			}
+		}
+	}
+
+	public void addToBlacklist(String address) {
+		try {
+			readWriteLock.writeLock().lock();
+			blacklist.add(address);
+		} finally {
+			readWriteLock.writeLock().unlock();
+		}
+	}
+
+	public boolean inBlacklist(String address) {
+		try {
+			readWriteLock.readLock().lock();
+			return blacklist.contains(address);
+		} finally {
+			readWriteLock.readLock().unlock();
+		}
+	}
+
 	public void flushToFile(String filename) throws IOException {
 		PrintWriter writer = new PrintWriter(new File(filename));
-		for (Entry<String, String> address : answers.entrySet()) {
-			writer.println(address.getValue() + "\t" + address.getKey());
+		for (String address : blacklist) {
+			writer.println(address);
 		}
-        filename.charAt(1);
 		writer.close();
 	}
 
@@ -48,40 +90,12 @@ public class SafeHostService extends StandReadyWorker implements
 		String line = null;
 		while ((line = bufferedReader.readLine()) != null) {
 			line = line.trim();
-			if (line.startsWith("#")) {
-				break;
-			}
-			String[] split = line.split("\\s");
-			if (split.length <= 1) {
-				logger.info("error record \"" + line + "\", ignored.");
-			}
-			answers.put(split[1], split[0]);
-			poisons.put(split[1], Boolean.TRUE);
 			if (logger.isDebugEnabled()) {
 				logger.debug("load blacklist address " + line);
 			}
+			blacklist.add(line);
 		}
 		bufferedReader.close();
-	}
-
-	public void add(String domain, String address) {
-		answers.put(domain, address);
-	}
-
-	public boolean isPoisoned(String domain) {
-		Boolean poisoned = poisons.get(domain);
-		if (poisoned == null) {
-			return false;
-		}
-		return poisoned;
-	}
-
-	public void setPoisoned(String domain) {
-		poisons.put(domain, Boolean.TRUE);
-	}
-
-	public String get(String domain) {
-		return answers.get(domain);
 	}
 
 	/*
@@ -91,7 +105,7 @@ public class SafeHostService extends StandReadyWorker implements
 	 */
 	@Override
 	public void shutDown() {
-		String filename = Configure.FILE_PATH + "/safehost";
+		String filename = Configure.FILE_PATH + "/blacklist";
 		try {
 			flushToFile(filename);
 		} catch (IOException e) {
@@ -107,7 +121,7 @@ public class SafeHostService extends StandReadyWorker implements
 	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String filename = Configure.FILE_PATH + "/safehost";
+		String filename = Configure.FILE_PATH + "/blacklist";
 		try {
 			loadFromFile(filename);
 		} catch (IOException e) {
@@ -124,7 +138,7 @@ public class SafeHostService extends StandReadyWorker implements
 	@Override
 	public String doWhatYouShouldDo(String whatWifeSays) {
 		if (FLUSH_CMD.equalsIgnoreCase(whatWifeSays)) {
-			String filename = Configure.FILE_PATH + "/safehost";
+			String filename = Configure.FILE_PATH + "/blacklist";
 			try {
 				flushToFile(filename);
 			} catch (IOException e) {

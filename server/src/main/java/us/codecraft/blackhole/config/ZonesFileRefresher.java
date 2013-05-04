@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.zones;
+package us.codecraft.blackhole.config;
 
 import java.io.File;
 import java.util.concurrent.Executors;

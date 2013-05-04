@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.zones;
+package us.codecraft.blackhole.answer;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,11 +11,11 @@ import us.codecraft.blackhole.utils.DoubleKeyMap;
  * @date Dec 14, 2012
  */
 @Component
-public class AnswerContainer implements AnswerProvider {
+public class TempAnswerProvider implements AnswerProvider {
 
 	private DoubleKeyMap<String, Integer, String> container;
 
-	public AnswerContainer() {
+	public TempAnswerProvider() {
 		container = new DoubleKeyMap<String, Integer, String>(
 				ConcurrentHashMap.class);
 	}
@@ -24,7 +24,7 @@ public class AnswerContainer implements AnswerProvider {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * us.codecraft.blackhole.zones.AnswerProvider#getAnswer(java.lang.String,
+	 * us.codecraft.blackhole.answer.AnswerProvider#getAnswer(java.lang.String,
 	 * int)
 	 */
 	@Override

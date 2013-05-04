@@ -13,7 +13,7 @@
         <beans>
         	<bean name="udpSocketMonitor" class="us.codecraft.blackhole.connector.UDPSocketMonitor">
         		<constructor-arg name="host" type="java.lang.String" value="0.0.0.0"></constructor-arg>
-        		<constructor-arg name="port" type="int" value="1053"></constructor-arg>
+        		<constructor-arg name="port" type="int" value="53"></constructor-arg>
         	</bean>
         	<bean name="wifesaysTcpSocketMonitor" class="us.codecraft.wifesays.me.TCPSocketMonitor">
         		<constructor-arg name="host" type="java.lang.String" value="0.0.0.0"></constructor-arg>

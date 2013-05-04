@@ -7,6 +7,5 @@
   <modules>  
     <module>./wifesays</module>  
     <module>./server/</module>  
-    <module>./hostd/mac</module>  
   </modules>  
 </project>

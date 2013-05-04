@@ -23,11 +23,11 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.antipollution.BlackListService;
-import us.codecraft.blackhole.antipollution.SafeHostService;
+import us.codecraft.blackhole.antipollution.BlackListManager;
+import us.codecraft.blackhole.antipollution.SafeHostManager;
 import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.connector.ThreadPools;
+import us.codecraft.blackhole.concurrent.ThreadPools;
 
 /**
  * Listen on port 40311 using reactor mode.
@@ -110,7 +110,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	@Autowired
 	private CacheManager cacheManager;
 	@Autowired
-	private BlackListService blackListService;
+	private BlackListManager blackListManager;
 	@Autowired
 	private DNSHostsContainer dnsHostsContainer;
 
@@ -118,7 +118,7 @@ public class MultiUDPReceiver implements InitializingBean {
 	private ConnectionTimer connectionTimer;
 
 	@Autowired
-	private SafeHostService safeBoxService;
+	private SafeHostManager safeBoxService;
 	@Autowired
 	private ThreadPools threadPools;
 
@@ -140,7 +140,7 @@ public class MultiUDPReceiver implements InitializingBean {
 		for (Record answer : answers) {
 			String address = StringUtils.removeEnd(answer.rdataToString(), ".");
 			if ((answer.getType() == Type.A || answer.getType() == Type.AAAA)
-					&& blackListService.inBlacklist(address)) {
+					&& blackListManager.inBlacklist(address)) {
 				if (!changed) {
 					// copy on write
 					message = (Message) message.clone();
@@ -257,10 +257,10 @@ public class MultiUDPReceiver implements InitializingBean {
 	private void addToBlacklist(Message message) {
 		for (Record answer : message.getSectionArray(Section.ANSWER)) {
 			String address = StringUtils.removeEnd(answer.rdataToString(), ".");
-			if (!blackListService.inBlacklist(address)) {
+			if (!blackListManager.inBlacklist(address)) {
 				logger.info("detected dns poisoning, add address " + address
 						+ " to blacklist");
-				blackListService.addToBlacklist(address);
+				blackListManager.addToBlacklist(address);
 			}
 		}
 	}

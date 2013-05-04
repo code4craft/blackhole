@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.zones;
+package us.codecraft.blackhole.answer;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +18,7 @@ import org.xbill.DNS.Type;
  * @date Dec 14, 2012
  */
 @Component
-public class AnswerPatternContainer implements AnswerProvider {
+public class AnswerPatternProvider implements AnswerProvider {
 
 	private volatile Map<Pattern, String> patterns;
 
@@ -33,13 +33,13 @@ public class AnswerPatternContainer implements AnswerProvider {
 	private static final String FAKE_CANME_PREFIX = "cname.";
 
 	@Autowired
-	private AnswerContainer answerContainer;
+	private TempAnswerProvider tempAnswerContainer;
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * us.codecraft.blackhole.zones.AnswerProvider#getAnswer(java.lang.String,
+	 * us.codecraft.blackhole.answer.AnswerProvider#getAnswer(java.lang.String,
 	 * int)
 	 */
 	@Override
@@ -56,16 +56,16 @@ public class AnswerPatternContainer implements AnswerProvider {
 				}
 				if (type == Type.MX) {
 					String fakeMXHost = fakeMXHost(query);
-					answerContainer.add(fakeMXHost, Type.A, answer);
+					tempAnswerContainer.add(fakeMXHost, Type.A, answer);
 					return fakeMXHost;
 				}
 				if (type == Type.CNAME) {
 					String fakeCNAMEHost = fakeCNAMEHost(query);
-					answerContainer.add(fakeCNAMEHost, Type.A, answer);
+					tempAnswerContainer.add(fakeCNAMEHost, Type.A, answer);
 					return fakeCNAMEHost;
 				}
 				try {
-					answerContainer.add(reverseIp(answer), Type.PTR, query);
+					tempAnswerContainer.add(reverseIp(answer), Type.PTR, query);
 				} catch (Throwable e) {
 					logger.info("not a ip, ignored");
 				}

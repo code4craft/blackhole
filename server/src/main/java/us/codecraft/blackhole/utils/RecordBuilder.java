@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.container;
+package us.codecraft.blackhole.utils;
 
 import java.net.UnknownHostException;
 
@@ -13,7 +13,6 @@ import org.xbill.DNS.TextParseException;
 import org.xbill.DNS.Type;
 
 import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.utils.SpringLocator;
 
 /**
  * @author yihua.huang@dianping.com

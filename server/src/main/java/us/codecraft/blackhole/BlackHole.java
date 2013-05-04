@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.main;
+package us.codecraft.blackhole;
 
 import java.io.IOException;
 import java.net.UnknownHostException;

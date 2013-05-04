@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 import org.xbill.DNS.Address;
 
 import us.codecraft.blackhole.utils.RecordUtils;
-import us.codecraft.blackhole.zones.AnswerPatternContainer;
-import us.codecraft.blackhole.zones.NSPatternContainer;
+import us.codecraft.blackhole.answer.AnswerPatternProvider;
 import us.codecraft.wifesays.me.ReloadAble;
 
 /**
@@ -28,10 +27,7 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 	private Configure configure;
 
 	@Autowired
-	private AnswerPatternContainer answerPatternContainer;
-
-	@Autowired
-	private NSPatternContainer nsPatternContainer;
+	private AnswerPatternProvider answerPatternContainer;
 
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -62,7 +58,7 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 							Pattern compileStringToPattern = compileStringToPattern(pattern);
 							nsPatternsTemp.put(compileStringToPattern, ip);
 							answerPatternsTemp.put(compileStringToPattern,
-									AnswerPatternContainer.DO_NOTHING);
+									AnswerPatternProvider.DO_NOTHING);
 						}
 
 					} else {
@@ -82,7 +78,6 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 				}
 			}
 			answerPatternContainer.setPatterns(answerPatternsTemp);
-			nsPatternContainer.setPatterns(nsPatternsTemp);
 			bufferedReader.close();
 		} catch (Throwable e) {
 			logger.warn("read config file failed:" + filename, e);

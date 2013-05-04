@@ -1,4 +1,4 @@
-package us.codecraft.blackhole.container;
+package us.codecraft.blackhole.answer;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -14,10 +14,9 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.zones.AnswerContainer;
-import us.codecraft.blackhole.zones.AnswerPatternContainer;
-import us.codecraft.blackhole.zones.AnswerProvider;
-import us.codecraft.blackhole.zones.SafeBoxAnswerProvider;
+import us.codecraft.blackhole.container.Handler;
+import us.codecraft.blackhole.container.MessageWrapper;
+import us.codecraft.blackhole.utils.RecordBuilder;
 
 /**
  * @author yihua.huang@dianping.com
@@ -31,13 +30,13 @@ public class AnswerHandler implements Handler, InitializingBean {
 	private Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
-	private AnswerContainer answerContainer;
+	private TempAnswerProvider tempAnswerContainer;
 
 	@Autowired
-	private AnswerPatternContainer answerPatternContainer;
+	private AnswerPatternProvider answerPatternContainer;
 
 	@Autowired
-	private SafeBoxAnswerProvider safeBoxAnswerProvider;
+	private SafeHostAnswerProvider safeHostAnswerProvider;
 
 	/*
 	 * (non-Javadoc)
@@ -52,9 +51,9 @@ public class AnswerHandler implements Handler, InitializingBean {
 
 	public void regitestProviders() {
 		answerProviders = new LinkedList<AnswerProvider>();
-		answerProviders.add(answerContainer);
+		answerProviders.add(tempAnswerContainer);
 		answerProviders.add(answerPatternContainer);
-		answerProviders.add(safeBoxAnswerProvider);
+		answerProviders.add(safeHostAnswerProvider);
 	}
 
 	// b._dns-sd._udp.0.129.37.10.in-addr.arpa.

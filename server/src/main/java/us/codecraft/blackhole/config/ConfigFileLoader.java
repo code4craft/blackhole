@@ -11,7 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import us.codecraft.blackhole.connector.ThreadPools;
+import us.codecraft.blackhole.concurrent.ThreadPools;
 import us.codecraft.blackhole.forward.DNSHostsContainer;
 import us.codecraft.wifesays.me.ReloadAble;
 

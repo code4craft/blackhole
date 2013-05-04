@@ -19,7 +19,7 @@ import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
 
-import us.codecraft.blackhole.antipollution.SafeHostService;
+import us.codecraft.blackhole.antipollution.SafeHostManager;
 import us.codecraft.blackhole.cache.CacheManager;
 
 /**
@@ -33,7 +33,7 @@ import us.codecraft.blackhole.cache.CacheManager;
 public class ConnectionTimer {
 
 	@Autowired
-	private SafeHostService safeBoxService;
+	private SafeHostManager safeBoxService;
 	/**
 	 * If the server doesn't support ICMP protocol, try http instead.
 	 */
