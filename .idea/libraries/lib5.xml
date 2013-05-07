@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="lib5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dnstools/target/lib/slf4j-log4j12-1.7.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dnstools/target/lib/commons-io-2.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dnstools/target/lib/commons-lang3-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dnstools/target/lib/log4j-1.2.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dnstools/target/lib/junit-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dnstools/target/lib/slf4j-api-1.7.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
