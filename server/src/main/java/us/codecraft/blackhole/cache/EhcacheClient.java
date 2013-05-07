@@ -178,12 +178,14 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (configure.isUseCache()) {
-			new Thread() {
-				@Override
-				public void run() {
-					init();
-				}
-			}.start();
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    init();
+                }
+            };
+            thread.setDaemon(true);
+            thread.start();
 		}
 	}
 

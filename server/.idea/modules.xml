@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/blackhole.iml" filepath="$PROJECT_DIR$/blackhole.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../wifesays/wifesays.iml" filepath="$PROJECT_DIR$/../../wifesays/wifesays.iml" />
+    </modules>
+  </component>
+</project>
+

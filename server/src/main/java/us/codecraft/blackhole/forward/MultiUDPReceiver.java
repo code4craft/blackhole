@@ -61,7 +61,7 @@ public class MultiUDPReceiver implements InitializingBean {
 
 		/**
 		 * @param key
-		 * @param delay
+		 * @param initDelay
 		 *            in ms
 		 */
 		public DelayStringKey(String key, long initDelay) {
@@ -222,22 +222,26 @@ public class MultiUDPReceiver implements InitializingBean {
 		datagramChannel = DatagramChannel.open();
 		datagramChannel.socket().bind(new InetSocketAddress(PORT_RECEIVE));
 		datagramChannel.configureBlocking(true);
-		new Thread(new Runnable() {
+        Thread threadForReceive = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				receive();
+            @Override
+            public void run() {
+                receive();
 
-			}
-		}).start();
-		new Thread(new Runnable() {
+            }
+        });
+        threadForReceive.setDaemon(true);
+        threadForReceive.start();
+        Thread threadForRemove = new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				removeAnswerFromQueue();
+            @Override
+            public void run() {
+                removeAnswerFromQueue();
 
-			}
-		}).start();
+            }
+        });
+        threadForRemove.setDaemon(true);
+        threadForRemove.start();
 	}
 
 	private void removeAnswerFromQueue() {

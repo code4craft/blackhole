@@ -1,11 +1,7 @@
 package us.codecraft.blackhole.connector;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 import java.util.concurrent.ExecutorService;
 
 import org.apache.log4j.Logger;
@@ -40,12 +36,17 @@ public class UDPSocketMonitor extends Thread {
 	@Autowired
 	private ThreadPools threadPools;
 
-	public UDPSocketMonitor(String host, int port) throws IOException {
+	public UDPSocketMonitor(String host, int port)  {
 		super();
-		this.addr = Inet4Address.getByName(host);
-		this.port = port;
-
-		socket = new DatagramSocket(port, addr);
+        try {
+            this.addr = Inet4Address.getByName(host);
+            this.port = port;
+            socket = new DatagramSocket(port, addr);
+        } catch (IOException e) {
+            System.err.println("Startup fail, 53 port is taken or has no privilege");
+            e.printStackTrace();
+            System.exit(-1);
+        }
 
 		this.setDaemon(true);
 	}
