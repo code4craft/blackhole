@@ -1,6 +1,5 @@
 package us.codecraft.blackhole.answer;
 
-import com.google.common.collect.Table;
 import org.springframework.stereotype.Component;
 import us.codecraft.blackhole.context.RequestContext;
 import us.codecraft.blackhole.utils.DoubleKeyMap;
@@ -16,8 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CustomTempAnswerProvider implements AnswerProvider {
 
 	private Map<String,DoubleKeyMap<String, Integer, String>> container;
-
-    private Table<String,Integer,String> table;
 
 	public CustomTempAnswerProvider() {
 		container = new ConcurrentHashMap<String, DoubleKeyMap<String, Integer, String>>();
