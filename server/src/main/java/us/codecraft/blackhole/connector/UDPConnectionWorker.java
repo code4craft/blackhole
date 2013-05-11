@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.xbill.DNS.Message;
 
 import us.codecraft.blackhole.container.QueryProcesser;
+import us.codecraft.blackhole.context.RequestContextProcessor;
 import us.codecraft.blackhole.forward.Forwarder;
 
 public class UDPConnectionWorker implements Runnable {
@@ -33,6 +34,7 @@ public class UDPConnectionWorker implements Runnable {
 
 		try {
 
+            RequestContextProcessor.processRequest(inDataPacket);
 			byte[] response = null;
 			response = queryProcesser.process(inDataPacket.getData());
 			if (response != null) {

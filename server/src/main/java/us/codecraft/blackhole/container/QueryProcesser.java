@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 
+import org.xbill.DNS.Section;
 import us.codecraft.blackhole.cache.CacheManager;
+import us.codecraft.blackhole.context.RequestContextProcessor;
 
 /**
  * Main logic of blackhole.<br/>
@@ -37,7 +39,7 @@ public class QueryProcesser {
 		if (cache != null) {
 			return cache;
 		}
-		MessageWrapper responseMessage = new MessageWrapper(new Message(query
+        MessageWrapper responseMessage = new MessageWrapper(new Message(query
 				.getHeader().getID()));
 		for (Handler handler : handlerManager.getHandlers()) {
 			boolean handle = handler.handle(new MessageWrapper(query),
@@ -48,7 +50,7 @@ public class QueryProcesser {
 		}
 		byte[] response = null;
 		if (responseMessage.hasRecord()) {
-			response = responseMessage.getMessage().toWire();
+            response = responseMessage.getMessage().toWire();
 		}
 
 		return response;

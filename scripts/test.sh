@@ -1,4 +1,5 @@
 #!/bin/sh
+grep -F '<constructor-arg name="port" type="int" value="53">' ../server/src/main/resources/spring/applicationContext-blackhole.xml
 blackhole stop
 sleep 1
 blackhole start

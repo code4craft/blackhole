@@ -30,7 +30,12 @@ public class AnswerHandler implements Handler, InitializingBean {
 	private Logger logger = Logger.getLogger(getClass());
 
 	@Autowired
+	private CustomTempAnswerProvider customTempAnswerProvider;
+	@Autowired
 	private TempAnswerProvider tempAnswerContainer;
+
+    @Autowired
+    private CustomAnswerPatternProvider customAnswerPatternProvider;
 
 	@Autowired
 	private AnswerPatternProvider answerPatternContainer;
@@ -51,9 +56,11 @@ public class AnswerHandler implements Handler, InitializingBean {
 
 	public void regitestProviders() {
 		answerProviders = new LinkedList<AnswerProvider>();
-		answerProviders.add(tempAnswerContainer);
-		answerProviders.add(answerPatternContainer);
-		answerProviders.add(safeHostAnswerProvider);
+        answerProviders.add(customTempAnswerProvider);
+        answerProviders.add(customAnswerPatternProvider);
+        answerProviders.add(tempAnswerContainer);
+        answerProviders.add(answerPatternContainer);
+        answerProviders.add(safeHostAnswerProvider);
 	}
 
 	// b._dns-sd._udp.0.129.37.10.in-addr.arpa.
