@@ -60,7 +60,7 @@ public class ZonesPattern {
             line = StringUtils.trim(StringUtils.substringAfter(line, ":"));
             Address.getByAddress(userIp);
         }
-        String[] items = line.split("\\s+");
+        String[] items = line.split("[\\s_]+");
         if (items.length < 2) {
             return null;
         }

@@ -123,4 +123,7 @@ public class CustomAnswerPatternProvider implements AnswerProvider {
         this.patterns = patterns;
     }
 
+    public DoubleKeyMap<String, Pattern, String> getPatterns() {
+        return patterns;
+    }
 }

@@ -46,6 +46,9 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
             String line = null;
             while ((line = bufferedReader.readLine()) != null) {
                 ZonesPattern zonesPattern = ZonesPattern.parse(line);
+                if (zonesPattern==null){
+                    continue;
+                }
                 try {
                     if (zonesPattern.getUserIp() == null) {
                         for (Pattern pattern : zonesPattern.getPatterns()) {
