@@ -14,45 +14,47 @@ import us.codecraft.blackhole.context.RequestContextProcessor;
 /**
  * Main logic of blackhole.<br/>
  * Process the DNS query and return the answer.
- * 
+ *
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
  */
 @Component
 public class QueryProcesser {
 
-	@Autowired
-	private HandlerManager handlerManager;
+    @Autowired
+    private HandlerManager handlerManager;
 
-	private Logger logger = Logger.getLogger(getClass());
+    private Logger logger = Logger.getLogger(getClass());
 
-	@Autowired
-	private CacheManager cacheManager;
+    @Autowired
+    private CacheManager cacheManager;
 
-	public byte[] process(byte[] queryData) throws IOException {
-		Message query = new Message(queryData);
-		if (logger.isDebugEnabled()) {
-			logger.debug("get query "
-					+ query.getQuestion().getName().toString());
-		}
-		byte[] cache = cacheManager.getFromCache(query);
-		if (cache != null) {
-			return cache;
-		}
+    public byte[] process(byte[] queryData) throws IOException {
+        Message query = new Message(queryData);
+        if (logger.isDebugEnabled()) {
+            logger.debug("get query "
+                    + query.getQuestion().getName().toString());
+        }
         MessageWrapper responseMessage = new MessageWrapper(new Message(query
-				.getHeader().getID()));
-		for (Handler handler : handlerManager.getHandlers()) {
-			boolean handle = handler.handle(new MessageWrapper(query),
-					responseMessage);
-			if (!handle) {
-				break;
-			}
-		}
-		byte[] response = null;
-		if (responseMessage.hasRecord()) {
+                .getHeader().getID()));
+        for (Handler handler : handlerManager.getHandlers()) {
+            boolean handle = handler.handle(new MessageWrapper(query),
+                    responseMessage);
+            if (!handle) {
+                break;
+            }
+        }
+        byte[] response = null;
+        if (responseMessage.hasRecord()) {
             response = responseMessage.getMessage().toWire();
-		}
+            return response;
+        }
 
-		return response;
-	}
+        byte[] cache = cacheManager.getFromCache(query);
+        if (cache != null) {
+            return cache;
+        } else {
+            return null;
+        }
+    }
 }
