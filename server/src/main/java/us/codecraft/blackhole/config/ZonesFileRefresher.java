@@ -1,23 +1,20 @@
 package us.codecraft.blackhole.config;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import us.codecraft.blackhole.answer.AnswerPatternProvider;
+import us.codecraft.blackhole.answer.CustomAnswerPatternProvider;
+import us.codecraft.blackhole.utils.RecordUtils;
+import us.codecraft.wifesays.me.StandReadyWorker;
+
 import java.io.File;
 import java.net.UnknownHostException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import us.codecraft.blackhole.answer.AnswerPatternProvider;
-import us.codecraft.blackhole.answer.CustomAnswerPatternProvider;
-import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.config.ZonesFileLoader;
-import us.codecraft.blackhole.utils.RecordUtils;
-import us.codecraft.wifesays.me.StandReadyWorker;
 
 /**
  * @author yihua.huang@dianping.com
@@ -93,7 +90,7 @@ public class ZonesFileRefresher extends StandReadyWorker implements Initializing
         } else if (StringUtils.startsWithIgnoreCase(whatWifeSays, DELETE_ZONES_IP)) {
             String ip = StringUtils.removeStart(whatWifeSays, DELETE_ZONES_IP);
             if (RecordUtils.isValidIpv4Address(ip)) {
-                customAnswerPatternProvider.setPatterns(ip, null);
+                customAnswerPatternProvider.getPatterns().remove(ip);
                 return "REMOVE SUCCESS";
             } else {
                 return "ERROR, invalid ip " + ip;
