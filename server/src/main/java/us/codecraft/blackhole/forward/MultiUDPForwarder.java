@@ -1,18 +1,17 @@
 package us.codecraft.blackhole.forward;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.xbill.DNS.Message;
+import us.codecraft.blackhole.config.Configure;
+import us.codecraft.blackhole.connector.UDPConnectionResponser;
+
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.xbill.DNS.Message;
-
-import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.connector.UDPConnectionResponser;
 
 /**
  * Forward DNS query to hosts contained in {@link DNSHostsContainer}.Use the

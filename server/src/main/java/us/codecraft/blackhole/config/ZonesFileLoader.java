@@ -1,23 +1,20 @@
 package us.codecraft.blackhole.config;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import us.codecraft.blackhole.answer.AnswerPatternProvider;
+import us.codecraft.blackhole.answer.CustomAnswerPatternProvider;
+import us.codecraft.blackhole.utils.DoubleKeyMap;
+import us.codecraft.wifesays.me.ReloadAble;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.xbill.DNS.Address;
-
-import us.codecraft.blackhole.answer.CustomAnswerPatternProvider;
-import us.codecraft.blackhole.utils.DoubleKeyMap;
-import us.codecraft.blackhole.utils.RecordUtils;
-import us.codecraft.blackhole.answer.AnswerPatternProvider;
-import us.codecraft.wifesays.me.ReloadAble;
 
 /**
  * @author yihua.huang@dianping.com

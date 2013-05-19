@@ -1,10 +1,9 @@
 package us.codecraft.blackhole.answer;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.springframework.stereotype.Component;
-
 import us.codecraft.blackhole.utils.DoubleKeyMap;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author yihua.huang@dianping.com

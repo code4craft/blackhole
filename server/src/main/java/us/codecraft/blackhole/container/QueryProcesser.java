@@ -1,15 +1,12 @@
 package us.codecraft.blackhole.container;
 
-import java.io.IOException;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
-
-import org.xbill.DNS.Section;
 import us.codecraft.blackhole.cache.CacheManager;
-import us.codecraft.blackhole.context.RequestContextProcessor;
+
+import java.io.IOException;
 
 /**
  * Main logic of blackhole.<br/>
@@ -50,7 +47,7 @@ public class QueryProcesser {
             return response;
         }
 
-        byte[] cache = cacheManager.getFromCache(query);
+        byte[] cache = cacheManager.getResponseFromCache(query);
         if (cache != null) {
             return cache;
         } else {

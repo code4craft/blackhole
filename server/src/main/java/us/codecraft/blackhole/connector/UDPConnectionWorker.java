@@ -1,13 +1,12 @@
 package us.codecraft.blackhole.connector;
 
-import java.net.DatagramPacket;
-
 import org.apache.log4j.Logger;
 import org.xbill.DNS.Message;
-
 import us.codecraft.blackhole.container.QueryProcesser;
 import us.codecraft.blackhole.context.RequestContextProcessor;
 import us.codecraft.blackhole.forward.Forwarder;
+
+import java.net.DatagramPacket;
 
 public class UDPConnectionWorker implements Runnable {
 

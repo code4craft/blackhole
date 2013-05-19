@@ -1,17 +1,16 @@
 package us.codecraft.blackhole.cache;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Section;
-
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.blackhole.utils.RecordUtils;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author yihua.huang@dianping.com
@@ -30,7 +29,7 @@ public class CacheManager implements InitializingBean {
 	@Autowired
 	private CacheClient cacheClient;
 
-	public byte[] getFromCache(Message query) {
+	public byte[] getResponseFromCache(Message query) {
 		if (!configure.isUseCache()) {
 			return null;
 		}
@@ -69,7 +68,7 @@ public class CacheManager implements InitializingBean {
 				.getSectionArray(Section.ADDITIONAL)));
 	}
 
-	public void setToCache(final Message query, final byte[] responseBytes) {
+	public void setResponseToCache(final Message query, final byte[] responseBytes) {
 		if (configure.isUseCache()) {
 			getCacheSaveExecutors().execute(new Runnable() {
 

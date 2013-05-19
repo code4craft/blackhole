@@ -1,10 +1,5 @@
 package us.codecraft.blackhole.answer;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +8,14 @@ import org.xbill.DNS.DClass;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
-
 import us.codecraft.blackhole.container.Handler;
 import us.codecraft.blackhole.container.MessageWrapper;
 import us.codecraft.blackhole.utils.RecordBuilder;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author yihua.huang@dianping.com

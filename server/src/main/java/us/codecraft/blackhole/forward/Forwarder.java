@@ -1,11 +1,10 @@
 package us.codecraft.blackhole.forward;
 
+import org.xbill.DNS.Message;
+import us.codecraft.blackhole.connector.UDPConnectionResponser;
+
 import java.net.SocketAddress;
 import java.util.List;
-
-import org.xbill.DNS.Message;
-
-import us.codecraft.blackhole.connector.UDPConnectionResponser;
 
 /**
  * @author yihua.huang@dianping.com

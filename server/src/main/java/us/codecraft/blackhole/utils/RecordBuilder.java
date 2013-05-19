@@ -1,18 +1,9 @@
 package us.codecraft.blackhole.utils;
 
-import java.net.UnknownHostException;
-
-import org.xbill.DNS.ARecord;
-import org.xbill.DNS.Address;
-import org.xbill.DNS.CNAMERecord;
-import org.xbill.DNS.MXRecord;
-import org.xbill.DNS.Name;
-import org.xbill.DNS.PTRRecord;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.TextParseException;
-import org.xbill.DNS.Type;
-
+import org.xbill.DNS.*;
 import us.codecraft.blackhole.config.Configure;
+
+import java.net.UnknownHostException;
 
 /**
  * @author yihua.huang@dianping.com

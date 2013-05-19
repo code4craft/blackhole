@@ -1,15 +1,5 @@
 package us.codecraft.blackhole.forward;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +8,13 @@ import org.xbill.DNS.Message;
 import org.xbill.DNS.Record;
 import org.xbill.DNS.Section;
 import org.xbill.DNS.Type;
-
 import us.codecraft.blackhole.antipollution.SafeHostManager;
 import us.codecraft.blackhole.cache.CacheManager;
+
+import java.io.IOException;
+import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Check the connecting time of host.Use to detect whether the DNS answer is
@@ -67,7 +61,7 @@ public class ConnectionTimer {
 	}
 
 	private void checkConnectTimeForAnswer0(Message query, Message message) {
-		byte[] answerBytes = cacheManager.getFromCache(query);
+		byte[] answerBytes = cacheManager.getResponseFromCache(query);
 		Message answerInCache = null;
 		if (answerBytes != null) {
 			try {
@@ -80,7 +74,7 @@ public class ConnectionTimer {
 					if (logger.isDebugEnabled()) {
 						logger.debug("update record in cahce " + message);
 					}
-					cacheManager.setToCache(query, answerInCache.toWire());
+					cacheManager.setResponseToCache(query, answerInCache.toWire());
 					return;
 				}
 			} catch (IOException e) {
@@ -91,7 +85,7 @@ public class ConnectionTimer {
 			if (logger.isDebugEnabled()) {
 				logger.debug("set new message to cahce " + message);
 			}
-			cacheManager.setToCache(query, message.toWire());
+			cacheManager.setResponseToCache(query, message.toWire());
 		}
 	}
 

@@ -1,21 +1,16 @@
 package us.codecraft.blackhole.antipollution;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
-
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ShutDownAble;
 import us.codecraft.wifesays.me.StandReadyWorker;
+
+import java.io.*;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author yihua.huang@dianping.com

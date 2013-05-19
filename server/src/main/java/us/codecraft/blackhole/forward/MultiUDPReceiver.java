@@ -1,5 +1,12 @@
 package us.codecraft.blackhole.forward;
 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.xbill.DNS.Message;
+import us.codecraft.blackhole.concurrent.ThreadPools;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -7,27 +14,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.xbill.DNS.Message;
-import org.xbill.DNS.Record;
-import org.xbill.DNS.Section;
-import org.xbill.DNS.Type;
-
-import us.codecraft.blackhole.antipollution.BlackListManager;
-import us.codecraft.blackhole.antipollution.SafeHostManager;
-import us.codecraft.blackhole.cache.CacheManager;
-import us.codecraft.blackhole.config.Configure;
-import us.codecraft.blackhole.concurrent.ThreadPools;
+import java.util.concurrent.*;
 
 /**
  * Listen on port 40311 using reactor mode.
@@ -107,24 +94,12 @@ public class MultiUDPReceiver implements InitializingBean {
     }
 
     @Autowired
-    private CacheManager cacheManager;
-    @Autowired
-    private BlackListManager blackListManager;
-    @Autowired
-    private DNSHostsContainer dnsHostsContainer;
-
-    @Autowired
-    private ConnectionTimer connectionTimer;
-
-    @Autowired
-    private SafeHostManager safeBoxService;
-    @Autowired
     private ThreadPools threadPools;
 
-    private Logger logger = Logger.getLogger(getClass());
-
     @Autowired
-    private Configure configure;
+    private ForwardAnswerProcessor forwardAnswerProcessor;
+
+    private Logger logger = Logger.getLogger(getClass());
 
     /**
      *
@@ -133,36 +108,6 @@ public class MultiUDPReceiver implements InitializingBean {
         super();
     }
 
-    private byte[] removeFakeAddress(Message message, byte[] bytes) {
-        Record[] answers = message.getSectionArray(Section.ANSWER);
-        boolean changed = false;
-        for (Record answer : answers) {
-            String address = StringUtils.removeEnd(answer.rdataToString(), ".");
-            if ((answer.getType() == Type.A || answer.getType() == Type.AAAA)
-                    && blackListManager.inBlacklist(address)) {
-                if (!changed) {
-                    // copy on write
-                    message = (Message) message.clone();
-                }
-                message.removeRecord(answer, Section.ANSWER);
-                changed = true;
-            }
-        }
-        if (message.getQuestion().getType() == Type.A
-                && (message.getSectionArray(Section.ANSWER) == null || message
-                .getSectionArray(Section.ANSWER).length == 0)
-                && (message.getSectionArray(Section.ADDITIONAL) == null || message
-                .getSectionArray(Section.ADDITIONAL).length == 0)
-                && (message.getSectionArray(Section.AUTHORITY) == null || message
-                .getSectionArray(Section.AUTHORITY).length == 0)) {
-            logger.info("remove message " + message.getQuestion());
-            return null;
-        }
-        if (changed) {
-            return message.toWire();
-        }
-        return bytes;
-    }
 
     private String getKey(Message message) {
         return message.getHeader().getID() + "_"
@@ -197,7 +142,8 @@ public class MultiUDPReceiver implements InitializingBean {
                     @Override
                     public void run() {
                         try {
-                            handleAnswer(answer, remoteAddress);
+                            final Message message = new Message(answer);
+                            forwardAnswerProcessor.handleAnswer(answer, message,remoteAddress,getAnswer(message));
                         } catch (Throwable e) {
                             logger.warn("forward exception " + e);
                         }
@@ -261,56 +207,6 @@ public class MultiUDPReceiver implements InitializingBean {
                 logger.warn("remove answer error", e);
             }
         }
-    }
-
-    private void addToBlacklist(Message message) {
-        for (Record answer : message.getSectionArray(Section.ANSWER)) {
-            String address = StringUtils.removeEnd(answer.rdataToString(), ".");
-            if (!blackListManager.inBlacklist(address)) {
-                logger.info("detected dns poisoning, add address " + address
-                        + " to blacklist");
-                blackListManager.addToBlacklist(address);
-            }
-        }
-    }
-
-    private void handleAnswer(byte[] answer, SocketAddress remoteAddress)
-            throws IOException {
-        final Message message = new Message(answer);
-        // fake dns server return an answer, it must be dns pollution
-        if (configure.getFakeDnsServer() != null
-                && remoteAddress.equals(configure.getFakeDnsServer())) {
-            addToBlacklist(message);
-            String domain = StringUtils.removeEnd(message.getQuestion()
-                    .getName().toString(), ".");
-            safeBoxService.setPoisoned(domain);
-            return;
-        }
-        if (logger.isTraceEnabled()) {
-            logger.trace("get message from " + remoteAddress + "\n" + message);
-        }
-        final ForwardAnswer forwardAnswer = getAnswer(message);
-        if (forwardAnswer == null) {
-            logger.info("Received messages for "
-                    + message.getQuestion().getName().toString()
-                    + " after timeout!");
-            return;
-        }
-        dnsHostsContainer.registerTimeCost(remoteAddress,
-                System.currentTimeMillis() - forwardAnswer.getStartTime());
-        answer = removeFakeAddress(message, answer);
-        if (logger.isDebugEnabled()) {
-            logger.debug("response message " + message.getHeader().getID()
-                    + " to "
-                    + forwardAnswer.getResponser().getInDataPacket().getPort());
-        }
-        if (answer != null) {
-            forwardAnswer.getResponser().response(answer);
-            cacheManager.setToCache(message, answer);
-        }
-        // connectionTimer.checkConnectTimeForAnswer(forwardAnswer.getQuery(),
-        // message);
-
     }
 
     /**

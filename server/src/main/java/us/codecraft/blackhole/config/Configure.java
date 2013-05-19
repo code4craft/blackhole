@@ -1,9 +1,9 @@
 package us.codecraft.blackhole.config;
 
+import org.springframework.stereotype.Component;
+
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-
-import org.springframework.stereotype.Component;
 
 /**
  * @author yihua.huang@dianping.com

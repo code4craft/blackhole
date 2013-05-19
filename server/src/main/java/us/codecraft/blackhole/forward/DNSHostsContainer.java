@@ -1,5 +1,8 @@
 package us.codecraft.blackhole.forward;
 
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,9 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
-
 /**
  * @author yihua.huang@dianping.com
  * @date Dec 21, 2012
@@ -18,58 +18,45 @@ import org.springframework.stereotype.Component;
 @Component
 public class DNSHostsContainer {
 
-	private int timeout = 3000;
+    private int timeout = 3000;
 
-	private Map<SocketAddress, AveragedRequestTime> requestTimes = new ConcurrentHashMap<SocketAddress, AveragedRequestTime>();
+    private int order;
 
-	private Logger logger = Logger.getLogger(getClass());
+    private Map<SocketAddress, Integer> requestTimes = new ConcurrentHashMap<SocketAddress, Integer>();
 
-	public void clearHosts() {
-		requestTimes = new ConcurrentHashMap<SocketAddress, AveragedRequestTime>();
-	}
+    private Logger logger = Logger.getLogger(getClass());
 
-	public void addHost(SocketAddress address) {
-		requestTimes.put(address, new AveragedRequestTime());
-		logger.info("add dns address " + address);
-	}
+    public void clearHosts() {
+        requestTimes = new ConcurrentHashMap<SocketAddress, Integer>();
+        order = 0;
+    }
 
-	/**
-	 * @param timeout
-	 *            the timeout to set
-	 */
-	public void setTimeout(int timeout) {
-		this.timeout = timeout;
-	}
+    public void addHost(SocketAddress address) {
+        requestTimes.put(address, order++);
+        logger.info("add dns address " + address);
+    }
 
-	public void registerTimeCost(SocketAddress address, long timeCost) {
-		AveragedRequestTime averagedRequestTime = requestTimes.get(address);
-		if (averagedRequestTime == null) {
-			return;
-		}
-		if (timeCost >= timeout) {
-			averagedRequestTime.incrFailCount();
-		} else {
-			averagedRequestTime.add(timeCost);
-		}
-	}
+    public int getOrder(SocketAddress socketAddress) {
+        Integer order = requestTimes.get(socketAddress);
+        return order==null?0:order;
+    }
 
-	public void registerFail(SocketAddress address) {
-		if (requestTimes.get(address) != null) {
-			requestTimes.get(address).incrFailCount();
-		}
-	}
+    /**
+     * @param timeout the timeout to set
+     */
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 
-	public List<SocketAddress> getAllAvaliableHosts() {
-		List<SocketAddress> results = new ArrayList<SocketAddress>();
-		Iterator<Entry<SocketAddress, AveragedRequestTime>> iterator = requestTimes
-				.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Entry<SocketAddress, AveragedRequestTime> next = iterator.next();
-			if (next.getValue().get() < timeout) {
-				results.add(next.getKey());
-			}
-		}
-		return results;
-	}
+    public List<SocketAddress> getAllAvaliableHosts() {
+        List<SocketAddress> results = new ArrayList<SocketAddress>();
+        Iterator<Entry<SocketAddress, Integer>> iterator = requestTimes
+                .entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<SocketAddress, Integer> next = iterator.next();
+            results.add(next.getKey());
+        }
+        return results;
+    }
 
 }

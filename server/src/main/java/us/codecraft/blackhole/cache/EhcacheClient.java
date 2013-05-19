@@ -1,23 +1,21 @@
 package us.codecraft.blackhole.cache;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-
 import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ShutDownAble;
 import us.codecraft.wifesays.me.StandReadyWorker;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author yihua.huang@dianping.com
