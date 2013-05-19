@@ -19,7 +19,7 @@ BlackHole最简单直接的用途是在开发和测试环境中将域名指向�
 
 BlackHole致力于成为一个方便稳定的企业内网DNS服务器，有一个支持配置DNS地址的Web服务端server-suite，正在开发中。目标是能够让用户方便的更改自己本地的DNS拦截规则，同时做到设备无关性，让移动设备也能轻易的修改域名配置，方便开发和测试。
 
-BlackHole还可以防止DNS污染攻击，对于某些"无法访问的网站"可以起到作用。BlackHole防止DNS攻击的方式参见：[http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/](http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/)
+BlackHole还可以防止DNS污染攻击，对于某些"无法访问的网站"可以起到作用。BlackHole防止DNS攻击的方式参见：[http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/](http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/)。
 
 BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/恢复等操作，无需用户自己修改，目前有Mac版本，支持10.7，目前已暂停维护。
 
@@ -48,7 +48,8 @@ BlackHole存在两种工作模式："拦截"和"转发"。
 
 * #####转发
 
-	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另外的DNS服务器，并将该DNS服务器的响应转发回客户端。	
+	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另外的DNS服务器，并将该DNS服务器的响应转发回客户端。Blackhole支持多个外部DNS同时转发，并使用最先响应的作为结果，以提高响应速度。
+		
 #####基准测试
 
 在基准测试中，拦截模式下不开启cache，qps为BIND的50%，为17000，如果开启cache，对于有缓存的数据达到40000qps，优于BIND，已经能满足企业内网需要。
