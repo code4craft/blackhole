@@ -71,15 +71,17 @@ public class ForwardAnswerProcessor {
         if (configure.isEnableSafeBox()) {
             answer = removeFakeAddress(message, answer);
         }
-        if (logger.isDebugEnabled()) {
-            logger.debug("response message " + message.getHeader().getID()
-                    + " to "
-                    + forwardAnswer.getResponser().getInDataPacket().getPort());
-        }
-        if (answer != null&& RecordUtils.hasAnswer(message)) {
+        if (answer != null) {
             if (forwardAnswer.confirmProcess(order)) {
                 forwardAnswer.getResponser().response(answer);
-                cacheManager.setResponseToCache(message, answer);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("response message " + message.getHeader().getID()
+                            + " to "
+                            + forwardAnswer.getResponser().getInDataPacket().getPort());
+                }
+                if (RecordUtils.hasAnswer(message)) {
+                    cacheManager.setResponseToCache(message, answer);
+                }
             }
         }
     }
@@ -110,7 +112,7 @@ public class ForwardAnswerProcessor {
                 changed = true;
             }
         }
-        if (message.getQuestion().getType() == Type.A
+        if (changed && message.getQuestion().getType() == Type.A
                 && (message.getSectionArray(Section.ANSWER) == null || message
                 .getSectionArray(Section.ANSWER).length == 0)
                 && (message.getSectionArray(Section.ADDITIONAL) == null || message

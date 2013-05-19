@@ -29,9 +29,9 @@ public class RecordUtils {
     public static boolean hasAnswer(Message message) {
         Record[] sectionArray = message.getSectionArray(Section.ANSWER);
         if (sectionArray == null || sectionArray.length == 0) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
 
     }
