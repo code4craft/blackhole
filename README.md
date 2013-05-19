@@ -17,6 +17,8 @@ BlackHole最简单直接的用途是在开发和测试环境中将域名指向�
 
 BlackHole还可以防止DNS污染攻击，对于某些无法访问的网站可以起到作用。BlackHole防止DNS攻击的方式参见：[http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/](http://code4craft.github.com/blog/2013/02/25/blackhole-anti-dns-poison/)
 
+BlackHole目前致力于成为一个方便的企业内网DNS服务器，有一个支持配置DNS地址的Web服务端server-suite，正在开发中。
+
 BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/恢复等操作，无需用户自己修改，目前有Mac版本，支持10.7，目前已暂停维护。
 
 ####3. 安装及配置
