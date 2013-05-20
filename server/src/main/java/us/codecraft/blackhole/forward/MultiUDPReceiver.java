@@ -199,6 +199,10 @@ public class MultiUDPReceiver implements InitializingBean {
         while (true) {
             try {
                 DelayStringKey delayRemoveKey = delayRemoveQueue.take();
+                ForwardAnswer forwardAnswer = answers.get(delayRemoveKey.getKey());
+                if (forwardAnswer.getTempAnswer()!=null){
+                    forwardAnswer.getResponser().response(forwardAnswer.getTempAnswer().toWire());
+                }
                 answers.remove(delayRemoveKey.getKey());
                 if (logger.isDebugEnabled()) {
                     logger.debug("remove key " + delayRemoveKey.getKey());

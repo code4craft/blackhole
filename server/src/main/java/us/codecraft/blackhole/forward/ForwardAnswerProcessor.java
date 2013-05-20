@@ -74,6 +74,7 @@ public class ForwardAnswerProcessor {
                 forwardAnswer.setTempAnswer(message);
                 if (forwardAnswer.getCountDown() <= 0) {
                     forwardAnswer.getResponser().response(answer);
+                    forwardAnswer.setTempAnswer(null);
                 }
             } else {
                 if (forwardAnswer.confirmProcess(order)) {
@@ -83,9 +84,7 @@ public class ForwardAnswerProcessor {
                                 + " to "
                                 + forwardAnswer.getResponser().getInDataPacket().getPort());
                     }
-                    if (RecordUtils.hasAnswer(message)) {
-                        cacheManager.setResponseToCache(message, answer);
-                    }
+                    cacheManager.setResponseToCache(message, answer);
                 }
             }
         }
