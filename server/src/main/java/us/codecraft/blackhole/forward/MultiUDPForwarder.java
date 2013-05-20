@@ -66,13 +66,13 @@ public class MultiUDPForwarder implements Forwarder {
 		}
 		// send to all address
 
-		ForwardAnswer forwardAnswer = new ForwardAnswer(query, responser);
-		if (configure.getFakeDnsServer() != null) {
-			// send fake dns query to detect dns poisoning
-			hosts.add(0, configure.getFakeDnsServer());
-		}
-		try {
-
+        int initCount = hosts.size();
+        if (configure.getFakeDnsServer() != null) {
+            // send fake dns query to detect dns poisoning
+            hosts.add(0, configure.getFakeDnsServer());
+        }
+        ForwardAnswer forwardAnswer = new ForwardAnswer(query, responser, initCount);
+        try {
 			multiUDPReceiver.registerReceiver(query, forwardAnswer);
 			try {
 				for (SocketAddress host : hosts) {

@@ -19,15 +19,20 @@ public class ForwardAnswer {
 
     private AtomicInteger minOrder = new AtomicInteger(Integer.MAX_VALUE);
 
+    private Message tempAnswer;
+
+    private final AtomicInteger countDown;
+
     /**
      * @param query
      * @param responser
      */
-    public ForwardAnswer(Message query, UDPConnectionResponser responser) {
+    public ForwardAnswer(Message query, UDPConnectionResponser responser, int initCount) {
         super();
         this.query = query;
         this.responser = responser;
         this.startTime = System.currentTimeMillis();
+        this.countDown = new AtomicInteger(initCount);
     }
 
     public UDPConnectionResponser getResponser() {
@@ -71,4 +76,19 @@ public class ForwardAnswer {
         return false;
     }
 
+    public Message getTempAnswer() {
+        return tempAnswer;
+    }
+
+    public void setTempAnswer(Message tempAnswer) {
+        this.tempAnswer = tempAnswer;
+    }
+
+    public int decrCountDown() {
+        return countDown.decrementAndGet();
+    }
+
+    public int getCountDown() {
+        return countDown.get();
+    }
 }

@@ -63,24 +63,29 @@ public class ForwardAnswerProcessor {
                     + " after timeout!");
             return;
         }
-        int order = dnsHostsContainer.getOrder(remoteAddress);
-        if (!forwardAnswer.shouldProcess(order)) {
-            return;
-        }
-
         if (configure.isEnableSafeBox()) {
             answer = removeFakeAddress(message, answer);
         }
+
         if (answer != null) {
-            if (forwardAnswer.confirmProcess(order)) {
-                forwardAnswer.getResponser().response(answer);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("response message " + message.getHeader().getID()
-                            + " to "
-                            + forwardAnswer.getResponser().getInDataPacket().getPort());
+            forwardAnswer.decrCountDown();
+            int order = dnsHostsContainer.getOrder(remoteAddress);
+            if (!RecordUtils.hasAnswer(message)) {
+                forwardAnswer.setTempAnswer(message);
+                if (forwardAnswer.getCountDown() <= 0) {
+                    forwardAnswer.getResponser().response(answer);
                 }
-                if (RecordUtils.hasAnswer(message)) {
-                    cacheManager.setResponseToCache(message, answer);
+            } else {
+                if (forwardAnswer.confirmProcess(order)) {
+                    forwardAnswer.getResponser().response(answer);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("response message " + message.getHeader().getID()
+                                + " to "
+                                + forwardAnswer.getResponser().getInDataPacket().getPort());
+                    }
+                    if (RecordUtils.hasAnswer(message)) {
+                        cacheManager.setResponseToCache(message, answer);
+                    }
                 }
             }
         }
