@@ -4,3 +4,6 @@
 [submodule "dnstools"]
 	path = dnstools
 	url = git@github.com:code4craft/dnstools.git
+[submodule "hostd"]
+	path = hostd
+	url = git@github.com:code4craft/hostd.git
