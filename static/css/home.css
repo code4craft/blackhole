@@ -58,3 +58,63 @@ div#release_notes {
   background-color: #333333;
 }
 
+.ui-btn-up-a {
+  border: 1px solid #cccccc /*{a-bup-border}*/;
+  background: #E6E6E6 /*{a-bup-background-color}*/;
+  font-weight: bold;
+  color: #333333 /*{a-bup-color}*/;
+  text-shadow: undefined /*{a-bup-shadow-x}*/ undefined /*{a-bup-shadow-y}*/ undefined /*{a-bup-shadow-radius}*/ undefined /*{a-bup-shadow-color}*/;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #ffffff /*{a-bup-background-start}*/), to( #E6E6E6 /*{a-bup-background-end}*/)); /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient( #ffffff /*{a-bup-background-start}*/, #E6E6E6 /*{a-bup-background-end}*/); /* Chrome 10+, Saf5.1+ */
+  background-image:    -moz-linear-gradient( #ffffff /*{a-bup-background-start}*/, #E6E6E6 /*{a-bup-background-end}*/); /* FF3.6 */
+  background-image:     -ms-linear-gradient( #ffffff /*{a-bup-background-start}*/, #E6E6E6 /*{a-bup-background-end}*/); /* IE10 */
+  background-image:      -o-linear-gradient( #ffffff /*{a-bup-background-start}*/, #E6E6E6 /*{a-bup-background-end}*/); /* Opera 11.10+ */
+  background-image:         linear-gradient( #ffffff /*{a-bup-background-start}*/, #E6E6E6 /*{a-bup-background-end}*/);
+}
+.ui-btn-up-a:visited,
+.ui-btn-up-a a.ui-link-inherit {
+  color: #333333 /*{a-bup-color}*/;
+}
+.ui-btn-hover-a {
+  border: 1px solid #cccccc /*{a-bhover-border}*/;
+  background: #e6e6e6 /*{a-bhover-background-color}*/;
+  font-weight: bold;
+  color: #333333 /*{a-bhover-color}*/;
+  text-shadow: undefined /*{a-bhover-shadow-x}*/ undefined /*{a-bhover-shadow-y}*/ undefined /*{a-bhover-shadow-radius}*/ undefined /*{a-bhover-shadow-color}*/;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #E6E6E6 /*{a-bhover-background-start}*/), to( #E6E6E6 /*{a-bhover-background-end}*/)); /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient( #E6E6E6 /*{a-bhover-background-start}*/, #E6E6E6 /*{a-bhover-background-end}*/); /* Chrome 10+, Saf5.1+ */
+  background-image:    -moz-linear-gradient( #E6E6E6 /*{a-bhover-background-start}*/, #E6E6E6 /*{a-bhover-background-end}*/); /* FF3.6 */
+  background-image:     -ms-linear-gradient( #E6E6E6 /*{a-bhover-background-start}*/, #E6E6E6 /*{a-bhover-background-end}*/); /* IE10 */
+  background-image:      -o-linear-gradient( #E6E6E6 /*{a-bhover-background-start}*/, #E6E6E6 /*{a-bhover-background-end}*/); /* Opera 11.10+ */
+  background-image:         linear-gradient( #E6E6E6 /*{a-bhover-background-start}*/, #E6E6E6 /*{a-bhover-background-end}*/);
+}
+.ui-btn-hover-a:visited,
+.ui-btn-hover-a:hover,
+.ui-btn-hover-a a.ui-link-inherit {
+  color: #333333 /*{a-bhover-color}*/;
+}
+.ui-btn-down-a {
+  border: 1px solid #cccccc /*{a-bdown-border}*/;
+  background: #d6d6d6 /*{a-bdown-background-color}*/;
+  font-weight: bold;
+  color: #333333 /*{a-bdown-color}*/;
+  text-shadow: undefined /*{a-bdown-shadow-x}*/ undefined /*{a-bdown-shadow-y}*/ undefined /*{a-bdown-shadow-radius}*/ undefined /*{a-bdown-shadow-color}*/;
+  background-image: -webkit-gradient(linear, left top, left bottom, from( #D6D6D6 /*{a-bdown-background-start}*/), to( #D6D6D6 /*{a-bdown-background-end}*/)); /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient( #D6D6D6 /*{a-bdown-background-start}*/, #D6D6D6 /*{a-bdown-background-end}*/); /* Chrome 10+, Saf5.1+ */
+  background-image:    -moz-linear-gradient( #D6D6D6 /*{a-bdown-background-start}*/, #D6D6D6 /*{a-bdown-background-end}*/); /* FF3.6 */
+  background-image:     -ms-linear-gradient( #D6D6D6 /*{a-bdown-background-start}*/, #D6D6D6 /*{a-bdown-background-end}*/); /* IE10 */
+  background-image:      -o-linear-gradient( #D6D6D6 /*{a-bdown-background-start}*/, #D6D6D6 /*{a-bdown-background-end}*/); /* Opera 11.10+ */
+  background-image:         linear-gradient( #D6D6D6 /*{a-bdown-background-start}*/, #D6D6D6 /*{a-bdown-background-end}*/);
+}
+.ui-btn-down-a:visited,
+.ui-btn-down-a:hover,
+.ui-btn-down-a a.ui-link-inherit {
+  color: #333333 /*{a-bdown-color}*/;
+}
+.ui-btn-up-a,
+.ui-btn-hover-a,
+.ui-btn-down-a {
+   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif /*{global-font-family}*/;
+  text-decoration: none;
+}
+
