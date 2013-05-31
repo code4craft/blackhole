@@ -48,7 +48,7 @@ BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/z
 	
 	BlackHole并没有递归查找DNS的功能，如果遇到未在本地配置的域名请求，它会做一个UDP代理的工作，将请求发向一个已有的DNS服务器，并返回这个DNS服务器的结果。**如果你希望用BlackHole做某些域名的拦截，同时不影响其他域名的访问，需要对这个DNS服务器的地址进行配置。**
 	
-	支持多个DNS服务器配置，BlackHole会优先选择访问速度最快的服务器作为外部DNS。
+	支持多个DNS服务器配置，BlackHole会优先采用较前面的配置的结果。如果你在内网配置了DNS拦截，请将你的内网DNS服务器放到第一位。
 
 * **DNS_TIMEOUT**
 	
@@ -91,14 +91,9 @@ BlackHole的配置跟Hosts文件是一样的，但是支持通配符"*"。
 BlackHole还支持NS记录的配置。NS记录的意思是，对于某些域名的请求，总是向某个DNS服务器查找结果。例如，你可以使用组合配置：
 
 	173.194.72.103 *.google.com
-	NS 8.8.8.8 docs.google.com
+	NS docs.google.com
 
-这两项配置的意思是：将*.google.com的地址都指向173.194.72.103，但是对于docs.google.com域名，则请求8.8.8.8 DNS服务器，并将其返回的值作为结果。
-
-NS记录的IP地址可以是单个、多个或者没有。以下配置都是合法的：
-
-	NS 8.8.8.8,192.168.0.1 docs.google.com 	#使用8.8.8.8,192.168.0.1两个地址(用","分隔，中间无空格)
-	NS docs.google.com 						#使用blackhole.conf中配置的DNS服务器
+这两项配置的意思是：将*.google.com的地址都指向173.194.72.103，但是对于docs.google.com域名，则不进行拦截，直接使用外部DNS服务器的返回值作为结果。
 
 支持SHELL的系统可以使用blackhole.sh zones来快速配置zones文件。修改zones文件是动态生效的。
 
