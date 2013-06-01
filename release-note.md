@@ -4,7 +4,7 @@ Release Notes
 
 * [issues#5](https://github.com/code4craft/blackhole/issues/5) 对不同的用户组提供不同的DNS响应，从而可以让每个用户管理自己的DNS配置。
 
-* 开发了一个Web模块[Hostd](http://code4craft.github.io/hostd/demo.html)，类似修改hosts，可以供所有用户进行自己DNS配置的管理。
+* 开发了一个Web模块[Hostd](http://code4craft.github.io/hostd/)，类似修改hosts，可以供所有用户进行自己DNS配置的管理。
 
 * [issues#8](https://github.com/code4craft/blackhole/issues/8) 对forward的外部DNS设定优先级 便于企业内网配置自己的DNS地址，防止被响应被覆盖。
 
