@@ -1,0 +1,7 @@
+language: java 
+before_install:
+   - git submodule update wifesays
+   - cd wifesays
+   - mvn install 
+script:
+   - mvn clean package dependency:copy-dependencies -DoutputDirectory=target/lib
