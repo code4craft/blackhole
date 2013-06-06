@@ -29,9 +29,16 @@ BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/�
 
 Linux系列系统请将文件复制到/usr/local/blackhole/文件夹下，若不在此目录，请将blackhole.sh中
 
+
 	HOME_DIR=/usr/local/blackhole
 	
-修改成你的目录。然后通过sudo blackhole.sh start可以启动。
+修改成你的目录。
+
+你也可以使用自动脚本进行安装：
+
+	curl http://code4craft.github.io/blackhole/install.sh | sh
+	
+然后通过sudo blackhole.sh start可以启动。
 
 Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
 
