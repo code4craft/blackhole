@@ -13,7 +13,7 @@ BlackHole的UDP代理部分使用了纯异步的逻辑，支持同时代理多�
 
 ####下载编译版本
 
-BlackHole的编译后版本保存在https://github.com/code4craft/blackhole-bin，直接clone这个项目到某一目录即可。
+BlackHole的编译后版本保存在[https://github.com/code4craft/blackhole-bin](https://github.com/code4craft/blackhole-bin)，直接clone这个项目到某一目录即可。
 
 	git clone https://github.com/code4craft/blackhole-bin.git /usr/local/blackhole
 
