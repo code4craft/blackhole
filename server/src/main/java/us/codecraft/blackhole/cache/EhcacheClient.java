@@ -13,9 +13,14 @@ import us.codecraft.blackhole.config.Configure;
 import us.codecraft.wifesays.me.ShutDownAble;
 import us.codecraft.wifesays.me.StandReadyWorker;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yihua.huang@dianping.com
@@ -23,159 +28,192 @@ import java.util.List;
  */
 @Component
 public class EhcacheClient extends StandReadyWorker implements CacheClient,
-		InitializingBean, ShutDownAble {
+        InitializingBean, ShutDownAble {
 
-	private Logger logger = Logger.getLogger(EhcacheClient.class);
+    private Logger logger = Logger.getLogger(EhcacheClient.class);
 
-	@Autowired
-	private Configure configure;
+    @Autowired
+    private Configure configure;
 
-	private static volatile CacheManager manager;
+    private static volatile CacheManager manager;
 
-	private static final String CACHE_NAME = "DNS";
+    private static final String CACHE_NAME = "DNS";
 
-	private static final String CACHE_CONF = "ehcache.xml";
+    private static final String CACHE_CONF = "ehcache.xml";
 
-	private static final String CLEAR = "clear_cache";
+    private static final String CLEAR = "clear_cache";
 
-	/**
-	 * (non-Jsdoc)
-	 * 
-	 * @see com.CacheClient.mail.postman.cache.service.impl.CacheClient#init()
-	 */
-	@Override
-	public void init() {
-		ClassPathResource classPathResource = new ClassPathResource(CACHE_CONF);
-		InputStream inputStream = null;
-		try {
-			inputStream = classPathResource.getInputStream();
-			if (manager == null) {
-				synchronized (EhcacheClient.class) {
-					if (manager == null) {
-						manager = new CacheManager(inputStream);
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.error("init ehcache error!", e);
-		} finally {
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				logger.warn("close error", e);
-			}
-			inputStream = null;
-		}
-	}
+    private static final String DUMP = "dump_cache";
 
-	/**
-	 * (non-Jsdoc)
-	 * 
-	 * @see com.dianping.mail.postman.cache.service.CacheService#get(java.lang.String)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> T get(String key) {
-		if (manager == null || key == null) {
-			return null;
-		}
-		if (manager == null) {
-			return null;
-		}
-		Cache cache = manager.getCache(CACHE_NAME);
-		Element element = cache.get(key);
-		if (element == null) {
-			return null;
-		}
-		T value = (T) element.getObjectValue();
-		return value;
-	}
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
-	/**
-	 * (non-Jsdoc)
-	 * 
-	 * @see com.dianping.mail.postman.cache.service.CacheService#set(java.lang.String,
-	 *      java.lang.Object, int)
-	 */
-	@Override
-	public <T> boolean set(String key, T value, int expireTime) {
-		if (!configure.isUseCache()) {
-			return false;
-		}
-		if (key == null || value == null) {
-			throw new IllegalArgumentException(
-					"key and value should not be null");
-		}
-		if (manager == null) {
-			return false;
-		}
-		Cache cache = manager.getCache(CACHE_NAME);
-		Element element = new Element(key, value, Boolean.FALSE, 0, expireTime);
-		cache.put(element);
-		return true;
-	}
+    /**
+     * (non-Jsdoc)
+     *
+     * @see com.CacheClient.mail.postman.cache.service.impl.CacheClient#init()
+     */
+    @Override
+    public void init() {
+        ClassPathResource classPathResource = new ClassPathResource(CACHE_CONF);
+        InputStream inputStream = null;
+        try {
+            inputStream = classPathResource.getInputStream();
+            if (manager == null) {
+                synchronized (EhcacheClient.class) {
+                    if (manager == null) {
+                        manager = new CacheManager(inputStream);
+                        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (logger.isDebugEnabled()){
+                                    logger.debug("start to flush cache to disk");
+                                }
+                                try {
+                                    Cache cache = manager.getCache(CACHE_NAME);
+                                    cache.flush();
+                                } catch (Exception e){
+                                    logger.warn("flush cache error!",e);
+                                }
+                            }
+                        }, 1, 1, TimeUnit.MINUTES);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("init ehcache error!", e);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                logger.warn("close error", e);
+            }
+            inputStream = null;
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * us.codecraft.wifesays.me.StandReady#doWhatYouShouldDo(java.lang.String)
-	 */
-	@Override
-	public String doWhatYouShouldDo(String whatWifeSays) {
-		if (CLEAR.equalsIgnoreCase(whatWifeSays)) {
-			if (manager == null) {
-				return "CACHE NOT USED";
-			}
-			clearCache();
-			return "REMOVE SUCCESS";
-		}
-		if (whatWifeSays.startsWith(CLEAR)) {
-			String[] split = whatWifeSays.split(":");
-			if (split.length >= 2) {
-				String address = split[1];
-				if (!address.endsWith(".")) {
-					address += ".";
-				}
-				String type = "A";
-				if (split.length > 2) {
-					type = split[2];
-				}
-				String key = address + " " + type;
-				if (manager == null) {
-					return "CACHE NOT USED";
-				}
-				Cache cache = manager.getCache(CACHE_NAME);
-				if (cache.get(key) == null) {
-					return "KEY " + key + " NOT EXIST";
-				}
-				cache.remove(key);
-				return "REMOVE SUCCESS";
-			}
-		}
-		return null;
-	}
+    /**
+     * (non-Jsdoc)
+     *
+     * @see com.dianping.mail.postman.cache.service.CacheService#get(java.lang.String)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T get(String key) {
+        if (manager == null || key == null) {
+            return null;
+        }
+        if (manager == null) {
+            return null;
+        }
+        Cache cache = manager.getCache(CACHE_NAME);
+        Element element = cache.get(key);
+        if (element == null) {
+            return null;
+        }
+        T value = (T) element.getObjectValue();
+        return value;
+    }
 
-	public void clearCache() {
-		Cache cache = manager.getCache(CACHE_NAME);
-		@SuppressWarnings("unchecked")
-		List<String> keys = cache.getKeys();
-		logger.info(keys.size() + " cached records cleared");
-		if (logger.isDebugEnabled()) {
-			logger.debug("[" + StringUtils.join(keys, ",") + "]");
-		}
-		cache.removeAll();
-	}
+    /**
+     * (non-Jsdoc)
+     *
+     * @see com.dianping.mail.postman.cache.service.CacheService#set(java.lang.String,
+     *      java.lang.Object, int)
+     */
+    @Override
+    public <T> boolean set(String key, T value, int expireTime) {
+        if (!configure.isUseCache()) {
+            return false;
+        }
+        if (key == null || value == null) {
+            throw new IllegalArgumentException(
+                    "key and value should not be null");
+        }
+        if (manager == null) {
+            return false;
+        }
+        Cache cache = manager.getCache(CACHE_NAME);
+        Element element = new Element(key, value, Boolean.FALSE, 0, expireTime);
+        cache.put(element);
+        return true;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		if (configure.isUseCache()) {
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * us.codecraft.wifesays.me.StandReady#doWhatYouShouldDo(java.lang.String)
+     */
+    @Override
+    public String doWhatYouShouldDo(String whatWifeSays) {
+        if (DUMP.equalsIgnoreCase(whatWifeSays)) {
+            final String dumpFilename = Configure.FILE_PATH + "/cache.dump";
+            Cache cache = manager.getCache(CACHE_NAME);
+            List<String> keys = (List<String>) cache.getKeys();
+            try {
+                PrintWriter writer = new PrintWriter(new FileWriter(dumpFilename));
+                for (String key : keys) {
+                    writer.println(key + "\t" + cache.get(key));
+                }
+                writer.close();
+            } catch (IOException e) {
+                logger.error("dumpfile error", e);
+            }
+            return keys.size() + "_caches_are_dumped_to_file_'" + dumpFilename + "'";
+        }
+        if (CLEAR.equalsIgnoreCase(whatWifeSays)) {
+            if (manager == null) {
+                return "CACHE NOT USED";
+            }
+            clearCache();
+            return "REMOVE SUCCESS";
+        }
+        if (whatWifeSays.startsWith(CLEAR)) {
+            String[] split = whatWifeSays.split(":");
+            if (split.length >= 2) {
+                String address = split[1];
+                if (!address.endsWith(".")) {
+                    address += ".";
+                }
+                String type = "A";
+                if (split.length > 2) {
+                    type = split[2];
+                }
+                String key = address + " " + type;
+                if (manager == null) {
+                    return "CACHE NOT USED";
+                }
+                Cache cache = manager.getCache(CACHE_NAME);
+                if (cache.get(key) == null) {
+                    return "KEY " + key + " NOT EXIST";
+                }
+                cache.remove(key);
+                return "REMOVE SUCCESS";
+            }
+        }
+        return null;
+    }
+
+    public void clearCache() {
+        Cache cache = manager.getCache(CACHE_NAME);
+        @SuppressWarnings("unchecked")
+        List<String> keys = cache.getKeys();
+        logger.info(keys.size() + " cached records cleared");
+        if (logger.isDebugEnabled()) {
+            logger.debug("[" + StringUtils.join(keys, ",") + "]");
+        }
+        cache.removeAll();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (configure.isUseCache()) {
             Thread thread = new Thread() {
                 @Override
                 public void run() {
@@ -184,19 +222,31 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
             };
             thread.setDaemon(true);
             thread.start();
-		}
-	}
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see us.codecraft.wifesays.me.ShutDownAble#shutDown()
-	 */
-	@Override
-	public void shutDown() {
-		Cache cache = manager.getCache(CACHE_NAME);
-		cache.flush();
-		logger.info("flush ehcache to file success");
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see us.codecraft.wifesays.me.ShutDownAble#shutDown()
+     */
+    @Override
+    public void shutDown() {
+        try {
+            Cache cache = manager.getCache(CACHE_NAME);
+            cache.flush();
+            manager.shutdown();
+            logger.info("flush cache to disk success!");
+        } catch (Exception e){
+            logger.warn("flush cache error!",e);
+        }
+    }
+
+    public static void main(String[] args) {
+        EhcacheClient ehcacheClient = new EhcacheClient();
+        ehcacheClient.init();
+        ehcacheClient.get("a");
+//        ehcacheClient.manager.getCache(CACHE_NAME);
+    }
 
 }

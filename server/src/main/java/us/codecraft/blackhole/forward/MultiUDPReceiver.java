@@ -143,7 +143,7 @@ public class MultiUDPReceiver implements InitializingBean {
                     public void run() {
                         try {
                             final Message message = new Message(answer);
-                            forwardAnswerProcessor.handleAnswer(answer, message,remoteAddress,getAnswer(message));
+                            forwardAnswerProcessor.handleAnswer(answer, message, remoteAddress, getAnswer(message));
                         } catch (Throwable e) {
                             logger.warn("forward exception " + e);
                         }
@@ -200,7 +200,7 @@ public class MultiUDPReceiver implements InitializingBean {
             try {
                 DelayStringKey delayRemoveKey = delayRemoveQueue.take();
                 ForwardAnswer forwardAnswer = answers.get(delayRemoveKey.getKey());
-                if (forwardAnswer.getTempAnswer()!=null){
+                if (forwardAnswer != null && forwardAnswer.getTempAnswer() != null) {
                     forwardAnswer.getResponser().response(forwardAnswer.getTempAnswer().toWire());
                 }
                 answers.remove(delayRemoveKey.getKey());

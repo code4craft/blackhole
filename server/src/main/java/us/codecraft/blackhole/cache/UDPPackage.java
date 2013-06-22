@@ -1,5 +1,8 @@
 package us.codecraft.blackhole.cache;
 
+import org.xbill.DNS.Message;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -60,18 +63,25 @@ public class UDPPackage implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		if (bytes == null || bytes.length == 0) {
-			return "[]";
-		}
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("[");
-		stringBuilder.append(bytes[0]);
-		for (int i = 1; i < bytes.length; i++) {
-			stringBuilder.append(",");
-			stringBuilder.append(bytes[i]);
-		}
-		stringBuilder.append("]");
-		return stringBuilder.toString();
+        try {
+            final Message message = new Message(bytes);
+            return message.toString();
+        } catch (IOException e) {
+
+            if (bytes == null || bytes.length == 0) {
+                return "[]";
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("[");
+            stringBuilder.append(bytes[0]);
+            for (int i = 1; i < bytes.length; i++) {
+                stringBuilder.append(",");
+                stringBuilder.append(bytes[i]);
+            }
+            stringBuilder.append("]");
+            return stringBuilder.toString();
+        }
+
 
 	}
 }
