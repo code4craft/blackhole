@@ -15,7 +15,7 @@ BlackHole具有DNS缓存以及持久化的功能，可以作为一个DNS缓存�
 
 BlackHole缓存性能优秀，可以支持每秒50000次随机查询，平均响应时间0.3ms，高于pdnsd及BIND([测试报告](https://github.com/code4craft/blackhole/blob/master/server/benchmark-other-dns-server))。
 
-#### 自定义域名
+#### hosts风格自定义域名
 
 BlackHole也支持修改域名配置，配置域名的方式非常简单，与hosts文件一致，并且支持通配符(目前仅支持A记录)。
 
@@ -44,7 +44,7 @@ BlackHole的另一个编译后版本保存在[https://github.com/code4craft/blac
 
 Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
 
-具体的设置请看[Blackhole Server Docs](https://github.com/code4craft/blackhole/blob/master/server/README.md)。
+具体的设置以及技术细节请看[Blackhole Server Docs](https://github.com/code4craft/blackhole/blob/master/server/README.md)。
 
 ###4. 协议
 

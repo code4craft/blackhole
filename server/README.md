@@ -3,7 +3,7 @@ BlackHole
 
 ###1. 技术结构
 
-BlackHole的链接部分参考了EagleDNS，使用了反应堆模式。
+BlackHole的连接处理部分参考了EagleDNS，使用了反应堆模式。
 
 BlackHole底层使用dnsjava进行DNS解析，并使用EhCache进行缓存和持久化。
 
