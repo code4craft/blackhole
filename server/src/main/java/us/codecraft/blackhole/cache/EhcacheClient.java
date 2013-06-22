@@ -45,6 +45,8 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
 
     private static final String DUMP = "dump_cache";
 
+    private static final String STAT = "stat_cache";
+
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     /**
@@ -65,14 +67,14 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
                         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
                             @Override
                             public void run() {
-                                if (logger.isDebugEnabled()){
+                                if (logger.isDebugEnabled()) {
                                     logger.debug("start to flush cache to disk");
                                 }
                                 try {
                                     Cache cache = manager.getCache(CACHE_NAME);
                                     cache.flush();
-                                } catch (Exception e){
-                                    logger.warn("flush cache error!",e);
+                                } catch (Exception e) {
+                                    logger.warn("flush cache error!", e);
                                 }
                             }
                         }, 1, 1, TimeUnit.MINUTES);
@@ -146,6 +148,9 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
      */
     @Override
     public String doWhatYouShouldDo(String whatWifeSays) {
+        if (manager == null) {
+            return "CACHE NOT USED";
+        }
         if (DUMP.equalsIgnoreCase(whatWifeSays)) {
             final String dumpFilename = Configure.FILE_PATH + "/cache.dump";
             Cache cache = manager.getCache(CACHE_NAME);
@@ -160,13 +165,12 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
                 logger.error("dumpfile error", e);
             }
             return keys.size() + "_caches_are_dumped_to_file_'" + dumpFilename + "'";
-        }
-        if (CLEAR.equalsIgnoreCase(whatWifeSays)) {
-            if (manager == null) {
-                return "CACHE NOT USED";
-            }
+        } else if (CLEAR.equalsIgnoreCase(whatWifeSays)) {
             clearCache();
             return "REMOVE SUCCESS";
+        } else if (STAT.equalsIgnoreCase(whatWifeSays)) {
+            Cache cache = manager.getCache(CACHE_NAME);
+            return cache.getSize()+" records in cache, try 'cache dump' to more info";
         }
         if (whatWifeSays.startsWith(CLEAR)) {
             String[] split = whatWifeSays.split(":");
@@ -237,8 +241,8 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
             cache.flush();
             manager.shutdown();
             logger.info("flush cache to disk success!");
-        } catch (Exception e){
-            logger.warn("flush cache error!",e);
+        } catch (Exception e) {
+            logger.warn("flush cache error!", e);
         }
     }
 
