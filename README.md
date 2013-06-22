@@ -25,20 +25,15 @@ BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/�
 
 ####3. 安装及配置
 
-若想使用BlackHole作为DNS服务器，则将[https://github.com/code4craft/blackhole/tree/master/server/bin](https://github.com/code4craft/blackhole/tree/master/server/bin)下的文件下载即可。
+BlackHole的编译后版本保存在https://github.com/code4craft/blackhole-bin，直接clone这个项目到某一目录即可。
 
-Linux系列系统请将文件复制到/usr/local/blackhole/文件夹下，若不在此目录，请将blackhole.sh中
-
-
-	HOME_DIR=/usr/local/blackhole
-	
-修改成你的目录。
+	git clone https://github.com/code4craft/blackhole-bin.git /usr/local/blackhole
 
 你也可以使用自动脚本进行安装：
 
 	curl http://code4craft.github.io/blackhole/install.sh | sh
 	
-然后通过sudo blackhole.sh start可以启动。
+然后通过sudo /usr/local/blackhole/blackhole.sh start可以启动。
 
 Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
 
