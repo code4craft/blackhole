@@ -36,7 +36,7 @@ BlackHole还可以通过UDP特征判断的方式防止DNS污染攻击，对于�
 
 	curl http://code4craft.github.io/blackhole/install.sh | sh
 
-BlackHole的另一个编译后版本保存在https://github.com/code4craft/blackhole-bin，如果以上脚本对你所在环境不可用，那么可以clone这个项目到某一目录。
+BlackHole的另一个编译后版本保存在[https://github.com/code4craft/blackhole-bin](https://github.com/code4craft/blackhole-bin)，如果以上脚本对你所在环境不可用，那么可以clone这个项目到某一目录。
 
 	git clone https://github.com/code4craft/blackhole-bin.git /usr/local/blackhole
 	
