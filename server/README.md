@@ -22,7 +22,17 @@ BlackHole还有一个单机版本hostd，整合了系统的DNS服务器修改/�
 
 ####3. 安装BlackHole:
 
-将[https://github.com/code4craft/blackhole/tree/master/server/bin](https://github.com/code4craft/blackhole/tree/master/server/bin)下的文件全部拷贝到/usr/local/blackhole目录下即可。
+BlackHole的编译后版本保存在https://github.com/code4craft/blackhole-bin，直接clone这个项目到某一目录即可。
+
+	git clone https://github.com/code4craft/blackhole-bin.git /usr/local/blackhole
+
+你也可以使用自动脚本进行安装：
+
+	curl http://code4craft.github.io/blackhole/install.sh | sh
+	
+然后通过sudo /usr/local/blackhole/blackhole.sh start可以启动。
+
+Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
 
 ####4. 配置BlackHole:
 
@@ -56,20 +66,28 @@ BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/z
 	
 * **CACHE**
 	
-	转发模式下，是否对DNS结果进行缓存。默认是true。缓存的失效时间由DNS结果的TLL值决定。缓存的保存时间不会大于DNS结果的最小TTL值。
+	转发模式下，是否对DNS结果进行缓存。默认是true。
+	
+* **CACHE_EXPIRE**
+	
+	设置缓存的过期时间，单位是秒。不设置此项或设置为0，则使用默认值。默认缓存的失效时间是DNS结果的TLL值。
 	
 * **TTL**
 
-	(time to live，DNS过期时间，单位是秒)。
+	BlackHole拦截的DNS请求的过期时间，单位是秒。
 	
 * **LOG**
 	
 	日志的等级。可选配置为('DEBUG','INFO','WARN')，对应log4j的等级。开启'DEBUG'级别的日志会显示每次请求和应答，但是会大大降低吞吐量。
 
+* **SAFE_BOX**
+	
+	是否开启反DNS污染功能。关闭此项可增加吞吐量。
+
 * **FAKE_DNS**
 	
 	伪造的DNS服务器，用于检测DNS污染。一般无须更改。
-
+	
 #####zones
 
 zones是DNS系统的域名配置文件。BlackHole简化了zones的配置。
@@ -105,8 +123,6 @@ blackhole使用Java编写，可以使用于任何平台。支持shell的平台�
 
 Windows下可以使用start.bat脚本来启动，不需要管理员权限运行。
 
-FOLDER为blackhole所在文件夹。
-
 ####6. 管理BlackHole：
 
 blackhole的监控模块使用了作者的另一个开源项目[wifesays](https://github.com/flashsword20/wifesays)。wifesays是一个简单的Java进程内TCP服务器，使用40310端口作为监控端口，基于TCP协议上封装了一些简单的文本命令。
@@ -130,7 +146,14 @@ COMMAND为命令。目前支持的命令为：
 * clear_cache
 
 	清除缓存(仅当使用缓存时有效)。
+	
+* stat_cache 
+	
+	显示缓存状态。
 
+* dump_cache
+	
+	将缓存输出到文件cache.dump，便于调试。
 	
 例如：
 
@@ -140,7 +163,7 @@ COMMAND为命令。目前支持的命令为：
 	
 支持SHELL的系统可以使用以下命令快速操作：
 	
-	blackhole.sh {start|stop|restart|reload|zones|config}
+	blackhole.sh {start|stop|restart|reload|zones|config|cache}
 
 ####7. 配置DNS服务器：
 
