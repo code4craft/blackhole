@@ -93,6 +93,8 @@ public class ConfigFileLoader implements InitializingBean, ReloadAble {
             configure.setEnableSafeBox(BooleanUtils.toBooleanObject(value));
         } else if (key.equalsIgnoreCase("thread_num")) {
             configure.setThreadNum(Integer.parseInt(value));
+        } else if (key.equalsIgnoreCase("cache_expire")) {
+            configure.setCacheExpire(Integer.parseInt(value));
         } else {
             return false;
         }

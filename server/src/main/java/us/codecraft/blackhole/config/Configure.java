@@ -37,6 +37,8 @@ public class Configure {
 
 	private static String configFilename;
 
+    private int cacheExpire;
+
 	public static String getConfigFilename() {
 		if (configFilename == null) {
 			return Configure.FILE_PATH + "/config/blackhole.conf";
@@ -170,4 +172,11 @@ public class Configure {
 		this.threadNum = threadNum;
 	}
 
+    public int getCacheExpire() {
+        return cacheExpire;
+    }
+
+    public void setCacheExpire(int cacheExpire) {
+        this.cacheExpire = cacheExpire;
+    }
 }
