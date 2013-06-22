@@ -36,33 +36,9 @@ BlackHole的编译后版本保存在https://github.com/code4craft/blackhole-bin�
 
 Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
 
-具体的设置请看[Blackhole Server Readme](https://github.com/code4craft/blackhole/blob/master/server/README.md)。
+具体的设置请看[Blackhole Server Docs](https://github.com/code4craft/blackhole/blob/master/server/README.md)。
 
-####4. 原理：
-
-BlackHole存在两种工作模式："拦截"和"转发"。
-
-* #####拦截
-
-
-	当DNS客户端的请求在BlackHole中有对应配置时，则进入拦截模式。拦截模式使用正则表达式匹配域名并拦截。同时支持PTR反解。
-
-* #####转发
-
-	当DNS客户端的请求在BlackHole中没有对应zones配置时，则进入转发模式。转发模式下，BlackHole会将UDP请求转发给另外的DNS服务器，并将该DNS服务器的响应转发回客户端。Blackhole支持多个外部DNS同时转发，并使用最先响应的作为结果，以提高响应速度。
-		
-#####基准测试
-
-在基准测试中，拦截模式下不开启cache，qps为BIND的50%，为17000，如果开启cache，对于有缓存的数据达到40000qps，优于BIND，已经能满足企业内网需要。
-
-基准测试结果见：
-[BlackHole vs BIND benchmark](https://github.com/flashsword20/blackhole/blob/master/benchmark)
-
-####5. 稳定性
-
-目前BlackHole已经比较稳定，有支持企业内部几百人使用的案例。
-
-####6. 协议
+####4. 协议
 
 BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。
 

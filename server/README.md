@@ -30,7 +30,7 @@ BlackHole的编译后版本保存在https://github.com/code4craft/blackhole-bin�
 	git clone https://github.com/code4craft/blackhole.git --recursive
 	cd blackhole
 	mvn clean package
-	
+	sh make.sh	
 
 ###3. 配置BlackHole:
 

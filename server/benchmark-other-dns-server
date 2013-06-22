@@ -1,0 +1,103 @@
+Benchmark
+
+-----------------------------------------------------
+-----------------------------------------------------
+
+Using queryperf in bind 9.9.3
+
+Environment：Mac Air MD231CH/A 
+
+CPU: 1.8Ghz Intel Core i5
+
+-----------------------------------------------------
+
+blackhole 1.2.1
+
+Memory Usage: 140M
+
+Statistics:
+
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         141300 queries
+  Queries completed:    141300 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:          0.214731 sec
+  RTT min:              0.000059 sec
+  RTT average:          0.000282 sec
+  RTT std deviation:    0.001746 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Sat Jun 22 19:39:18 2013
+  Finished at:          Sat Jun 22 19:39:21 2013
+  Ran for:              2.643923 seconds
+
+  Queries per second:   53443.311322 qps
+
+-----------------------------------------------------
+  
+BIND 9.9.3
+
+Memory Usage: 37M
+
+Statistics:
+
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         141300 queries
+  Queries completed:    141300 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:          0.231236 sec
+  RTT min:              0.000018 sec
+  RTT average:          0.000421 sec
+  RTT std deviation:    0.001912 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Sat Jun 22 20:24:01 2013
+  Finished at:          Sat Jun 22 20:24:04 2013
+  Ran for:              3.473272 seconds
+
+  Queries per second:   40682.100337 qps
+
+-----------------------------------------------------  
+
+pdnsd   
+
+Memory Usage: 1.5M
+
+Statistics:
+
+  Parse input file:     once
+  Ended due to:         reaching end of file
+
+  Queries sent:         141300 queries
+  Queries completed:    141300 queries
+  Queries lost:         0 queries
+  Queries delayed(?):   0 queries
+
+  RTT max:          0.559270 sec
+  RTT min:              0.000135 sec
+  RTT average:          0.001076 sec
+  RTT std deviation:    0.006703 sec
+  RTT out of range:     0 queries
+
+  Percentage completed: 100.00%
+  Percentage lost:        0.00%
+
+  Started at:           Sat Jun 22 19:56:29 2013
+  Finished at:          Sat Jun 22 19:56:37 2013
+  Ran for:              7.891417 seconds
+
+  Queries per second:   17905.529514 qps
