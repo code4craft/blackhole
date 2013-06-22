@@ -9,3 +9,4 @@ curl ${BLACK_HOLE_URL} > blackhole-${VERSION}.tar.gz
 tar -xzf blackhole-${VERSION}.tar.gz
 rm -f blackhole-${VERSION}.tar.gz
 echo "blackhole is installed to ${HOME_DIR}"
+echo "Try '[sudo] /usr/local/blackhole/blackhole.sh start' to start it!"
