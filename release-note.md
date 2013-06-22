@@ -1,5 +1,11 @@
 Release Notes
 ----
+*2012-5-31* 
+
+增加自定义缓存过期时间的功能。
+
+优化了缓存目录地址。
+
 *2012-5-31* `version：1.2.0`
 
 * [issues#5](https://github.com/code4craft/blackhole/issues/5) 对不同的用户组提供不同的DNS响应，从而可以让每个用户管理自己的DNS配置。
