@@ -39,7 +39,7 @@ case "$1" in
     java -jar $HOME_DIR/lib/wifesays-1.0.0-alpha.jar -cshutdown > /dev/null;
     sleep 2;
     echo "Starting blackhole..."
-    java -jar $HOME_DIR/blackhole.jar -d"$HOME_DIR">> $HOME_DIR/log &
+    java -jar -Djava.io.tmpdir="$HOME_DIR/cache" $HOME_DIR/blackhole.jar -d"$HOME_DIR">> $HOME_DIR/log &
     ;;
   reload)
     echo "Reloading blackhole"
