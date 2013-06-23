@@ -3,6 +3,7 @@ package us.codecraft.blackhole.cache;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.xbill.DNS.Message;
 import org.xbill.DNS.Section;
@@ -26,6 +27,7 @@ public class CacheManager implements InitializingBean {
 
     private Logger logger = Logger.getLogger(getClass());
 
+    @Qualifier("EhcacheClient")
     @Autowired
     private CacheClient cacheClient;
 

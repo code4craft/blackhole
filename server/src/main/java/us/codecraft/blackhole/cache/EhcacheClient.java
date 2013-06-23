@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @author yihua.huang@dianping.com
  * @date Dec 19, 2012
  */
-@Component
+@Component("EhcacheClient")
 public class EhcacheClient extends StandReadyWorker implements CacheClient,
         InitializingBean, ShutDownAble {
 
