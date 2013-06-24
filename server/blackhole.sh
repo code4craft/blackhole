@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 HOME_DIR=/usr/local/blackhole
 PATH=$PATH:$HOME_DIR
 export PATH
-JVM_OPTION="-XX:+UseParNewGC"
+JVM_OPTION=""
 
-function doCache(){
+function doCache()
+{
   case "$1" in
       stat)
         java -jar $HOME_DIR/lib/wifesays-1.0.0-alpha.jar -cstat_cache
