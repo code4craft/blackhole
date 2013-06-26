@@ -1,140 +1,190 @@
-<html xmlns="http://www.w3.org/1999/xhtml"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>BlackHoleJ</title>
-<link href="./static/css/bootstrap.css" rel="stylesheet">
-<link href="./static/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="./static/css/home.css" rel="stylesheet">
-<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>BlackHoleJ</title>
+    <link href="./static/css/bootstrap.css" rel="stylesheet">
+    <link href="./static/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="./static/css/home.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico"/>
 </head>
 <body>
 <div id="frontpage">
-	<div class="startdiv" style="margin-left:27%;margin-top:4%">
-	<h1 style="font-size:55px;">BlackHoleJ</h1>
-	</div>
-	<div style="margin-top:40px;width:75%;" class="span10">
-	<p class="lead">BlackHoleJ是一个迷你型的DNS服务器。它的主要特色是可以通过简单配置，将DNS请求导向某些特定IP。同时可以通过特征判断的方式，防止DNS污染。 </p>
-	</div>
-	<div class="startdiv span10" style="margin-top:0px;width:100%;clear:both;">
-	<p class="lead">BlackHoleJ的配置跟hosts文件类似，但支持通配符:</p>
-		<div class="code">
-		<p>#       将"codecraft.us"域名的A记录指向127.0.0.1</p>
-		<p>127.0.0.1       codecraft.us</p>
-		<p></p>
-		<p>#               将所有域名的A记录指向127.0.0.1</p>
-		<p>127.0.0.1       *</p>
-		<p>#               将所有以"codecraft"开始的域名（例如："codecraft.github.com"）的A记录指向127.0.0.1</p>
-		<p>127.0.0.1       codecraft.*.*</p>
-		</div>
-	</div>
-	<div style="margin-top:0px;float:none">
-	<a href="#download" class="btn btn-primary btn-large" style="margin-top:5%;margin-left:20%;float:left">下载</a>
-	<a href="#source" class="btn btn-primary btn-large" style="margin-top:5%;margin-left:15%;float:left">代码</a>
-	</div>
+    <div class="startdiv" style="margin-left:27%;margin-top:4%">
+        <h1 style="font-size:55px;">BlackHoleJ</h1>
+    </div>
+    <div style="margin-top:40px;width:75%;" class="span10">
+        <p class="lead">
+            BlackHoleJ是一个Java编写的DNS服务器，它可以进行DNS缓存，也支持自定义域名配置，并可以防止DNS污染。比起老牌的DNS软件pdnsd、BIND，BlackHole功能比较简单，但是更容易使用，性能也更好。 </p>
+    </div>
+    <div class="startdiv span10" style="margin-top:0px;width:100%;clear:both;">
+        <p class="lead">BlackHoleJ的配置跟hosts文件类似，但支持通配符:</p>
+
+        <div class="code">
+            <p># 将"codecraft.us"域名的A记录指向127.0.0.1</p>
+
+            <p>127.0.0.1 codecraft.us</p>
+
+            <p></p>
+
+            <p># 将所有域名的A记录指向127.0.0.1</p>
+
+            <p>127.0.0.1 *</p>
+
+            <p># 将所有以"codecraft"开始的域名（例如："codecraft.github.com"）的A记录指向127.0.0.1</p>
+
+            <p>127.0.0.1 codecraft.*.*</p>
+        </div>
+    </div>
+    <div style="margin-top:0px;float:none">
+        <a href="#download" class="btn btn-primary btn-large" style="margin-top:5%;margin-left:20%;float:left">下载</a>
+        <a href="#source" class="btn btn-primary btn-large" style="margin-top:5%;margin-left:15%;float:left">代码</a>
+    </div>
 </div>
 
 <div id="body">
-	<div style="margin-left:15%;" class="span10 lead">
-		<a name="download"></a>
-		<div style="margin-top:20px">
-		<p><h2>依赖环境:</h2></p>
-		BlackHoleJ是一个Java程序，运行它需要Java 1.6以上的运行环境。
-			<div>
-			<a class="btn btn-primary btn-large" href="http://42.96.139.35/download/blackhole-1.1.2.tar.gz" style="margin-top:50px;margin-left:200px">下载BlackHoleJ</a>
-			<a class="btn btn-large" target="_blank" href="http://www.java.com/" style="margin-top:50px;margin-left:200px">下载Java</a>
-			</div>
-		</div>
-		<div style="margin-top:0px">
-			<h2>Windows系统：</h2>
-		<p>可将文件保存到任意目录，并运行blackhole.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。</p>
-		<p>关闭时请在命令行界面下使用Ctrl+C退出，而不要直接关闭窗口，否则某些运行记录会无法保存。</p>
-		<div><img src="./static/img/windows-ui.png"/></div>
-		<p style="margin-top:5%">启动之后，将系统DNS为127.0.0.1即可。</p>
-		</div>
-			
-		<div>
-			<h2>Linux系统：</h2>
-			<div>
-				<p style="clear:left">Linux系列系统请将文件复制到/usr/local/blackhole/文件夹下，若不在此目录，请将blackhole.sh中的以下行修改成你的目录。</p>
-			
-				<div class="code" style="margin-top:10px;margin-bottom:10px">HOME_DIR=/usr/local/blackhole</div>
-					
-				<p style="clear:left">启动BlackHoleJ:</p>
-				<div class="code" style="margin-top:10px;margin-bottom:10px">sudo /usr/local/blackhole/blackhole.sh start</div>
-				<p>查看更多的命令，可以直接输入：</p>
-				<div class="code" style="margin-top:10px;margin-bottom:10px">/usr/local/blackhole/blackhole.sh</div>
-			</div>
-		</div>
+    <div style="margin-left:15%;" class="span10 lead">
+        <a name="download"></a>
 
-		
-	</div>
-	<div id="release_notes">
-		<div class="span12 lead" style="margin-top:5%;margin-left:4%;">
-		<div>
-		<a name="source"></a>
-		<p><h2>源代码：</h2></p>
-		<p class="lead">
-		BlackHoleJ的源代码已托管到github <a target="_blank" href="https://github.com/code4craft/blackhole">https://github.com/code4craft/blackhole</a>。BlackHole的连接部分参考了<a target="_blank" href="http://www.unlogic.se/projects/eagledns">EagleDNS</a>的代码，遵守LGPLv3协议。
-		 </p>
-		</div>
-		
-			<p>
-			<h2>Release Notes</h2>
-			</p>
-			<div>
-			<h3>version: 1.1.2</h3>
-			</div>
-			<p><em>2012-4-2</em></p>
-			<div>
-			<p>1.1.2发布，修复了一个返回空响应体导致DNS查找失败的问题，从此稳定性大大提高<a href="https://github.com/code4craft/blackhole/issues/3" target="_blank">https://github.com/code4craft/blackhole/issues/3</a>。</p>
+        <div style="margin-top:20px">
+            <p>
 
-			<p>BlackHole也迎来第一位企业级用户。争取发展成为一个公司内网使用的简单可配置的DNS服务器。</p>
-			</div>
-			<div>
-			<h3>version: 1.1.1</h3>
-			</div>
-			<p><em>2012-3-24</em></p>
-			<div>
-			<p>1.1.1发布，增加NS配置功能，详情见<a href="https://github.com/code4craft/blackhole/blob/master/server/README.md" target="_blank">https://github.com/code4craft/blackhole/blob/master/server/README.md</a></p>
-			</div>
-			<div>
-			<h3>version: 1.1</h3>
-			</div>
-			<p><em>2012-2-25</em></p>
-			<div>
-			<p>1.1发布，偷偷增加反DNS污染功能。原理：
-			<a href="http://my.oschina.net/flashsword/blog/110276" target="_blank">http://my.oschina.net/flashsword/blog/110276</a></p>
-			</div>
-			<div>
-			<h3>version: 1.0-alpha</h3>
-			</div>
+            <h2>依赖环境:</h2></p>
+            BlackHoleJ是一个Java程序，运行它需要Java 1.6以上的运行环境。
+            <div>
+                <a class="btn btn-primary btn-large" href="http://code4craft.qiniudn.com/blackhole-1.2.1.tar.gz"
+                   style="margin-top:50px;margin-left:200px">下载BlackHoleJ</a>
+                <a class="btn btn-large" target="_blank" href="http://www.java.com/"
+                   style="margin-top:50px;margin-left:200px">下载Java</a>
+            </div>
+        </div>
+        <div style="margin-top:0px">
+            <h2>Windows系统：</h2>
 
-			<p><em>2012-12-31</em></p>
+            <p>可将文件保存到任意目录，并运行blackhole.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。</p>
 
-			<p>1.0-alpha发布，加入功能：</p>
+            <p>关闭时请在命令行界面下使用Ctrl+C退出，而不要直接关闭窗口，否则某些运行记录会无法保存。</p>
 
-			<div class="lead span10">		
-				<ul>
-				<li>DNS转发代理，并可缓存结果</li>
-				<li>可配置多个转发服务器</li>
-				<li>增加超时机制</li>
-				</ul>
-			</div>
-			<div>
-			<h3>version: 0.1</h3>
-			</div>
-			<div>
-			<p><em>2012-12-17</em></p>
+            <div><img src="./static/img/windows-ui.png"/></div>
+            <p style="margin-top:5%">启动之后，将系统DNS为127.0.0.1即可。</p>
+        </div>
 
-			<p>为了满足模拟邮件发送的需求，开发了第一个版本。可以拦截所有请求到某一IP。从EagelDNS的框架修改而来。</p>
-			</div>
-			
-			
+        <div>
+            <h2>Linux系统：</h2>
 
-			
-			<div>作者邮箱:	code4crafter@gmail.com</div>
-		</div>
-	</div>
+            <div>
+                <p style="clear:left">
+                    Linux系列系统请将文件复制到/usr/local/blackhole/文件夹下，若不在此目录，请将blackhole.sh中的<strong>HOME_DIR</strong>行修改成你的目录。
+                </p>
+
+                <p style="clear:left">你也可以直接使用命令进行下载和安装：</p>
+
+                <div class="code" style="margin-top:10px;margin-bottom:10px">curl
+                    http://code4craft.github.io/blackhole/install.sh | sh
+                </div>
+
+                <p style="clear:left">启动BlackHoleJ:</p>
+
+                <div class="code" style="margin-top:10px;margin-bottom:10px">sudo /usr/local/blackhole/blackhole.sh
+                    start
+                </div>
+                <p>查看更多的命令，可以直接输入：</p>
+
+                <div class="code" style="margin-top:10px;margin-bottom:10px">/usr/local/blackhole/blackhole.sh</div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="release_notes">
+        <div class="span12 lead" style="margin-top:5%;margin-left:4%;">
+            <div>
+                <a name="source"></a>
+
+                <p>
+
+                <h2>源代码：</h2></p>
+                <p class="lead">
+                    BlackHoleJ的源代码已托管到github <a target="_blank" href="https://github.com/code4craft/blackhole">https://github.com/code4craft/blackhole</a>。BlackHole的连接部分参考了<a
+                        target="_blank" href="http://www.unlogic.se/projects/eagledns">EagleDNS</a>的代码，遵守LGPLv3协议。
+                </p>
+            </div>
+            <h2>Release Notes</h2>
+
+            <p><em>2012-6-22</em> <code>version：1.2.1</code></p>
+
+            <p>增加自定义缓存过期时间的功能。</p>
+
+            <p>优化了缓存目录地址。</p>
+
+            <p>修复了缓存持久化不生效的bug。</p>
+
+            <p>详细进行了性能测试，并更新了文档。</p>
+
+            <p><em>2012-5-31</em> <code>version：1.2.0</code></p>
+
+            <p>
+
+            <p><a href="https://github.com/code4craft/blackhole/issues/5">issues#5</a>
+                对不同的用户组提供不同的DNS响应，从而可以让每个用户管理自己的DNS配置。</p>
+
+            <p>开发了一个Web模块<a href="http://code4craft.github.io/hostd/">Hostd</a>，类似修改hosts，可以供所有用户进行自己DNS配置的管理。</p>
+
+            <p><a href="https://github.com/code4craft/blackhole/issues/8">issues#8</a> 对forward的外部DNS设定优先级
+                便于企业内网配置自己的DNS地址，防止被响应被覆盖。</p>
+
+
+            <p><em>2012-5-7</em></p>
+
+            <ul>
+                <li>修复启动失败后进程不退出的bug。</li>
+            </ul>
+
+
+            <p><em>2012-4-27</em> <code>version：1.1.3</code></p>
+
+            <p>1.1.3发布。</p>
+
+
+            <p>重写了代理模式，​改为纯异步I/O实现，大大降低使用线程数，并提高了25%的效率。</p>
+            <p>修复一个高并发下某些响应丢失的bug。</p>
+
+
+            <p><em>2012-4-2</em> <code>version：1.1.2</code></p>
+
+            <p>1.1.2发布，修复了一个返回空响应体导致DNS查找失败的问题，从此稳定性大大提高<a href="https://github.com/code4craft/blackhole/issues/3">https://github.com/code4craft/blackhole/issues/3</a>。
+            </p>
+
+            <p>BlackHole也迎来第一位企业级用户。争取发展成为一个公司内网使用的简单可配置的DNS服务器。</p>
+
+            <p><em>2012-3-24</em> <code>version：1.1.1</code></p>
+
+            <p>1.1.1发布，增加NS配置功能，详情见<a href="https://github.com/code4craft/blackhole/blob/master/server/README.md">https://github.com/code4craft/blackhole/blob/master/server/README.md</a>
+            </p>
+
+            <p><em>2012-2-25</em> <code>version: 1.1</code></p>
+
+            <p>1.1发布，偷偷增加反DNS污染功能。原理：
+                <a href="http://my.oschina.net/flashsword/blog/110276">http://my.oschina.net/flashsword/blog/110276</a>
+            </p>
+
+            <p><em>2012-12-31</em> <code>version: 1.0-alpha</code></p>
+
+            <p>1.0-alpha发布，加入功能：</p>
+
+
+                <p>DNS转发代理，并可缓存结果</p>
+                <p>可配置多个转发服务器</p>
+                <p>增加超时机制</p>
+
+
+            <p><em>2012-12-17</em> <code>version: 0.1</code></p>
+
+            <p>为了满足模拟邮件发送的需求，开发了第一个版本。可以拦截所有请求到某一IP。从EagelDNS的框架修改而来。</p>
+
+
+            <div>作者邮箱: code4crafter@gmail.com</div>
+        </div>
+    </div>
 
 </body>
 </html>
