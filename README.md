@@ -34,7 +34,7 @@ BlackHole还可以通过UDP特征判断的方式防止DNS污染攻击，对于�
 
 你使用自动脚本进行安装BlackHole：
 
-	curl http://code4craft.github.io/blackhole/install.sh | sh
+	curl http://code4craft.github.io/blackhole/install.sh | [sudo] sh
 
 BlackHole的另一个编译后版本保存在[https://github.com/code4craft/blackhole-bin](https://github.com/code4craft/blackhole-bin)，如果以上脚本对你所在环境不可用，那么可以clone这个项目到某一目录。
 
@@ -44,7 +44,7 @@ BlackHole的另一个编译后版本保存在[https://github.com/code4craft/blac
 
 Windows系统可将文件保存到任意目录，并运行start.bat(Win7下无需用管理员权限启动)，若弹出终端界面并且持续运行，则启动成功。
 
-具体的设置以及技术细节请看[Blackhole Server Docs](https://github.com/code4craft/blackhole/blob/master/server/README.md)。
+各种问题解决、具体的设置以及技术细节请看[Blackhole Server Docs](https://github.com/code4craft/blackhole/blob/master/server/README.md)。
 
 ###4. 协议
 
