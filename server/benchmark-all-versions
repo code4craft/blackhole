@@ -45,3 +45,15 @@
   Queries per second:   10039.901489 qps
   
   Avg: 15284
+
+ --------
+ 
+ ###1.2.1
+  memory: 136.7M
+  threads: 58
+
+ -------
+ 
+ ###1.2.2
+  memory: 129.3M
+  threads: 34
