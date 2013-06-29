@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Cache in ConcurrentHashMap. Just for test.<br>
+ * Not in use.<br>
  * @author code4crafer@gmail.com
  *         Date: 13-6-23
  *         Time: 下午12:08

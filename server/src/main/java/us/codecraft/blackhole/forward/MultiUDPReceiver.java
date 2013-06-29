@@ -123,13 +123,18 @@ public class MultiUDPReceiver implements InitializingBean {
         return answers.get(getKey(message));
     }
 
-    public void removeAnswer(Message message, long timeOut) {
+    /**
+     * Add answer to remove queue and remove when timeout.
+     * @param message
+     * @param timeOut
+     */
+    public void delayRemoveAnswer(Message message, long timeOut) {
         delayRemoveQueue.add(new DelayStringKey(getKey(message), timeOut));
     }
 
     private void receive() {
-        ExecutorService processExecutors = threadPools.getMainProcessExecutor();
-        final ByteBuffer byteBuffer = ByteBuffer.allocate(512);
+        ExecutorService processExecutors = threadPools.getUdpReceiverExecutor();
+        final ByteBuffer byteBuffer = ByteBuffer.allocate(dnsPackageLength);
         while (true) {
             try {
                 byteBuffer.clear();

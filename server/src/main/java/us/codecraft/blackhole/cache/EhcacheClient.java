@@ -140,11 +140,10 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
         return true;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * us.codecraft.wifesays.me.StandReady#doWhatYouShouldDo(java.lang.String)
+    /**
+     * telnet control for caches
+     * @param whatWifeSays
+     * @return
      */
     @Override
     public String doWhatYouShouldDo(String whatWifeSays) {
@@ -244,13 +243,6 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
         } catch (Exception e) {
             logger.warn("flush cache error!", e);
         }
-    }
-
-    public static void main(String[] args) {
-        EhcacheClient ehcacheClient = new EhcacheClient();
-        ehcacheClient.init();
-        ehcacheClient.get("a");
-//        ehcacheClient.manager.getCache(CACHE_NAME);
     }
 
 }

@@ -19,8 +19,14 @@ public class ForwardAnswer {
 
     private AtomicInteger minOrder = new AtomicInteger(Integer.MAX_VALUE);
 
+    /**
+     * Answer that not return immediately. It will be returned when countDown<=0 or ForwardAnswer is removed.
+     */
     private Message tempAnswer;
 
+    /**
+     * Number of external DNS response which not recevied yet.
+     */
     private final AtomicInteger countDown;
 
     /**

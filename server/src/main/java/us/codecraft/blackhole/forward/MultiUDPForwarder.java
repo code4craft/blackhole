@@ -85,7 +85,7 @@ public class MultiUDPForwarder implements Forwarder {
 				logger.warn("error", e);
 			}
 		} finally {
-			multiUDPReceiver.removeAnswer(query, configure.getDnsTimeOut());
+			multiUDPReceiver.delayRemoveAnswer(query, configure.getDnsTimeOut());
 		}
 	}
 

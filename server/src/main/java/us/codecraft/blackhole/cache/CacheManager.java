@@ -102,7 +102,7 @@ public class CacheManager implements InitializingBean {
     private ExecutorService getCacheSaveExecutors() {
         if (cacheSaveExecutors == null) {
             synchronized (this) {
-                cacheSaveExecutors = Executors.newFixedThreadPool(50);
+                cacheSaveExecutors = Executors.newFixedThreadPool(configure.getThreadNum());
             }
         }
         return cacheSaveExecutors;

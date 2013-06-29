@@ -81,7 +81,7 @@ public class ForwardAnswerProcessor {
                     forwardAnswer.getResponser().response(answer);
                     if (logger.isDebugEnabled()) {
                         logger.debug("response message " + message.getHeader().getID()
-                                + " to "
+                                + " from " + remoteAddress + " to "
                                 + forwardAnswer.getResponser().getInDataPacket().getPort());
                     }
                     cacheManager.setResponseToCache(message, answer);

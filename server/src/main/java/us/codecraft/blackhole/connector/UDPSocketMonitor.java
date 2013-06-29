@@ -3,7 +3,6 @@ package us.codecraft.blackhole.connector;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import us.codecraft.blackhole.concurrent.ThreadPools;
-import us.codecraft.blackhole.config.Configure;
 import us.codecraft.blackhole.container.QueryProcesser;
 import us.codecraft.blackhole.forward.Forwarder;
 
@@ -31,8 +30,6 @@ public class UDPSocketMonitor extends Thread {
     @Autowired
     private Forwarder forwarder;
     @Autowired
-    private Configure configure;
-    @Autowired
     private ThreadPools threadPools;
 
     public UDPSocketMonitor(String host, int port) {
@@ -42,7 +39,7 @@ public class UDPSocketMonitor extends Thread {
             this.port = port;
             socket = new DatagramSocket(port, addr);
         } catch (IOException e) {
-            System.err.println("Startup fail, 53 port is taken or has no privilege");
+            System.err.println("Startup fail, 53 port is taken or has no privilege. Check if you are running in root, or another DNS server is running.");
             log.error("Startup fail, 53 port is taken or has no privilege", e);
             System.exit(-1);
         }
@@ -80,14 +77,6 @@ public class UDPSocketMonitor extends Thread {
         }
         log.info("UDP socket monitor on address " + getAddressAndPort()
                 + " shutdown");
-    }
-
-    public void closeSocket() throws IOException {
-
-        log.info("Closing TCP socket monitor on address " + getAddressAndPort()
-                + "...");
-
-        this.socket.close();
     }
 
     public String getAddressAndPort() {
