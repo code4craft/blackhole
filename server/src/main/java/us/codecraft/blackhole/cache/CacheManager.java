@@ -121,4 +121,8 @@ public class CacheManager implements InitializingBean {
         }
     }
 
+    public void clearCache() {
+        cacheClient.clearCache();
+    }
+
 }

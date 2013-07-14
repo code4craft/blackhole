@@ -5,6 +5,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.blackhole.answer.CustomAnswerPatternProvider;
+import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.utils.RecordUtils;
 import us.codecraft.wifesays.me.StandReadyWorker;
 

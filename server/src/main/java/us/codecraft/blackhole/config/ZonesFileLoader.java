@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.blackhole.answer.AnswerPatternProvider;
 import us.codecraft.blackhole.answer.CustomAnswerPatternProvider;
+import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.utils.DoubleKeyMap;
 import us.codecraft.wifesays.me.ReloadAble;
 
@@ -28,6 +29,9 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 
     @Autowired
     private AnswerPatternProvider answerPatternContainer;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Autowired
     private CustomAnswerPatternProvider customAnswerPatternProvider;
@@ -78,6 +82,7 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
     @Override
     public void reload() {
         readConfig(Configure.getZonesFilename());
+        cacheManager.clearCache();
     }
 
     /*

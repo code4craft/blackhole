@@ -33,4 +33,6 @@ public interface CacheClient {
 	 */
 	void init() throws Exception;
 
+    void clearCache();
+
 }

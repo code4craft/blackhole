@@ -31,4 +31,9 @@ public class MapCacheClient implements CacheClient{
     @Override
     public void init() throws Exception {
     }
+
+    @Override
+    public void clearCache() {
+        map = new ConcurrentHashMap<String, Object>();
+    }
 }
