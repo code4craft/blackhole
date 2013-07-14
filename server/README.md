@@ -46,10 +46,10 @@ Ubuntu下默认开启了dnsmasq，如果启动时提示53端口被占用，可�
 
 如果你没有将BlackHole安装到/usr/local/blackhole，则需要修改blackhole.sh，将HOME_DIR更改为你的安装目录。
 
-BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/zones。
+BlackHole目前有两个配置文件，分别是**config/blackhole.conf**和**config/zones**。
 **BlackHole的配置文件都是修改后动态生效的！**
 
-####blackhole.conf
+####conf/blackhole.conf
 
 是blackhole的主要配置文件。
 
@@ -97,7 +97,7 @@ BlackHole目前有两个配置文件，分别是config/blackhole.conf和config/z
 	
 	伪造的DNS服务器，用于检测DNS污染。一般无须更改。
 	
-####zones
+####conf/zones
 
 zones是DNS系统的域名配置文件。BlackHole简化了zones的配置，只支持A记录(因为作者觉得A记录够用了！)。
 
