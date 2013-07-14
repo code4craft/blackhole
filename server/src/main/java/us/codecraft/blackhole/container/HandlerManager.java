@@ -3,7 +3,8 @@ package us.codecraft.blackhole.container;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import us.codecraft.blackhole.answer.AnswerHandler;
+import us.codecraft.blackhole.answer.PostAnswerHandler;
+import us.codecraft.blackhole.answer.PreAnswerHandler;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,10 +17,15 @@ import java.util.List;
 @Component
 public class HandlerManager implements InitializingBean {
 
-	private List<Handler> handlers;
+	private List<Handler> preHandlers;
+
+    private List<Handler> postHandlers;
 
 	@Autowired
-	private AnswerHandler answerHandler;
+	private PreAnswerHandler preAnswerHandler;
+
+    @Autowired
+    private PostAnswerHandler postAnswerHandler;
 
 	@Autowired
 	private HeaderHandler headerHandler;
@@ -36,16 +42,25 @@ public class HandlerManager implements InitializingBean {
 	}
 
 	public void registerHandlers() {
-		handlers = new LinkedList<Handler>();
-		handlers.add(headerHandler);
-		handlers.add(answerHandler);
+		preHandlers = new LinkedList<Handler>();
+		preHandlers.add(headerHandler);
+		preHandlers.add(preAnswerHandler);
+        postHandlers = new LinkedList<Handler>();
+        postHandlers.add(postAnswerHandler);
 	}
 
 	/**
 	 * @return the handlers
 	 */
-	public List<Handler> getHandlers() {
-		return Collections.unmodifiableList(handlers);
+	public List<Handler> getPreHandlers() {
+		return Collections.unmodifiableList(preHandlers);
 	}
+
+    /**
+     * @return the handlers
+     */
+    public List<Handler> getPostHandlers() {
+        return Collections.unmodifiableList(postHandlers);
+    }
 
 }

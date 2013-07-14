@@ -2,7 +2,7 @@ package us.codecraft.blackhole.answer;
 
 /**
  * Provide the answer.An answerContainer must be registered in
- * {@link AnswerHandler#regitestProviders()} before it takes effect.
+ * {@link PreAnswerHandler#regitestProviders()} before it takes effect.
  * 
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012

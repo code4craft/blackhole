@@ -34,7 +34,7 @@ public class QueryProcesser {
         }
         MessageWrapper responseMessage = new MessageWrapper(new Message(query
                 .getHeader().getID()));
-        for (Handler handler : handlerManager.getHandlers()) {
+        for (Handler handler : handlerManager.getPreHandlers()) {
             boolean handle = handler.handle(new MessageWrapper(query),
                     responseMessage);
             if (!handle) {
@@ -51,7 +51,19 @@ public class QueryProcesser {
         if (cache != null) {
             return cache;
         } else {
-            return null;
+            for (Handler handler : handlerManager.getPostHandlers()) {
+                boolean handle = handler.handle(new MessageWrapper(query),
+                        responseMessage);
+                if (!handle) {
+                    break;
+                }
+            }
+            if (responseMessage.hasRecord()) {
+                response = responseMessage.getMessage().toWire();
+                return response;
+            } else {
+                return null;
+            }
         }
     }
 }
