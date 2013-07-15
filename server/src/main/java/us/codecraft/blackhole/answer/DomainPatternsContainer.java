@@ -1,5 +1,6 @@
 package us.codecraft.blackhole.answer;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,9 +12,9 @@ import java.util.regex.Pattern;
  */
 public class DomainPatternsContainer {
 
-    private volatile Map<Pattern, String> domainPatterns;
+    private volatile Map<Pattern, String> domainPatterns = new HashMap<Pattern, String>();
 
-    private volatile Map<String, String> domainTexts;
+    private volatile Map<String, String> domainTexts = new HashMap<String, String>();
 
     public Map<Pattern, String> getDomainPatterns() {
         return domainPatterns;

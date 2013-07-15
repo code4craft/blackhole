@@ -57,7 +57,7 @@ public class CustomAnswerPatternProvider implements AnswerProvider {
             return null;
         }
         String clientIp = RequestContext.getClientIp();
-        String ip = domainTexts.get(clientIp).get(query);
+        String ip = domainTexts.get(clientIp,query);
         if (ip!=null){
             return ip;
         }
