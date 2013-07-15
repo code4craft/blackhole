@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class DNSHostsContainer {
 
+    //TODO:domainPatternsContainer
     private int timeout = 3000;
 
     private int order;
@@ -48,7 +49,7 @@ public class DNSHostsContainer {
         this.timeout = timeout;
     }
 
-    public List<SocketAddress> getAllAvaliableHosts() {
+    public List<SocketAddress> getAllAvaliableHosts(String domain) {
         List<SocketAddress> results = new ArrayList<SocketAddress>();
         Iterator<Entry<SocketAddress, Integer>> iterator = requestTimes
                 .entrySet().iterator();

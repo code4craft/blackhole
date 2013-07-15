@@ -47,7 +47,7 @@ public class MultiUDPForwarder implements Forwarder {
 			UDPConnectionResponser responser) {
 		// get address
 		List<SocketAddress> allAvaliableHosts = dnsHostsContainer
-				.getAllAvaliableHosts();
+				.getAllAvaliableHosts(query.getQuestion().getName().toString());
 		forward(queryBytes, query, allAvaliableHosts, responser);
 	}
 

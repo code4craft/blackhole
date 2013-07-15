@@ -24,6 +24,8 @@ public class ZonesPattern {
 
     private List<Pattern> patterns = new ArrayList<Pattern>();
 
+    private List<String> texts = new ArrayList<String>();
+
     public List<Pattern> getPatterns() {
         return patterns;
     }
@@ -48,6 +50,14 @@ public class ZonesPattern {
         this.userIp = userIp;
     }
 
+    public List<String> getTexts() {
+        return texts;
+    }
+
+    public void setTexts(List<String> texts) {
+        this.texts = texts;
+    }
+
     public static ZonesPattern parse(String line) throws UnknownHostException {
         ZonesPattern zonesPattern = new ZonesPattern();
         line = line.trim();
@@ -67,13 +77,10 @@ public class ZonesPattern {
         if (items[0].equalsIgnoreCase("NS")) {
             boolean configIp = RecordUtils
                     .areValidIpv4Addresses(items[1]);
-            String ip = configIp ? items[1] : "";
             zonesPattern.setTargetIp(AnswerPatternProvider.DO_NOTHING);
             for (int i = configIp ? 2 : 1; i < items.length; i++) {
                 String pattern = items[i];
-                // ip format check
-                Pattern compileStringToPattern = compileStringToPattern(pattern);
-                zonesPattern.getPatterns().add(compileStringToPattern);
+                parseDomainPattern(zonesPattern, pattern);
             }
 
         } else {
@@ -82,20 +89,21 @@ public class ZonesPattern {
             zonesPattern.setTargetIp(ip);
             for (int i = 1; i < items.length; i++) {
                 String pattern = items[i];
-                // ip format check
-                zonesPattern.getPatterns().add(compileStringToPattern(pattern));
+                parseDomainPattern(zonesPattern, pattern);
             }
         }
 
         return zonesPattern;
     }
 
-    private static Pattern compileStringToPattern(String patternStr) {
-        patternStr = "^" + patternStr;
-        patternStr += ".";
-        patternStr = patternStr.replace(".", "\\.");
-        patternStr = patternStr.replace("*", ".*");
-        patternStr += "$";
-        return Pattern.compile(patternStr);
+    private static void parseDomainPattern(ZonesPattern zonesPattern, String pattern) {
+        DomainPattern domainPattern = DomainPattern.parse(pattern);
+        if (domainPattern.isUseRegex()) {
+            zonesPattern.getPatterns().add(domainPattern.getRegexPattern());
+        } else {
+            zonesPattern.getTexts().add(domainPattern.getFullTextMatch());
+        }
     }
+
+
 }

@@ -8,6 +8,7 @@ import org.xbill.DNS.Type;
 import us.codecraft.blackhole.context.RequestContext;
 import us.codecraft.blackhole.utils.DoubleKeyMap;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Read the config to patterns and process the request record.
+ * Read the config to domainPatterns and process the request record.
  *
  * @author yihua.huang@dianping.com
  * @date Dec 14, 2012
@@ -24,7 +25,11 @@ import java.util.regex.Pattern;
 @Component
 public class CustomAnswerPatternProvider implements AnswerProvider {
 
-    private volatile DoubleKeyMap<String, Pattern, String> patterns = new DoubleKeyMap<String, Pattern, String>(new ConcurrentHashMap<String, Map<Pattern, String>>(), LinkedHashMap.class);
+
+    //TODO:domainPatternsContainer
+    private volatile DoubleKeyMap<String, Pattern, String> domainPatterns = new DoubleKeyMap<String, Pattern, String>(new ConcurrentHashMap<String, Map<Pattern, String>>(), LinkedHashMap.class);
+
+    private volatile DoubleKeyMap<String, String, String> domainTexts = new DoubleKeyMap<String, String, String>(new ConcurrentHashMap<String, Map<String, String>>(), HashMap.class);
 
     private Logger logger = Logger.getLogger(getClass());
 
@@ -52,7 +57,11 @@ public class CustomAnswerPatternProvider implements AnswerProvider {
             return null;
         }
         String clientIp = RequestContext.getClientIp();
-        Map<Pattern, String> patternsForIp = patterns.get(clientIp);
+        String ip = domainTexts.get(clientIp).get(query);
+        if (ip!=null){
+            return ip;
+        }
+        Map<Pattern, String> patternsForIp = domainPatterns.get(clientIp);
         if (patternsForIp == null) {
             return null;
         }
@@ -112,18 +121,19 @@ public class CustomAnswerPatternProvider implements AnswerProvider {
         return stringBuilder.toString();
     }
 
-    /**
-     * @param patterns the patterns to set
-     */
-    public void setPatterns(String ip, Map<Pattern, String> patterns) {
-        this.patterns.put(ip, patterns);
+    public void setDomainPatterns(DoubleKeyMap<String, Pattern, String> domainPatterns) {
+        this.domainPatterns = domainPatterns;
     }
 
-    public void setPatterns(DoubleKeyMap<String, Pattern, String> patterns) {
-        this.patterns = patterns;
+    public DoubleKeyMap<String, Pattern, String> getDomainPatterns() {
+        return domainPatterns;
     }
 
-    public DoubleKeyMap<String, Pattern, String> getPatterns() {
-        return patterns;
+    public DoubleKeyMap<String, String, String> getDomainTexts() {
+        return domainTexts;
+    }
+
+    public void setDomainTexts(DoubleKeyMap<String, String, String> domainTexts) {
+        this.domainTexts = domainTexts;
     }
 }

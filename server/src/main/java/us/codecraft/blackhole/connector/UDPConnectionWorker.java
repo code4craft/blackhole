@@ -34,8 +34,7 @@ public class UDPConnectionWorker implements Runnable {
 		try {
 
             RequestContextProcessor.processRequest(inDataPacket);
-			byte[] response = null;
-			response = queryProcesser.process(inDataPacket.getData());
+			byte[] response = queryProcesser.process(inDataPacket.getData());
 			if (response != null) {
 				responser.response(response);
 			} else {

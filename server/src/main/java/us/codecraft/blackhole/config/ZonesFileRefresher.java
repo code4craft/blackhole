@@ -5,7 +5,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import us.codecraft.blackhole.answer.CustomAnswerPatternProvider;
-import us.codecraft.blackhole.cache.CacheManager;
 import us.codecraft.blackhole.utils.RecordUtils;
 import us.codecraft.wifesays.me.StandReadyWorker;
 
@@ -78,7 +77,10 @@ public class ZonesFileRefresher extends StandReadyWorker implements Initializing
                     return "PARSE ERROR";
                 }
                 for (Pattern pattern : zonesPattern.getPatterns()) {
-                    customAnswerPatternProvider.getPatterns().put(zonesPattern.getUserIp(), pattern, zonesPattern.getTargetIp());
+                    customAnswerPatternProvider.getDomainPatterns().put(zonesPattern.getUserIp(), pattern, zonesPattern.getTargetIp());
+                }
+                for (String text : zonesPattern.getTexts()) {
+                    customAnswerPatternProvider.getDomainTexts().put(zonesPattern.getUserIp(), text, zonesPattern.getTargetIp());
                 }
                 return "SUCCESS, " + zonesPattern.getPatterns().size() + " patterns added.";
             } catch (UnknownHostException e) {
@@ -87,7 +89,8 @@ public class ZonesFileRefresher extends StandReadyWorker implements Initializing
         } else if (StringUtils.startsWithIgnoreCase(whatWifeSays, DELETE_ZONES_IP)) {
             String ip = StringUtils.removeStart(whatWifeSays, DELETE_ZONES_IP);
             if (RecordUtils.isValidIpv4Address(ip)) {
-                customAnswerPatternProvider.getPatterns().remove(ip);
+                customAnswerPatternProvider.getDomainPatterns().remove(ip);
+                customAnswerPatternProvider.getDomainTexts().remove(ip);
                 return "REMOVE SUCCESS";
             } else {
                 return "ERROR, invalid ip " + ip;

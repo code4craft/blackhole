@@ -65,8 +65,8 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
                     logger.warn("parse config line error:\t" + line + "\t" + e);
                 }
             }
-            answerPatternContainer.setPatterns(answerPatternsTemp);
-            customAnswerPatternProvider.setPatterns(customAnswerPatternsTemp);
+            answerPatternContainer.setDomainPatterns(answerPatternsTemp);
+            customAnswerPatternProvider.setDomainPatterns(customAnswerPatternsTemp);
             bufferedReader.close();
         } catch (Throwable e) {
             logger.warn("read config file failed:" + filename, e);
