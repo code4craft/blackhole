@@ -118,7 +118,6 @@ public class ZonesFileLoader implements InitializingBean, ReloadAble {
 	@Override
 	public void reload() {
 		readConfig(Configure.getZonesFilename());
-		cacheManager.clearCache();
 	}
 
 	/*

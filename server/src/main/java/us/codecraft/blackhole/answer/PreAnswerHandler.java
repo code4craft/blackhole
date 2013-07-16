@@ -22,7 +22,17 @@ public class PreAnswerHandler extends AbstractAnswerHandler implements Initializ
 	@Autowired
 	private CustomAnswerPatternProvider customAnswerPatternProvider;
 
-	/*
+    @Autowired
+    private AnswerPatternProvider answerPatternProvider;
+
+    @Autowired
+    private TempAnswerProvider tempAnswerContainer;
+
+    @Autowired
+    private SafeHostAnswerProvider safeHostAnswerProvider;
+
+
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see
@@ -37,6 +47,9 @@ public class PreAnswerHandler extends AbstractAnswerHandler implements Initializ
 		answerProviders = new LinkedList<AnswerProvider>();
 		answerProviders.add(customTempAnswerProvider);
 		answerProviders.add(customAnswerPatternProvider);
+        answerProviders.add(tempAnswerContainer);
+        answerProviders.add(answerPatternProvider);
+        answerProviders.add(safeHostAnswerProvider);
 	}
 
     @Override

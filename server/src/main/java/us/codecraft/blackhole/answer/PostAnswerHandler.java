@@ -1,7 +1,6 @@
 package us.codecraft.blackhole.answer;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
@@ -16,15 +15,6 @@ public class PostAnswerHandler extends AbstractAnswerHandler implements Initiali
 
     private List<AnswerProvider> answerProviders;
 
-    @Autowired
-    private AnswerPatternProvider answerPatternProvider;
-
-    @Autowired
-    private TempAnswerProvider tempAnswerContainer;
-
-    @Autowired
-    private SafeHostAnswerProvider safeHostAnswerProvider;
-
     /*
      * (non-Javadoc)
      *
@@ -38,9 +28,6 @@ public class PostAnswerHandler extends AbstractAnswerHandler implements Initiali
 
     public void regitestProviders() {
         answerProviders = new LinkedList<AnswerProvider>();
-        answerProviders.add(tempAnswerContainer);
-        answerProviders.add(answerPatternProvider);
-        answerProviders.add(safeHostAnswerProvider);
     }
 
     @Override
