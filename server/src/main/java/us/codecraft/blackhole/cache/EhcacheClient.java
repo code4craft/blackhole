@@ -198,6 +198,9 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
     }
 
     public void clearCache() {
+        if (manager==null){
+            return;
+        }
         Cache cache = manager.getCache(CACHE_NAME);
         if (cache==null){
             return;
