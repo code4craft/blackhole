@@ -199,6 +199,9 @@ public class EhcacheClient extends StandReadyWorker implements CacheClient,
 
     public void clearCache() {
         Cache cache = manager.getCache(CACHE_NAME);
+        if (cache==null){
+            return;
+        }
         @SuppressWarnings("unchecked")
         List<String> keys = cache.getKeys();
         logger.info(keys.size() + " cached records cleared");
