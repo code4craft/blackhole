@@ -1,7 +1,7 @@
 #!/bin/sh
 HOME_DIR=/usr/local/blackhole/
 SCRIPT_URL=http://code4craft.github.io/blackhole/install.sh
-VERSION=1.2.1
+VERSION=1.2.2
 BLACK_HOLE_URL=http://code4craft.qiniudn.com/blackhole-${VERSION}.tar.gz
 UPDATE=0
 
