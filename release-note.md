@@ -1,5 +1,9 @@
 Release Notes
 ----
+*2012-8-12* `version：1.2.3`
+
+bugfix: [issue#11 Forward的请求包不合规范](https://github.com/code4craft/blackhole/issues/11)
+
 *2012-7-16* `version：1.2.2`
 
 极大优化了A记录配置的性能。
