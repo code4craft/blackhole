@@ -4,9 +4,9 @@ Release Notes
 
 极大优化了A记录配置的性能。
 
-在数万条配置的情况下，性能并未有下降。
+修复数万条配置的情况下，性能明显下降的问题[issue#9](https://github.com/code4craft/blackhole/issues/9)。
 
-新增NS记录配置的支持。
+新增NS格式的配置。
 
 *2012-6-22* `version：1.2.1`
 

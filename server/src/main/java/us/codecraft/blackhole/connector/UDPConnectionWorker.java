@@ -38,8 +38,9 @@ public class UDPConnectionWorker implements Runnable {
 			if (response != null) {
 				responser.response(response);
 			} else {
-				forwarder.forward(inDataPacket.getData(), new Message(
-						inDataPacket.getData()), responser);
+                Message query = new Message(
+                        inDataPacket.getData());
+                forwarder.forward(query.toWire(), query, responser);
 			}
 		} catch (Throwable e) {
 
