@@ -1,10 +1,10 @@
 Release Notes
 ----
-*2012-8-12* `version：1.2.3`
+*2013-8-12* `version：1.2.3`
 
 bugfix: [issue#11 Forward的请求包不合规范](https://github.com/code4craft/blackhole/issues/11)
 
-*2012-7-16* `version：1.2.2`
+*2013-7-16* `version：1.2.2`
 
 极大优化了A记录配置的性能。
 
@@ -12,7 +12,7 @@ bugfix: [issue#11 Forward的请求包不合规范](https://github.com/code4craft
 
 新增NS格式的配置。
 
-*2012-6-22* `version：1.2.1`
+*2013-6-22* `version：1.2.1`
 
 增加自定义缓存过期时间的功能。
 
@@ -22,7 +22,7 @@ bugfix: [issue#11 Forward的请求包不合规范](https://github.com/code4craft
 
 详细进行了性能测试，并更新了文档。
 
-*2012-5-31* `version：1.2.0`
+*2013-5-31* `version：1.2.0`
 
 * [issues#5](https://github.com/code4craft/blackhole/issues/5) 对不同的用户组提供不同的DNS响应，从而可以让每个用户管理自己的DNS配置。
 
@@ -30,11 +30,11 @@ bugfix: [issue#11 Forward的请求包不合规范](https://github.com/code4craft
 
 * [issues#8](https://github.com/code4craft/blackhole/issues/8) 对forward的外部DNS设定优先级 便于企业内网配置自己的DNS地址，防止被响应被覆盖。
 
-*2012-5-7*
+*2013-5-7*
 
 * 修复启动失败后进程不退出的bug。
 
-*2012-4-27* `version：1.1.3`
+*2013-4-27* `version：1.1.3`
 
 1.1.3发布。
 
@@ -42,17 +42,17 @@ bugfix: [issue#11 Forward的请求包不合规范](https://github.com/code4craft
 
 * 修复一个高并发下某些响应丢失的bug。
 
-*2012-4-2* `version：1.1.2`
+*2013-4-2* `version：1.1.2`
 
 1.1.2发布，修复了一个返回空响应体导致DNS查找失败的问题，从此稳定性大大提高[https://github.com/code4craft/blackhole/issues/3](https://github.com/code4craft/blackhole/issues/3)。
 
 BlackHole也迎来第一位企业级用户。争取发展成为一个公司内网使用的简单可配置的DNS服务器。
 
-*2012-3-24* `version：1.1.1`
+*2013-3-24* `version：1.1.1`
 
 1.1.1发布，增加NS配置功能，详情见[https://github.com/code4craft/blackhole/blob/master/server/README.md](https://github.com/code4craft/blackhole/blob/master/server/README.md)
 
-*2012-2-25*	`version: 1.1`
+*2013-2-25*	`version: 1.1`
 
 1.1发布，偷偷增加反DNS污染功能。原理：
 [http://my.oschina.net/flashsword/blog/110276](http://my.oschina.net/flashsword/blog/110276)
