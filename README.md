@@ -52,3 +52,6 @@ BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。
 
 作者邮箱：
 code4crafter@gmail.com
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/code4craft/blackhole/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
