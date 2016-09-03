@@ -33,6 +33,9 @@ public class DomainPatternsContainer {
     }
 
     public String getIp(String domain) {
+        //add by Rock
+        System.out.println("convert domain to lowercase");
+        domain = domain != null? domain.toLowerCase(): "";
         String ip = domainTexts.get(domain);
         if (ip != null) {
             return ip;
