@@ -19,3 +19,14 @@
 #	127.0.0.1	flashsword20.*.*
 #		response all query like "flashsword20.diandian.com" "flashsword20.github.com"
 #
+192.168.88.90 sso.umu360.com
+192.168.88.90 www.umu360.com
+192.168.88.91 UIC.umu360.com, uic.umu360.com
+192.168.88.91 EP.umu360.com
+192.168.88.91 pigrecord.umu360.com
+192.168.88.91 Sensor.umu360.com
+192.168.88.92 img.umu360.com
+192.168.88.92 store.umu360.com
+192.168.88.95 backend.umu360.com
+192.168.88.94 mysql1.inner.umu360.com
+192.168.88.90 redis.inner.umu360.com

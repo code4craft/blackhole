@@ -41,6 +41,7 @@ public class DomainPatternsContainer {
             return ip;
         }
         for (Map.Entry<Pattern, String> entry : domainPatterns.entrySet()) {
+            entry.getKey().
             Matcher matcher = entry.getKey().matcher(domain);
             if (matcher.find()) {
                 return entry.getValue();
