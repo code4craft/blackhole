@@ -1,7 +1,7 @@
 BlackHole
 =========
 
-###1. 技术结构
+### 1. 技术结构
 
 BlackHole的连接处理部分参考了EagleDNS，使用了反应堆模式。
 
@@ -9,9 +9,9 @@ BlackHole底层使用dnsjava进行DNS解析，并使用EhCache进行缓存和持
 
 BlackHole的UDP代理部分使用了纯异步的逻辑，支持同时代理多个外部DNS服务器，并使用最快的响应结果。
 
-###2. 安装
+### 2. 安装
 
-####下载编译版本
+#### 下载编译版本
 
 BlackHole的编译后版本保存在[https://github.com/code4craft/blackhole-bin](https://github.com/code4craft/blackhole-bin)，直接clone这个项目到某一目录即可。
 
@@ -21,7 +21,7 @@ BlackHole的编译后版本保存在[https://github.com/code4craft/blackhole-bin
 
 	curl http://code4craft.github.io/blackhole/install.sh | sh
 
-####从源码编译
+#### 从源码编译
 
 你也可以使用源码，进行修改和编译。
 
@@ -30,7 +30,7 @@ BlackHole的编译后版本保存在[https://github.com/code4craft/blackhole-bin
 	mvn clean package
 	sh make.sh	
 	
-###3. 启动
+### 3. 启动
 
 然后通过sudo /usr/local/blackhole/blackhole.sh start可以启动。
 
@@ -42,14 +42,14 @@ Ubuntu下默认开启了dnsmasq，如果启动时提示53端口被占用，可�
 	
 禁用dnsmasq的方法：修改/etc/NetworkManager/NetworkManager.conf，注释掉dns=dnsmasq即可。
 
-###4. 配置BlackHole:
+### 4. 配置BlackHole:
 
 如果你没有将BlackHole安装到/usr/local/blackhole，则需要修改blackhole.sh，将HOME_DIR更改为你的安装目录。
 
 BlackHole目前有两个配置文件，分别是**config/blackhole.conf**和**config/zones**。
 **BlackHole的配置文件都是修改后动态生效的！**
 
-####conf/blackhole.conf
+#### conf/blackhole.conf
 
 是blackhole的主要配置文件。
 
@@ -97,7 +97,7 @@ BlackHole目前有两个配置文件，分别是**config/blackhole.conf**和**co
 	
 	伪造的DNS服务器，用于检测DNS污染。一般无须更改。
 	
-####conf/zones
+#### conf/zones
 
 zones是DNS系统的域名配置文件。BlackHole简化了zones的配置，只支持A记录(因为作者觉得A记录够用了！)。
 
@@ -124,7 +124,7 @@ BlackHole还支持NS记录的配置。NS记录的意思是，对于某些域名�
 
 如果两条规则出现冲突，前面的规则会生效。
 
-###5. 动态管理BlackHole：
+### 5. 动态管理BlackHole：
 
 blackhole的监控模块使用了作者的另一个开源项目[wifesays](https://github.com/flashsword20/wifesays)。wifesays是一个简单的Java进程内TCP服务器，使用40310端口作为监控端口，基于TCP协议上封装了一些简单的文本命令。
 
@@ -169,7 +169,7 @@ COMMAND为命令。目前支持的命令为：
 	
 	blackhole.sh {start|stop|restart|reload|zones|config|cache}
 
-###6. 协议
+### 6. 协议
 
 BlackHole的连接部分参考了EagleDNS的代码，遵守LGPLv3协议。
 
