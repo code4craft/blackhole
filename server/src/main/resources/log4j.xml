@@ -7,7 +7,17 @@
 			<param name="ConversionPattern" value="%d{yy-MM-dd HH:mm:ss,SSS} %-5p %c(%F:%L) ## %m%n" />
 		</layout>
 	</appender>
-	
+
+	<appender name="rollingFile" class="org.apache.log4j.RollingFileAppender" >
+		<param name="File" value="log/blackhole.log" /><!-- 设置日志输出文件名 -->
+		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
+		<param name="Append" value="true" />
+
+		<param name="MaxBackupIndex" value="3" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yy-MM-dd HH:mm:ss,SSS} %-5p %c(%F:%L) ## %m%n" />
+		</layout>
+	</appender>
 	 <logger name="org.springframework" additivity="false">
                 <level value="warn" />
                 <appender-ref ref="stdout" />
@@ -17,10 +27,20 @@
                 <level value="warn" />
                 <appender-ref ref="stdout" />
      </logger>
+
+	<logger name="us.codecraft" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="stdout" />
+		<appender-ref ref="rollingFile" />
+	</logger>
+
+
 	
 	<root>
-		<level value="info" />
+		<level value="debug" />
 		<appender-ref ref="stdout" />
+		<appender-ref ref="rollingFile" />
+
 	</root>
 
 </log4j:configuration>
