@@ -1,0 +1,8 @@
+SET PR_PATH=%CD%
+
+SET PR_SERVICE_NAME=blackHoleDNS
+
+SET PR_EXE=prunsrv.exe
+
+
+%PR_PATH%\%PR_EXE% //DS//%PR_SERVICE_NAME% 

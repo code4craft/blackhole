@@ -55,10 +55,10 @@ public abstract class AbstractAnswerHandler implements Handler {
         if (type == Type.ANY) {
             type = Type.A;
         }
-        if (logger.isDebugEnabled()) {
+
             logger.debug("query \t" + Type.string(type) + "\t"
                     + DClass.string(question.getDClass()) + "\t" + query);
-        }
+
         for (AnswerProvider answerProvider : getaAnswerProviders()) {
             String answer = answerProvider.getAnswer(query, type);
             if (answer != null) {

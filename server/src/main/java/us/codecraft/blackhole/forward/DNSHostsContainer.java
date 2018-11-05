@@ -51,11 +51,15 @@ public class DNSHostsContainer {
 	}
 
 	public List<SocketAddress> getAllAvaliableHosts(String domain) {
-		String ip = domainPatternsContainer.getIp(domain);
-		if (ip != null) {
-            List<SocketAddress> socketAddresses = new ArrayList<SocketAddress>();
-            socketAddresses.add(new InetSocketAddress(ip, 53));
-            return socketAddresses;
+		if(domainPatternsContainer == null)
+			logger.warn("domainPatternsContainer is null!");
+		else {
+			String ip = domainPatternsContainer.getIp(domain);
+			if (ip != null) {
+				List<SocketAddress> socketAddresses = new ArrayList<SocketAddress>();
+				socketAddresses.add(new InetSocketAddress(ip, 53));
+				return socketAddresses;
+			}
 		}
 		List<SocketAddress> results = new ArrayList<SocketAddress>();
 		Iterator<Entry<SocketAddress, Integer>> iterator = requestTimes.entrySet().iterator();
@@ -69,4 +73,6 @@ public class DNSHostsContainer {
 	public void setDomainPatternsContainer(DomainPatternsContainer domainPatternsContainer) {
 		this.domainPatternsContainer = domainPatternsContainer;
 	}
+
+
 }
